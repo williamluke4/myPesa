@@ -7,6 +7,7 @@ import "package:collection/collection.dart";
 class TransactionListWidget  extends StatelessWidget {
   final List<Transaction> transactions;
   final Account account;
+  final bool disabled;
   Widget build(BuildContext context){
     var groupedByDate = groupBy(this.transactions, (obj) => obj.date);
     var dates = groupedByDate.keys.toList();
@@ -27,7 +28,7 @@ class TransactionListWidget  extends StatelessWidget {
                       : '-',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
-                ...transactions.map((tx) => TransactionRowWidget(this.account, tx))
+                ...transactions.map((tx) => TransactionRowWidget(this.account, tx, this.disabled))
 
               ]
           );
@@ -35,5 +36,5 @@ class TransactionListWidget  extends StatelessWidget {
       ),
     );
   }
-  TransactionListWidget(this.account, this.transactions);
+  TransactionListWidget(this.account, this.transactions, this.disabled);
 }

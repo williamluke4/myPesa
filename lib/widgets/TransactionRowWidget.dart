@@ -9,10 +9,10 @@ DateFormat dateFormat = DateFormat("dd-MM-yyyy");
 class TransactionRowWidget extends StatelessWidget {
   final Transaction transaction;
   final Account account;
-
+  final bool disabled;
   Widget build(BuildContext context) {
     return InkWell(
-        onTap: () {
+        onTap: this.disabled ? (){} : () {
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -59,5 +59,5 @@ class TransactionRowWidget extends StatelessWidget {
         ));
   }
 
-  TransactionRowWidget(this.account, this.transaction);
+  TransactionRowWidget(this.account, this.transaction, this.disabled);
 }

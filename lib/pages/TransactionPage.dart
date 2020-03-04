@@ -18,9 +18,9 @@ class TransactionPage extends StatelessWidget {
         body: Column(
           children: <Widget>[
             TransactionDetailWidget(this.account, this.transaction),
-            Text("Transactions"),
+            Text("All Transactions"),
             Expanded(
-              child:TransactionListWidget(this.account, transactions)
+              child:TransactionListWidget(this.account, transactions, true)
             ),
           ],
         )

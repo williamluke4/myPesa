@@ -60,21 +60,26 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    loadAccount();
-
   }
+
   void _onRefresh() async {
-    // monitor network fetch
-    await loadAccount();
-    if (mounted) setState(() {});
+    print("Refresh");
+    // Loading of messages
+    Account newAccount = await getAccountFromMessages();
+    print("Account");
+    if(newAccount == null){
+      newAccount = await getAccountFromMessages();
+    }
+    if (mounted) setState(() {
+      _account=newAccount;
+    });
+    if(_account == null){
+      _refreshController.refreshFailed();
 
-    print(_account.balance);
-    _refreshController.refreshCompleted();
+    } else {
+      _refreshController.refreshCompleted();
 
-    // if failed,use refreshFailed()
-  }
-  void loadAccount() async{
-    _account = await getAccountFromMessages();
+    }
   }
 
   @override
@@ -95,8 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
           body: getCurrentPage(currentPage, _account, context),
           bottomNavigationBar: FancyBottomNavigation(
             tabs: [
-              TabData(iconData: Icons.account_balance, title: "Balance"),
-              TabData(iconData: Icons.monetization_on, title: "Transactions"),
+              TabData(iconData: Icons.account_balance, title: "Home"),
               TabData(iconData: Icons.settings, title: "Settings")
             ],
             onTabChangedListener: (position) {
@@ -112,21 +116,23 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 Widget getCurrentPage(int pageNum, Account account, BuildContext context) {
-  if(account == null || account.transactions.length == 0) {
+  if (account == null || account.transactions.length == 0) {
     return Container(
-      child: Center(
-        child: Text("No Messages from MPESA found"),
-      )
-    );
+        child: Center(
+      child: Text("No Messages from MPESA found"),
+    ));
   }
   switch (pageNum) {
     case 0:
       return Column(
-        children: <Widget>[BalanceWidget(account)],
+        children: <Widget>[
+          BalanceWidget(account),
+          Expanded(
+              child:TransactionListWidget(account, account.transactions, false)
+          ),
+        ],
       );
     case 1:
-      return TransactionListWidget(account, account.transactions);
-    case 2:
       return Container();
   }
   ;

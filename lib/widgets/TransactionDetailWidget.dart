@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:myPesa/models/Account.dart';
 import 'package:myPesa/models/Transaction.dart';
 
@@ -22,18 +23,18 @@ class TransactionDetailWidget extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
                     Text(this.transaction.date),
-                    Row(
-                      children: <Widget>[
-                        Text('Ref: '),
-                        Text(
-                          this.transaction.ref != null
-                              ? this.transaction.ref
-                              : '',
-                          style: TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ],
+                Row(
+                  children: <Widget>[
+                    Text('Ref: '),
+                    SelectableText(
+                      this.transaction.ref != null
+                          ? this.transaction.ref
+                          : '',
+                      style: TextStyle(fontWeight: FontWeight.bold),
                     )
                   ],
+                )
+                ],
                 ),
               ),
               Padding(
@@ -41,8 +42,8 @@ class TransactionDetailWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Expanded(child: Text(this.transaction.recipient)),
-                    Text(
+                    Expanded(child: SelectableText(this.transaction.recipient)),
+                    SelectableText(
                       this.transaction.amount != null
                           ? this.transaction.amount
                           : "-",
