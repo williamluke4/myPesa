@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_pesa/data/models/Transaction.dart';
 
+import '../errors.dart';
+
 class SettingsState extends Equatable {
   const SettingsState({
     this.isLoading = false,
@@ -14,7 +16,7 @@ class SettingsState extends Equatable {
   });
   final bool isLoading;
   final GoogleSignInAccount? user;
-  final String? error;
+  final AuthError? error;
   final String? balance;
   final List<Transaction>? transactions;
   final ThemeMode themeMode;
@@ -22,7 +24,7 @@ class SettingsState extends Equatable {
   SettingsState copyWith({
     bool? isLoading,
     GoogleSignInAccount? user,
-    String? error,
+    AuthError? error,
     String? balance,
     List<Transaction>? transactions,
     ThemeMode? themeMode,

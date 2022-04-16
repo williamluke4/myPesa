@@ -1,4 +1,6 @@
-import "package:collection/collection.dart";
+import 'dart:developer';
+
+import 'package:collection/collection.dart';
 import 'package:googleapis/sheets/v4.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -19,38 +21,45 @@ class SheetRepository {
   final SheetsApi sheetsAPI;
   final Map<String, String> authHeaders;
 
-  Future<Spreadsheet?> createSheet(
-      {required List<Transaction> transactions}) async {
+  Future<Spreadsheet?> createSheet({
+    required List<Transaction> transactions,
+  }) async {
     try {
       final monthYearTransactions = groupBy<Transaction, String>(
-          transactions,
-          (tx) =>
-              tx.dateTime != null ? dateTimeToString(tx.dateTime!) : 'Unknown');
+        transactions,
+        (tx) =>
+            tx.dateTime != null ? dateTimeToString(tx.dateTime!) : 'Unknown',
+      );
 
       final sheets = monthYearTransactions.keys.map((date) {
         final txs = monthYearTransactions[date];
+        // ignore: flutter_style_todos
         final rowData = txs?.map((tx) {
-          return RowData(values: [
-            CellData(
-              userEnteredValue: ExtendedValue(stringValue: tx.date),
-            ),
-            CellData(
-              userEnteredValue: ExtendedValue(stringValue: tx.ref),
-            ),
-            CellData(
-              userEnteredValue: ExtendedValue(stringValue: tx.recipient),
-            ),
-            CellData(
-              userEnteredValue: ExtendedValue(
-                  stringValue: "${txTypeToString(tx)}${tx.amount}"),
-            ),
-            CellData(
-              userEnteredValue: ExtendedValue(stringValue: tx.txCost),
-            ),
-            CellData(
-              userEnteredValue: ExtendedValue(stringValue: tx.balance),
-            )
-          ]);
+          // TODO(will): Clean This Up
+          return RowData(
+            values: [
+              CellData(
+                userEnteredValue: ExtendedValue(stringValue: tx.date),
+              ),
+              CellData(
+                userEnteredValue: ExtendedValue(stringValue: tx.ref),
+              ),
+              CellData(
+                userEnteredValue: ExtendedValue(stringValue: tx.recipient),
+              ),
+              CellData(
+                userEnteredValue: ExtendedValue(
+                  stringValue: "${txTypeToString(tx)}${tx.amount}",
+                ),
+              ),
+              CellData(
+                userEnteredValue: ExtendedValue(stringValue: tx.txCost),
+              ),
+              CellData(
+                userEnteredValue: ExtendedValue(stringValue: tx.balance),
+              )
+            ],
+          );
         });
 
         return Sheet(
@@ -63,17 +72,15 @@ class SheetRepository {
         );
       });
 
-      print("Uploading Sheet");
-
-      final result = await sheetsAPI.spreadsheets.create(
+      final spreadsheet = await sheetsAPI.spreadsheets.create(
         Spreadsheet(
-          properties: SpreadsheetProperties(title: "Mpesa Transactions"),
+          properties: SpreadsheetProperties(title: 'mPesa Transactions'),
           sheets: sheets.toList(),
         ),
       );
-      return result;
+      return spreadsheet;
     } catch (e) {
-      print(e);
+      log(e.toString());
       rethrow;
     }
   }

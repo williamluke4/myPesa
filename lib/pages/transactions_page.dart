@@ -5,8 +5,8 @@ import 'package:my_pesa/settings/settings_state.dart';
 import 'package:my_pesa/widgets/BalanceWidget.dart';
 import 'package:my_pesa/widgets/TransactionListWidget.dart';
 
-class AccountView extends StatelessWidget {
-  const AccountView({Key? key}) : super(key: key);
+class TransactionsPage extends StatelessWidget {
+  const TransactionsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,11 +16,16 @@ class AccountView extends StatelessWidget {
           return Column(
             children: <Widget>[
               BalanceWidget(balance: state.balance ?? ''),
-              ElevatedButton(
-                onPressed: () =>
-                    context.read<SettingsCubit>().exportToGoogleSheets(),
-                child: Text('Export'),
-              ),
+              
+              if (state.isLoading)
+                ElevatedButton(
+                  onPressed: () =>
+                      context.read<SettingsCubit>().exportToGoogleSheets(),
+                  child: const Text('Export'),
+                )
+              else
+                const CircularProgressIndicator.adaptive(),
+
               Expanded(
                 child: TransactionListWidget(
                   disabled: false,

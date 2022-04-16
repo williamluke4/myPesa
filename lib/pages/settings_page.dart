@@ -10,18 +10,6 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SettingsCubit(),
-      child: const SettingsPage(),
-    );
-  }
-}
-
-class SettingsView extends StatelessWidget {
-  const SettingsView({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       body: BlocConsumer<SettingsCubit, SettingsState>(
         bloc: context.read<SettingsCubit>(),

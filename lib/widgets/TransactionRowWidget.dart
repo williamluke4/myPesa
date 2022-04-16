@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:my_pesa/data/models/Account.dart';
 import 'package:my_pesa/data/models/Transaction.dart';
-import 'package:my_pesa/pages/TransactionPage.dart';
+import 'package:my_pesa/pages/transaction_page.dart';
 
 DateFormat dateFormat = DateFormat('dd-MM-yyyy');
 

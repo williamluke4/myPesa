@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_pesa/data/sheet_repository.dart';
+import 'package:my_pesa/errors.dart';
 import 'package:my_pesa/settings/settings_state.dart';
 import 'package:my_pesa/utils/load.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -29,7 +30,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     try {
       await _googleSignIn.signIn();
     } catch (error) {
-      emit(state.copyWith(error: error.toString()));
+      emit(state.copyWith(error: AuthError(error: error)));
     }
   }
 
@@ -42,19 +43,19 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   Future<void> exportToGoogleSheets() async {
+    emit(state.copyWith(isLoading: true));
     if (state.transactions != null &&
         state.transactions!.isNotEmpty &&
         state.user != null) {
       final authHeaders = await state.user!.authHeaders;
       final gsheets = SheetRepository(authHeaders: authHeaders);
-      print("Creating");
-      var spreadsheet =
+      final spreadsheet =
           await gsheets.createSheet(transactions: state.transactions!);
       if (spreadsheet != null) {
         print(spreadsheet.spreadsheetId);
       }
     }
-    print("No Auth");
+    emit(state.copyWith(isLoading: false, error: AuthError()));
   }
 
   Future<void> refreshTransactions() async {

@@ -1,9 +1,8 @@
-import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_pesa/account/account.dart';
+import 'package:my_pesa/pages/settings_page.dart';
+import 'package:my_pesa/pages/transactions_page.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
-import 'package:my_pesa/settings/settings_screen.dart';
 
 class App extends StatelessWidget {
   const App({Key? key}) : super(key: key);
@@ -40,25 +39,29 @@ class AppView extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         brightness: Brightness.dark,
       ),
-      home: MyHomePage(),
+      home: const Home(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
+class Home extends StatefulWidget {
+  const Home({Key? key}) : super(key: key);
+
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  HomeState createState() => HomeState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class HomeState extends State<Home> {
   int _currentIndex = 0;
+
   final PageController _pageController = PageController();
-  final _bottomNavigationBarItems = [
-    const BottomNavigationBarItem(
+
+  final _bottomNavigationBarItems = const [
+    BottomNavigationBarItem(
       icon: Icon(Icons.home),
       label: 'Transactions',
     ),
-    const BottomNavigationBarItem(
+    BottomNavigationBarItem(
       icon: Icon(Icons.settings),
       label: 'Settings',
     ),
@@ -76,17 +79,19 @@ class _MyHomePageState extends State<MyHomePage> {
           },
           controller: _pageController,
           children: const [
-            AccountView(),
-            SettingsView(),
+            TransactionsPage(),
+            SettingsPage(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           items: _bottomNavigationBarItems,
           onTap: (index) {
-            _pageController.animateToPage(index,
-                duration: Duration(microseconds: 300),
-                curve: Curves.bounceInOut);
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(microseconds: 300),
+              curve: Curves.bounceInOut,
+            );
           },
         ),
       ),
