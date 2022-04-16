@@ -26,12 +26,22 @@ jobs:
       - run: flutter pub get
       - run: flutter test
       # Setup Keystore ANDROID_KEYSTORE=(openssl base64 -A -in my.keystore > base64)
-      - run: echo -n ${ANDROID_KEYSTORE} | base64 -d > ./android/my.keystore
-      - run: echo "keystorePath=./my.keystore" > ./android/key.properties
-      - run: echo "keystorePassword=${KEYSTORE_PASSWORD}" >> ./android/key.properties
-      - run: echo "keyAlias=${ALIAS_NAME}" >> ./android/key.properties
-      - run: echo "keyPassword=${KEY_PASSWORD}" >> ./android/key.properties
+      - name: Setup Keystore
+        run: |
+          echo -n ${ANDROID_KEYSTORE} | base64 -d > ./android/my.keystore
+          echo "keystorePath=./my.keystore" > ./android/key.properties
+          echo "keystorePassword=${KEYSTORE_PASSWORD}" >> ./android/key.properties
+          echo "keyAlias=${ALIAS_NAME}" >> ./android/key.properties
+          echo "keyPassword=${KEY_PASSWORD}" >> ./android/key.properties
+        env:
+          ANDROID_KEYSTORE: ${{secrets.ANDROID_KEYSTORE}}
+          KEYSTORE_PASSWORD: ${{secrets.KEYSTORE_PASSWORD}}
+          ALIAS_NAME: ${{secrets.ALIAS_NAME}}
+          KEY_PASSWORD: ${{secrets.KEY_PASSWORD}}
 
       # Build
-      - run: flutter build apk --flavor production -t ./lib/main_production.dart
-      - run: flutter build appbundle  --flavor production -t ./lib/main_production.dart
+      - name: Build APK
+        run: flutter build apk --flavor production -t ./lib/main_production.dart
+
+      - name: Build AppBundle
+        run: flutter build appbundle  --flavor production -t ./lib/main_production.dart
