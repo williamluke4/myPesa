@@ -48,7 +48,7 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
       );
       await HydratedBlocOverrides.runZoned(
         () async => runApp(await builder()),
-        storage:  storage,
+        storage: storage,
         blocObserver: AppBlocObserver(),
       );
     },

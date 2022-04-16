@@ -19,14 +19,13 @@ class SheetRepository {
   final SheetsApi sheetsAPI;
   final Map<String, String> authHeaders;
 
-  Future<Spreadsheet?> createSheet({required List<Transaction> transactions}) async {
+  Future<Spreadsheet?> createSheet(
+      {required List<Transaction> transactions}) async {
     try {
-      print("Grouping");
       final monthYearTransactions = groupBy<Transaction, String>(
           transactions,
           (tx) =>
               tx.dateTime != null ? dateTimeToString(tx.dateTime!) : 'Unknown');
-      print("Mapping");
 
       final sheets = monthYearTransactions.keys.map((date) {
         final txs = monthYearTransactions[date];
@@ -53,7 +52,6 @@ class SheetRepository {
             )
           ]);
         });
-        print("Generated Sheets");
 
         return Sheet(
           properties: SheetProperties(title: date),
