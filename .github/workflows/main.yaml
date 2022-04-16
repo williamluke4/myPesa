@@ -29,7 +29,7 @@ jobs:
       - name: Setup Keystore
         run: |
           echo -n ${ANDROID_KEYSTORE} | base64 -d > ./android/my.keystore
-          echo "storeFile=./my.keystore" > ./android/key.properties
+          echo "storeFile=../my.keystore" > ./android/key.properties
           echo "storePassword=${KEYSTORE_PASSWORD}" >> ./android/key.properties
           echo "keyAlias=${ALIAS_NAME}" >> ./android/key.properties
           echo "keyPassword=${KEY_PASSWORD}" >> ./android/key.properties
