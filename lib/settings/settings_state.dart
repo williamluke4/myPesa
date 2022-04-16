@@ -20,7 +20,7 @@ class SettingsState extends Equatable {
   final String? balance;
   final List<Transaction> transactions;
   final ThemeMode themeMode;
-  
+
   // ignore: flutter_style_todos
   // TODO:  Add SpreadsheetID
   SettingsState copyWith({
