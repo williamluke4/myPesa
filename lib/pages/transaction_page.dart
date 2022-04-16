@@ -17,7 +17,7 @@ class TransactionPage extends StatelessWidget {
         .read<SettingsCubit>()
         .state
         .transactions
-        ?.where((tx) => transaction.recipient == tx.recipient)
+        .where((tx) => transaction.recipient == tx.recipient)
         .toList();
     return Scaffold(
       appBar: AppBar(
@@ -29,7 +29,7 @@ class TransactionPage extends StatelessWidget {
           const Text('All Transactions'),
           Expanded(
             child: TransactionListWidget(
-              transactions: transactions ?? [],
+              transactions: transactions,
               disabled: true,
             ),
           ),

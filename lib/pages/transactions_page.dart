@@ -10,9 +10,24 @@ class TransactionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SettingsCubit, SettingsState>(
+    return BlocConsumer<SettingsCubit, SettingsState>(
+      listener: (BuildContext context, SettingsState state) {
+        if (state.error != null) {
+          final snackBar = SnackBar(
+            content: Text(
+              state.error!.message,
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.redAccent,
+          );
+
+          // Find the ScaffoldMessenger in the widget tree
+          // and use it to show a SnackBar.
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      },
       builder: (context, state) {
-        if (state.transactions != null && state.transactions!.isNotEmpty) {
+        if (state.transactions.isNotEmpty) {
           return Column(
             children: <Widget>[
               BalanceWidget(balance: state.balance ?? ''),
@@ -27,7 +42,7 @@ class TransactionsPage extends StatelessWidget {
               Expanded(
                 child: TransactionListWidget(
                   disabled: false,
-                  transactions: state.transactions ?? [],
+                  transactions: state.transactions,
                 ),
               ),
             ],

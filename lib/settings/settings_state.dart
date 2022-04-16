@@ -11,14 +11,14 @@ class SettingsState extends Equatable {
     this.user,
     this.error,
     this.themeMode = ThemeMode.system,
-    this.transactions,
+    this.transactions = const <Transaction>[],
     this.balance,
   });
   final bool isLoading;
   final GoogleSignInAccount? user;
-  final AuthError? error;
+  final UserError? error;
   final String? balance;
-  final List<Transaction>? transactions;
+  final List<Transaction> transactions;
   final ThemeMode themeMode;
   
   // ignore: flutter_style_todos
@@ -26,7 +26,7 @@ class SettingsState extends Equatable {
   SettingsState copyWith({
     bool? isLoading,
     GoogleSignInAccount? user,
-    AuthError? error,
+    UserError? error,
     String? balance,
     List<Transaction>? transactions,
     ThemeMode? themeMode,

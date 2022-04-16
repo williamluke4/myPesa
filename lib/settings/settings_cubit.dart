@@ -31,7 +31,11 @@ class SettingsCubit extends Cubit<SettingsState> {
     try {
       await _googleSignIn.signIn();
     } catch (error) {
-      emit(state.copyWith(error: AuthError(error: error)));
+      emit(
+        state.copyWith(
+          error: signInError,
+        ),
+      );
     }
   }
 
@@ -45,19 +49,34 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   Future<void> exportToGoogleSheets() async {
     emit(state.copyWith(isLoading: true));
-    if (state.transactions != null &&
-        state.transactions!.isNotEmpty &&
-        state.user != null) {
-      final authHeaders = await state.user!.authHeaders;
-      final gsheets = SheetRepository(authHeaders: authHeaders);
-      final spreadsheet =
-          await gsheets.createSheet(transactions: state.transactions!);
-      if (spreadsheet != null) {
-        // ignore: flutter_style_todos
-        // TODO: Set SpreadsheetID
-      }
+    if (state.transactions.isEmpty) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: noTransactionsError,
+        ),
+      );
+      return;
     }
-    emit(state.copyWith(isLoading: false, error: AuthError()));
+    if (state.user == null) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: notSignedInError,
+        ),
+      );
+      return;
+    }
+
+    final authHeaders = await state.user!.authHeaders;
+    final gsheets = SheetRepository(authHeaders: authHeaders);
+    final spreadsheet =
+        await gsheets.createSheet(transactions: state.transactions);
+    if (spreadsheet != null) {
+      // ignore: flutter_style_todos
+      // TODO: Set SpreadsheetID
+    }
+    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> refreshTransactions() async {
