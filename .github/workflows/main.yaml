@@ -25,5 +25,5 @@ jobs:
           cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
       - run: flutter pub get
       - run: flutter test
-      - run: flutter build apk
-      - run: flutter build appbundle
+      - run: flutter build apk --flavor production -t ./lib/main_production.dart
+      - run: flutter build appbundle  --flavor production -t ./lib/main_production.dart
