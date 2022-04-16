@@ -16,16 +16,14 @@ class TransactionsPage extends StatelessWidget {
           return Column(
             children: <Widget>[
               BalanceWidget(balance: state.balance ?? ''),
-              
               if (state.isLoading)
+                const CircularProgressIndicator.adaptive()
+              else
                 ElevatedButton(
                   onPressed: () =>
                       context.read<SettingsCubit>().exportToGoogleSheets(),
                   child: const Text('Export'),
-                )
-              else
-                const CircularProgressIndicator.adaptive(),
-
+                ),
               Expanded(
                 child: TransactionListWidget(
                   disabled: false,
