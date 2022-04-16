@@ -1,12 +1,7 @@
 # myPesa
-
-![coverage][coverage_badge]
-[![style: very good analysis][very_good_analysis_badge]][very_good_analysis_link]
-[![License: MIT][license_badge]][license_link]
-
 ## Info
 
-Works by looking for messages from `MPESA` then parses them using regex. I am not a flutter dev, was just experimenting and **Safaricom** don't provide a nice way to view transactions.
+Works by looking for messages from `MPESA` then parses them using regex. I am not a flutter dev, was just experimenting and **Safaricom** don't provide a nice way to view/export transactions.
 
 ## Help Wanted
 
