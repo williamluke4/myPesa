@@ -7,8 +7,8 @@ import 'package:my_pesa/settings/settings_state.dart';
 
 void main() {
   group('SettingsCubit', () {
-    test('initial state is ', () {
-      expect(SettingsCubit().state, equals(SettingsCubit()));
+    test('check state equality ', () {
+      expect(SettingsCubit().state, SettingsCubit().state);
     });
 
     blocTest<SettingsCubit, SettingsState>(

@@ -3,8 +3,8 @@ import 'package:my_pesa/app.dart';
 
 void main() {
   group('App', () {
-    testWidgets('renders AccountsPage', (tester) async {
-      await tester.pumpWidget(const AppView());
+    testWidgets('renders Home', (tester) async {
+      await tester.pumpWidget(const App());
       expect(find.byType(Home), findsOneWidget);
     });
   });
