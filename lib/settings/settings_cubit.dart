@@ -73,8 +73,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     final spreadsheet =
         await gsheets.createSheet(transactions: state.transactions);
     if (spreadsheet != null) {
-      // ignore: flutter_style_todos
-      // TODO: Set SpreadsheetID
+      // TODO(williamluke4): Set SpreadsheetID
     }
     emit(state.copyWith(isLoading: false));
   }

@@ -22,7 +22,7 @@ class SettingsState extends Equatable {
   final ThemeMode themeMode;
 
   // ignore: flutter_style_todos
-  // TODO:  Add SpreadsheetID
+  // TODO(williamluke4):  Add SpreadsheetID
   SettingsState copyWith({
     bool? isLoading,
     GoogleSignInAccount? user,

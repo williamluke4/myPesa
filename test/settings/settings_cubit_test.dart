@@ -18,7 +18,8 @@ void main() {
       expect: () => [const SettingsState(themeMode: ThemeMode.dark)],
     );
     blocTest<SettingsCubit, SettingsState>(
-      'emits [error: noTransactionsError] when exportToGoogleSheets with no transactions',
+      '''
+emits [error: noTransactionsError] when exportToGoogleSheets with no transactions''',
       build: SettingsCubit.new,
       act: (cubit) => cubit.exportToGoogleSheets(),
       expect: () => [
