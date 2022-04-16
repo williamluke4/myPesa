@@ -1,19 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:myPesa/models/Account.dart';
-import 'package:myPesa/models/Transaction.dart';
+import 'package:my_pesa/data/models/Transaction.dart';
 
 class TransactionDetailWidget extends StatelessWidget {
+  const TransactionDetailWidget({
+    Key? key,
+    required this.transaction,
+  }) : super(key: key);
   final Transaction transaction;
-  final Account account;
 
+  @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.all(5.0),
-        child: Card(
-            child: Padding(
-          padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(5),
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
@@ -22,19 +23,17 @@ class TransactionDetailWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Text(this.transaction.date),
-                Row(
-                  children: <Widget>[
-                    Text('Ref: '),
-                    SelectableText(
-                      this.transaction.ref != null
-                          ? this.transaction.ref
-                          : '',
-                      style: TextStyle(fontWeight: FontWeight.bold),
+                    Text(transaction.date),
+                    Row(
+                      children: <Widget>[
+                        const Text('Ref: '),
+                        SelectableText(
+                          transaction.ref,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        )
+                      ],
                     )
                   ],
-                )
-                ],
                 ),
               ),
               Padding(
@@ -42,16 +41,16 @@ class TransactionDetailWidget extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Expanded(child: SelectableText(this.transaction.recipient)),
+                    Expanded(
+                      child: SelectableText(transaction.recipient),
+                    ),
                     SelectableText(
-                      this.transaction.amount != null
-                          ? this.transaction.amount
-                          : "-",
+                      transaction.amount,
                       style: TextStyle(
-                          color:
-                          this.transaction.type != TransactionType.IN
-                              ? Colors.red
-                              : Colors.green),
+                        color: transaction.type != TransactionType.IN
+                            ? Colors.red
+                            : Colors.green,
+                      ),
                       textAlign: TextAlign.right,
                     ),
                   ],
@@ -59,8 +58,8 @@ class TransactionDetailWidget extends StatelessWidget {
               ),
             ],
           ),
-        )));
+        ),
+      ),
+    );
   }
-
-  TransactionDetailWidget(this.account, this.transaction);
 }

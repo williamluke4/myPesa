@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:myPesa/models/Account.dart';
-import 'package:myPesa/models/Transaction.dart';
-import 'package:myPesa/widgets/TransactionDetailWidget.dart';
-import 'package:myPesa/widgets/TransactionListWidget.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/data/models/Transaction.dart';
+import 'package:my_pesa/settings/settings_cubit.dart';
+import 'package:my_pesa/widgets/TransactionDetailWidget.dart';
+import 'package:my_pesa/widgets/TransactionListWidget.dart';
 
 class TransactionPage extends StatelessWidget {
+  const TransactionPage({
+    Key? key,
+    required this.transaction,
+  }) : super(key: key);
   final Transaction transaction;
-  final Account account;
   @override
   Widget build(BuildContext context) {
-    var transactions = this.account.transactions.where( (tx) => this.transaction.recipient == tx.recipient).toList();
+    final transactions = context
+        .read<SettingsCubit>()
+        .state
+        .transactions
+        ?.where((tx) => transaction.recipient == tx.recipient)
+        .toList();
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Transactions"),
-        ),
-        body: Column(
-          children: <Widget>[
-            TransactionDetailWidget(this.account, this.transaction),
-            Text("All Transactions"),
-            Expanded(
-              child:TransactionListWidget(this.account, transactions, true)
+      appBar: AppBar(
+        title: const Text('Transactions'),
+      ),
+      body: Column(
+        children: <Widget>[
+          TransactionDetailWidget(transaction: transaction),
+          const Text('All Transactions'),
+          Expanded(
+            child: TransactionListWidget(
+              transactions: transactions ?? [],
+              disabled: true,
             ),
-          ],
-        )
+          ),
+        ],
+      ),
     );
   }
-  TransactionPage(this.account, this.transaction);
 }

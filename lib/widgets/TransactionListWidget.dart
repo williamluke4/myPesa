@@ -1,40 +1,50 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:myPesa/models/Account.dart';
-import 'package:myPesa/models/Transaction.dart';
-import 'package:myPesa/widgets/TransactionRowWidget.dart';
-import "package:collection/collection.dart";
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/data/models/Transaction.dart';
+import 'package:my_pesa/settings/settings_cubit.dart';
+import 'package:my_pesa/widgets/TransactionRowWidget.dart';
 
-class TransactionListWidget  extends StatelessWidget {
+class TransactionListWidget extends StatelessWidget {
+  const TransactionListWidget({
+    Key? key,
+    required this.transactions,
+    required this.disabled,
+  }) : super(key: key);
   final List<Transaction> transactions;
-  final Account account;
   final bool disabled;
-  Widget build(BuildContext context){
-    var groupedByDate = groupBy(this.transactions, (obj) => obj.date);
-    var dates = groupedByDate.keys.toList();
+  @override
+  Widget build(BuildContext context) {
+    final groupedByDate =
+        groupBy<Transaction, String>(transactions, (obj) => obj.date);
+    final dates = groupedByDate.keys.toList();
 
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ListView.builder(
-        itemCount: dates.length,
-        itemBuilder: (context, index) {
-          var transactions = groupedByDate[dates[index]];
-          Transaction tx = this.transactions[index];
-          return Column(
+      padding: const EdgeInsets.all(8),
+      child: RefreshIndicator(
+        onRefresh: () => context.read<SettingsCubit>().refreshTransactions(),
+        child: ListView.builder(
+          itemCount: dates.length,
+          itemBuilder: (context, index) {
+            final transactions = groupedByDate[dates[index]];
+            return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  dates[index]!= null
-                  ? dates[index]
-                      : '-',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  dates[index],
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-                ...transactions.map((tx) => TransactionRowWidget(this.account, tx, this.disabled))
-
-              ]
-          );
-        },
+                ...transactions!.map<TransactionRowWidget>(
+                  (tx) => TransactionRowWidget(
+                    transaction: tx,
+                    disabled: disabled,
+                  ),
+                )
+              ],
+            );
+          },
+        ),
       ),
     );
   }
-  TransactionListWidget(this.account, this.transactions, this.disabled);
 }
