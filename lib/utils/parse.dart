@@ -1,7 +1,7 @@
 import 'package:basic_utils/basic_utils.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:intl/intl.dart';
-import 'package:my_pesa/data/models/Transaction.dart';
+import 'package:my_pesa/data/models/transaction.dart';
 
 RegExp getBalanceRX = RegExp(r'balance\s+(is|was)\s+([a-zA-Z]+)([\d,]+.\d{2})');
 RegExp getTXCostRX = RegExp(r'Transaction\s*cost,\s*([a-zA-Z]+)([\d.,]+)\.');

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
-import 'package:my_pesa/data/models/Transaction.dart';
+import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/utils/parse.dart';
 
 Future<List<Transaction>> getTransactionsFromMessages(String sender) async {

@@ -4,7 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:googleapis/sheets/v4.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-import 'package:my_pesa/data/models/Transaction.dart';
+import 'package:my_pesa/data/models/transaction.dart';
 
 DateFormat dateFormat = DateFormat('MMMM yyyy');
 
@@ -33,9 +33,9 @@ class SheetRepository {
 
       final sheets = monthYearTransactions.keys.map((date) {
         final txs = monthYearTransactions[date];
-        // ignore: flutter_style_todos
         final rowData = txs?.map((tx) {
-          // TODO(will): Clean This Up
+          // ignore: flutter_style_todos
+          // TODO: Clean This Up
           return RowData(
             values: [
               CellData(
@@ -49,7 +49,7 @@ class SheetRepository {
               ),
               CellData(
                 userEnteredValue: ExtendedValue(
-                  stringValue: "${txTypeToString(tx)}${tx.amount}",
+                  stringValue: '${txTypeToString(tx)}${tx.amount}',
                 ),
               ),
               CellData(

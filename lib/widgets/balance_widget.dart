@@ -15,12 +15,11 @@ class BalanceWidget extends StatelessWidget {
           child: Column(
             children: <Widget>[
               const Padding(
-                padding: EdgeInsets.all(10.0),
+                padding: EdgeInsets.all(10),
                 child: Align(
-                  alignment: Alignment
-                      .centerLeft, // Align however you like (i.e .centerRight, centerLeft)
+                  alignment: Alignment.centerLeft,
                   child: Text(
-                    "Balance",
+                    'Balance',
                     textScaleFactor: 2,
                     style: TextStyle(
                       color: Colors.white,
@@ -30,12 +29,10 @@ class BalanceWidget extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(5.0),
+                padding: const EdgeInsets.all(5),
                 child: Align(
-                  alignment: Alignment
-                      .center, // Align however you like (i.e .centerRight, centerLeft)
                   child: Text(
-                    "Ksh $balance",
+                    'Ksh $balance',
                     textAlign: TextAlign.center,
                     textScaleFactor: 3,
                     style: const TextStyle(

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_pesa/data/models/Transaction.dart';
+import 'package:my_pesa/data/models/transaction.dart';
 
 class TransactionDetailWidget extends StatelessWidget {
   const TransactionDetailWidget({

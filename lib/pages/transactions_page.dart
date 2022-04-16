@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
 import 'package:my_pesa/settings/settings_state.dart';
-import 'package:my_pesa/widgets/BalanceWidget.dart';
-import 'package:my_pesa/widgets/TransactionListWidget.dart';
+import 'package:my_pesa/widgets/balance_widget.dart';
+import 'package:my_pesa/widgets/transaction_list_widget.dart';
 
 class TransactionsPage extends StatelessWidget {
   const TransactionsPage({Key? key}) : super(key: key);

@@ -10,7 +10,8 @@ import 'package:permission_handler/permission_handler.dart';
 class SettingsCubit extends Cubit<SettingsState> {
   SettingsCubit() : super(const SettingsState()) {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-      if (account == null) {
+      if (account == null && state.user != null) {
+        // ignore: avoid_redundant_argument_values
         emit(state.copyWith(user: null));
       } else {
         emit(state.copyWith(user: account));
@@ -52,7 +53,8 @@ class SettingsCubit extends Cubit<SettingsState> {
       final spreadsheet =
           await gsheets.createSheet(transactions: state.transactions!);
       if (spreadsheet != null) {
-        print(spreadsheet.spreadsheetId);
+        // ignore: flutter_style_todos
+        // TODO: Set SpreadsheetID
       }
     }
     emit(state.copyWith(isLoading: false, error: AuthError()));

@@ -1,5 +1,6 @@
 import 'package:my_pesa/utils/parse.dart';
 
+// ignore: constant_identifier_names
 enum TransactionType { IN, OUT, UNKNOWN }
 
 class Transaction {

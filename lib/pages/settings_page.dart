@@ -15,12 +15,22 @@ class SettingsPage extends StatelessWidget {
         bloc: context.read<SettingsCubit>(),
         listener: (BuildContext context, SettingsState state) {
           if (state.error != null) {
-            // TODO your code here
+            final snackBar = SnackBar(
+              content: Text(
+                state.error!.message,
+                style: const TextStyle(color: Colors.white),
+              ),
+              backgroundColor: Colors.redAccent,
+            );
+
+            // Find the ScaffoldMessenger in the widget tree
+            // and use it to show a SnackBar.
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
           }
         },
         builder: (BuildContext context, SettingsState state) {
           if (state.isLoading) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
           final user = state.user;
           return SettingsList(
@@ -35,6 +45,10 @@ class SettingsPage extends StatelessWidget {
                       ),
                       title: Text(user.displayName ?? ''),
                       description: Text(user.email),
+                      trailing: ElevatedButton(
+                        onPressed: context.read<SettingsCubit>().signout,
+                        child: const Text('Sign Out'),
+                      ),
                     )
                   else
                     SettingsTile.navigation(

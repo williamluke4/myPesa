@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_pesa/data/models/Transaction.dart';
+import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
-import 'package:my_pesa/widgets/TransactionRowWidget.dart';
+import 'package:my_pesa/widgets/transaction_row_widget.dart';
 
 class TransactionListWidget extends StatelessWidget {
   const TransactionListWidget({
