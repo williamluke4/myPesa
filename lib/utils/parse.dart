@@ -8,7 +8,7 @@ RegExp getTXCostRX = RegExp(r'Transaction\s*cost,\s*([a-zA-Z]+)([\d.,]+)\.');
 RegExp getLipaOrSendRX =
     RegExp(r'([a-zA-Z]+)([\d.,]+)\s*(paid to|sent to| of)\s+(.+?)(?=\son\s)');
 RegExp getDateAndTime = RegExp(
-  r'on\s*([\d]{1,2}[\/][\d]{1,2}[\/][\d]{1,2})\s*at\s*(\d{1,2}:\d{2} [A-Z]{2})',
+  r'on\s*([\d]{1,2}[\/][\d]{1,2}[\/][\d]{1,2})\s*at\s*(\d{1,2}:\d{1,2} [A-Z]{2})',
 );
 RegExp getRef = RegExp('([A-Z0-9]{10})');
 RegExp getReceived =
@@ -16,7 +16,7 @@ RegExp getReceived =
 RegExp getWithdraw =
     RegExp(r'Withdraw\s+([a-zA-Z]+)([\d.,]+)\s*(from)\s+(.*?)\.{0,1}on');
 
-Transaction getMpesaTransaction(String body) {
+Transaction? parseMpesaTransaction(String body) {
   String? txCost;
   String? ref;
   String? recipient;
@@ -64,9 +64,12 @@ Transaction getMpesaTransaction(String body) {
     amount = getWithdrawMatch.group(2);
     recipient = getWithdrawMatch.group(4);
   }
+  if (ref == null) {
+    return null;
+  }
   return Transaction(
     recipient: recipient ?? '',
-    ref: ref ?? '',
+    ref: ref,
     amount: amount ?? '',
     txCost: txCost ?? '',
     balance: balance ?? '',
@@ -78,7 +81,7 @@ Transaction getMpesaTransaction(String body) {
 
 Transaction? parseTransaction(SmsMessage message) {
   if (message.sender == 'MPESA' && message.body != null) {
-    final transaction = getMpesaTransaction(message.body ?? '');
+    final transaction = parseMpesaTransaction(message.body ?? '');
     return transaction;
   }
   return null;
