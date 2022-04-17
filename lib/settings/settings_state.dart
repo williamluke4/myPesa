@@ -33,7 +33,7 @@ class SettingsState extends Equatable {
   }) {
     return SettingsState(
       isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
+      error: error, // Do not copy error
       themeMode: themeMode ?? this.themeMode,
       user: user ?? this.user,
       balance: balance ?? this.balance,
