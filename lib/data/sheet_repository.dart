@@ -56,7 +56,11 @@ class SheetRepository {
               ),
               CellData(
                 userEnteredValue: ExtendedValue(stringValue: tx.balance),
-              )
+              ),
+              if (date == 'Unknown')
+                CellData(
+                  userEnteredValue: ExtendedValue(stringValue: tx.body),
+                )
             ],
           );
         });
