@@ -95,7 +95,7 @@ android {
         }        
         development {
             dimension "default"
-            applicationIdSuffix ""
+            applicationIdSuffix ".dev"
             manifestPlaceholders = [appName: "[DEV] myPesa"]
         }
     }
@@ -104,7 +104,6 @@ android {
         release {
             signingConfig signingConfigs.release
             minifyEnabled true
-            useProguard true
             proguardFiles getDefaultProguardFile('proguard-android.txt')
         }
         debug {
