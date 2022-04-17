@@ -2,7 +2,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_pesa/data/models/transaction.dart';
-
 import 'package:my_pesa/errors.dart';
 
 class SettingsState extends Equatable {
@@ -38,6 +37,15 @@ class SettingsState extends Equatable {
       user: user ?? this.user,
       balance: balance ?? this.balance,
       transactions: transactions ?? this.transactions,
+    );
+  }
+
+  SettingsState signout() {
+    return SettingsState(
+      isLoading: isLoading,
+      themeMode: themeMode,
+      balance: balance,
+      transactions: transactions,
     );
   }
 

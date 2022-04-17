@@ -12,7 +12,7 @@ class SettingsCubit extends Cubit<SettingsState> {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
       if (account == null && state.user != null) {
         // ignore: avoid_redundant_argument_values
-        emit(state.copyWith(user: null));
+        emit(state.signout());
       } else {
         emit(state.copyWith(user: account));
       }

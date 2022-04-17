@@ -46,7 +46,8 @@ class SettingsPage extends StatelessWidget {
                       title: Text(user.displayName ?? ''),
                       description: Text(user.email),
                       trailing: ElevatedButton(
-                        onPressed: context.read<SettingsCubit>().signout,
+                        onPressed: () =>
+                            context.read<SettingsCubit>().signout(),
                         child: const Text('Sign Out'),
                       ),
                     )
