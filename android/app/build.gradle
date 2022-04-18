@@ -56,6 +56,7 @@ android {
         versionName flutterVersionName
     }
 
+    // TODO: Remove when below fix is available in stable channel.
     // https://github.com/flutter/flutter/pull/82309
     lintOptions {
         checkReleaseBuilds false

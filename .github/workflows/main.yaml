@@ -15,7 +15,7 @@ jobs:
       flutter_channel: stable
       flutter_version: 2.10.0
 
-  # Creates Issues from TODO comments
+  # Creates Issues from comments
   create_issues:
     runs-on: "ubuntu-latest"
     if: ${{ github.event_name == 'push' }}

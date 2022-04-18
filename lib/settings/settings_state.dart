@@ -19,7 +19,7 @@ class SettingsState extends Equatable {
   final String? balance;
   final List<Transaction> transactions;
   final ThemeMode themeMode;
-
+  // TODO(williamluke4):  Add SpreadsheetID
   SettingsState copyWith({
     bool? isLoading,
     GoogleSignInAccount? user,
