@@ -42,7 +42,6 @@ void main() {
       expect(transaction.dateTime, DateTime(2021, 1, 16, 17, 9));
     });
 
-    // TODO(williamluke4): Add support for reversed transactions.
     // test('reversedTransaction', () {
     //   final transaction = parseMpesaTransaction(reversedTransaction);
     //   expect(transaction.amount, equals('1,000.00'));

@@ -34,7 +34,6 @@ class SheetRepository {
       final sheets = monthYearTransactions.keys.map((date) {
         final txs = monthYearTransactions[date];
         final rowData = txs?.map((tx) {
-          // TODO(williamluke4): Clean this up.
           return RowData(
             values: [
               CellData(
