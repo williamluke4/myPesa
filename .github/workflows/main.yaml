@@ -28,17 +28,14 @@ jobs:
       - run: flutter test
       # Setup Keystore ANDROID_KEYSTORE=(openssl base64 -A -in my.keystore > base64)
       - name: Setup Keystore
-        run: |
-          echo -n ${ANDROID_KEYSTORE} | base64 -d > ./android/my.keystore
-          echo "storeFile=../my.keystore" > ./android/key.properties
-          echo "storePassword=${KEYSTORE_PASSWORD}" >> ./android/key.properties
-          echo "keyAlias=${ALIAS_NAME}" >> ./android/key.properties
-          echo "keyPassword=${KEY_PASSWORD}" >> ./android/key.properties
+        shell: bash
         env:
           ANDROID_KEYSTORE: ${{secrets.ANDROID_KEYSTORE}}
           KEYSTORE_PASSWORD: ${{secrets.KEYSTORE_PASSWORD}}
           ALIAS_NAME: ${{secrets.ALIAS_NAME}}
           KEY_PASSWORD: ${{secrets.KEY_PASSWORD}}
+        run: |
+          sh ./.github/workflows/scripts/setup_keystore.sh
 
       # Build
       - name: Build APK
@@ -46,7 +43,7 @@ jobs:
 
       - name: Build AppBundle
         run: flutter build appbundle  --flavor production -t ./lib/main_production.dart
-      
+
       - name: Publish
         uses: softprops/action-gh-release@v1
         with:

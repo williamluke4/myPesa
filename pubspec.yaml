@@ -1,11 +1,9 @@
 name: my_pesa
-description: Lets you View MPESA Transactions
 version: 2.0.2+1
 publish_to: none
-
+description: Lets you View MPESA Transactions
 environment:
   sdk: ">=2.16.0 <3.0.0"
-
 dependencies:
   basic_utils: ^4.2.0
   bloc: ^8.0.3
