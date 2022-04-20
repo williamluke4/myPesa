@@ -5,8 +5,8 @@ import 'package:my_pesa/data/models/transaction.dart';
 
 RegExp getBalanceRX = RegExp(r'balance\s+(is|was)\s+([a-zA-Z]+)([\d,]+.\d{2})');
 RegExp getTXCostRX = RegExp(r'Transaction\s*cost,\s*([a-zA-Z]+)([\d.,]+)\.');
-RegExp getLipaOrSendRX = RegExp(
-    r'([a-zA-Z]+)([\d.,]+)\s*(paid to|sent to| of)\s+(.+?)(?=\son\s)');
+RegExp getLipaOrSendRX =
+    RegExp(r'([a-zA-Z]+)([\d.,]+)\s*(paid to|sent to| of)\s+(.+?)(?=\son\s)');
 RegExp getDateAndTime = RegExp(
   r'on\s*([\d]{1,2}[\/][\d]{1,2}[\/][\d]{1,2})\s*at\s*(\d{1,2}:\d{1,2} [A-Z]{2})',
   caseSensitive: false,
@@ -18,8 +18,7 @@ RegExp getReceived = RegExp(
 );
 RegExp getWithdraw =
     RegExp(r'Withdraw\s+([a-zA-Z]+)([\d.,]+)\s*(from)\s+(.*?)\.{0,1}on');
-RegExp getDeposit =
-    RegExp(r'Give Ksh([\d.,]+) cash to (.+) New');
+RegExp getDeposit = RegExp(r'Give Ksh([\d.,]+) cash to (.+) New');
 
 Transaction? parseMpesaTransaction(String body) {
   String? txCost;
