@@ -9,12 +9,16 @@ RegExp getLipaOrSendRX =
     RegExp(r'([a-zA-Z]+)([\d.,]+)\s*(paid to|sent to| of)\s+(.+?)(?=\son\s)');
 RegExp getDateAndTime = RegExp(
   r'on\s*([\d]{1,2}[\/][\d]{1,2}[\/][\d]{1,2})\s*at\s*(\d{1,2}:\d{1,2} [A-Z]{2})',
+  caseSensitive: false,
 );
 RegExp getRef = RegExp('([A-Z0-9]{10})');
-RegExp getReceived =
-    RegExp(r'received\s+([a-zA-Z]+)([\d.,]+)\s*(from)\s+(.*?)\.{0,1}on');
+RegExp getReceived = RegExp(
+  r'received\s+([a-zA-Z]+)([\d.,]+)\s*(from)\s+(.*?)\.{0,1}on',
+  caseSensitive: false,
+);
 RegExp getWithdraw =
     RegExp(r'Withdraw\s+([a-zA-Z]+)([\d.,]+)\s*(from)\s+(.*?)\.{0,1}on');
+RegExp getDeposit = RegExp(r'Give Ksh([\d.,]+) cash to (.+) New');
 
 Transaction? parseMpesaTransaction(String body) {
   String? txCost;
@@ -63,6 +67,12 @@ Transaction? parseMpesaTransaction(String body) {
     type = TransactionType.OUT;
     amount = getWithdrawMatch.group(2);
     recipient = getWithdrawMatch.group(4);
+  }
+  final Match? getDepositMatch = getDeposit.firstMatch(body);
+  if (getDepositMatch != null) {
+    type = TransactionType.IN;
+    amount = getDepositMatch.group(1);
+    recipient = getDepositMatch.group(2);
   }
   if (ref == null) {
     return null;
