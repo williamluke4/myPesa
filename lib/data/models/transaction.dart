@@ -18,7 +18,7 @@ class Transaction extends Equatable {
     this.dateTime,
   }) : date = dateTime != null ? dateTimeToString(dateTime) : '';
 
-  factory Transaction.fromJson(dynamic json) {
+  factory Transaction.fromJson(Map<String, dynamic> json) {
     return Transaction(
       amount: json['amount'] as String,
       ref: json['ref'] as String,

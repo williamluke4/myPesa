@@ -8,6 +8,7 @@ import 'package:my_pesa/data/sheet_repository.dart';
 import 'package:my_pesa/errors.dart';
 import 'package:my_pesa/settings/settings_state.dart';
 import 'package:my_pesa/utils/load.dart';
+import 'package:my_pesa/utils/logger.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class SettingsCubit extends HydratedCubit<SettingsState> {
@@ -93,15 +94,15 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
     }
     // Loading of messages
     final transactions = await getTransactionsFromMessages('MPESA');
-    // TODO: This is not efficient
-    state.transactions.forEach((tx) {
-      if (tx.category != unCategorized) {
-        var idx = transactions.indexWhere((element) => element.ref == tx.ref);
+    // TODO(x): This is not efficient
+    for (final tx in state.transactions) {
+      if (tx.category.name != unCategorized.name) {
+        final idx = transactions.indexWhere((element) => element.ref == tx.ref);
         if (idx != -1) {
           transactions[idx] = transactions[idx].copyWith(category: tx.category);
         }
       }
-    });
+    }
     emit(
       state.copyWith(
         transactions: transactions,
@@ -116,8 +117,6 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
       final updatedTransactions = List<Transaction>.from(state.transactions);
       updatedTransactions[txIdx] =
           state.transactions[txIdx].copyWith(category: category);
-
-      print("inserted ${updatedTransactions[txIdx].category.name}");
       emit(state.copyWith(transactions: updatedTransactions));
     } else {
       emit(
@@ -129,8 +128,15 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
   }
 
   @override
+  void onError(Object error, StackTrace stackTrace) {
+    log.e('Error: $error', [stackTrace]);
+    super.onError(error, stackTrace);
+  }
+
+  @override
   SettingsState? fromJson(Map<String, dynamic> json) =>
       SettingsState.fromJson(json);
+
   @override
-  Map<String, dynamic> toJson(state) => state.toJson();
+  Map<String, dynamic> toJson(SettingsState state) => state.toJson(state);
 }

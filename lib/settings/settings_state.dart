@@ -16,14 +16,18 @@ class SettingsState extends Equatable {
     this.balance,
     this.spreadsheetId,
   });
-  // TODO: I think theres a bug here
+  // TODO(x): I think theres a bug here
   factory SettingsState.fromJson(Map<String, dynamic> map) {
+    final transactions = map['transactions'] is List
+        ? List<Map<String, dynamic>>.from(map['transactions'] as List)
+        : <Map<String, dynamic>>[];
     return SettingsState(
-      balance: map['balance'] as String,
-      exportType: ExportType.values.byName(map['exportType'] as String),
-      transactions: (map['transactions'] as List<dynamic>)
-          .map<Transaction>(Transaction.fromJson)
-          .toList(),
+      balance: map['balance'] is String ? map['balance'] as String : '0.00',
+      exportType: map['exportType'] is String
+          ? ExportType.values.byName(map['exportType'] as String)
+          : ExportType.split,
+      transactions:
+          transactions.map<Transaction>(Transaction.fromJson).toList(),
       themeMode: ThemeMode.values.byName(
         map['themeMode'] is String
             ? map['themeMode'] as String
@@ -86,12 +90,16 @@ class SettingsState extends Equatable {
         spreadsheetId
       ];
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        'isLoading': isLoading,
-        'balance': balance,
-        'spreadsheetId': spreadsheetId,
-        'exportType': exportType.name,
-        'transactions': transactions.map<dynamic>((x) => x.toJson()).toList(),
-        'themeMode': themeMode.name,
-      };
+  Map<String, dynamic> toJson(SettingsState state) {
+    final transactions = state.transactions
+        .map<Map<String, dynamic>>((x) => x.toJson())
+        .toList();
+    return <String, dynamic>{
+      'balance': state.balance,
+      'spreadsheetId': state.spreadsheetId,
+      'exportType': state.exportType.name,
+      'transactions': transactions,
+      'themeMode': state.themeMode.name,
+    };
+  }
 }

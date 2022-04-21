@@ -35,7 +35,7 @@ List<RowData> exportTransaction(Transaction tx, ExportType type) {
             if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
           ],
         ),
-        if (tx.txCost.isNotEmpty)
+        if (tx.txCost.isNotEmpty && tx.txCost != '0.00')
           RowData(
             values: [
               cell(stringValue: tx.date),

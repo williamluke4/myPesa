@@ -10,7 +10,7 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
 
   @override
   void onError(Object error, StackTrace stackTrace) {
-    log.e('Error: $error');
+    log.e('Error: $error', [stackTrace]);
     super.onError(error, stackTrace);
   }
 
@@ -36,11 +36,12 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
 
   @override
   CategoriesState? fromJson(Map<String, dynamic> json) {
-    final categories = json['categories'] is List
-        ? (json['categories'] as List<dynamic>)
+    final categories = json['categories'] is List<dynamic>
+        ? List<Map<String, dynamic>>.from(json['categories'] as List)
             .map<Category>(Category.fromJson)
             .toList()
         : <Category>[];
+
     final defaultCategory =
         Category.fromJson(json['defaultCategory'] as Map<String, dynamic>);
     return CategoriesLoaded(
