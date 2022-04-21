@@ -36,6 +36,7 @@ class TransactionListWidget extends StatelessWidget {
                 ),
                 ...transactions!.map<TransactionRowWidget>(
                   (tx) => TransactionRowWidget(
+                    key: Key(tx.ref),
                     transaction: tx,
                     disabled: disabled,
                   ),

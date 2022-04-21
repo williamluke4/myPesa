@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/pages/settings_page.dart';
 import 'package:my_pesa/pages/transactions_page.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
@@ -13,6 +14,9 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider(
           create: (_) => SettingsCubit()..refreshTransactions(),
+        ),
+        BlocProvider(
+          create: (_) => CategoriesCubit(),
         ),
       ],
       child: const AppView(),

@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:googleapis/sheets/v4.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:my_pesa/data/export.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 
 DateFormat dateFormat = DateFormat('MMMM yyyy');
@@ -23,6 +24,7 @@ class SheetRepository {
 
   Future<Spreadsheet?> createSheet({
     required List<Transaction> transactions,
+    required ExportType type,
   }) async {
     try {
       final monthYearTransactions = groupBy<Transaction, String>(
@@ -33,36 +35,9 @@ class SheetRepository {
 
       final sheets = monthYearTransactions.keys.map((date) {
         final txs = monthYearTransactions[date];
-        final rowData = txs?.map((tx) {
-          // TODO(williamluke4): Clean this up.
-          return RowData(
-            values: [
-              CellData(
-                userEnteredValue: ExtendedValue(stringValue: tx.date),
-              ),
-              CellData(
-                userEnteredValue: ExtendedValue(stringValue: tx.ref),
-              ),
-              CellData(
-                userEnteredValue: ExtendedValue(stringValue: tx.recipient),
-              ),
-              CellData(
-                userEnteredValue: ExtendedValue(
-                  stringValue: '${txTypeToString(tx)}${tx.amount}',
-                ),
-              ),
-              CellData(
-                userEnteredValue: ExtendedValue(stringValue: tx.txCost),
-              ),
-              CellData(
-                userEnteredValue: ExtendedValue(stringValue: tx.balance),
-              ),
-              if (date == 'Unknown')
-                CellData(
-                  userEnteredValue: ExtendedValue(stringValue: tx.body),
-                )
-            ],
-          );
+        final rowData = txs?.fold<List<RowData>>([], (value, tx) {
+          value.addAll(exportTransaction(tx, type));
+          return value;
         });
 
         return Sheet(
@@ -86,17 +61,6 @@ class SheetRepository {
       log(e.toString());
       rethrow;
     }
-  }
-}
-
-String txTypeToString(Transaction tx) {
-  switch (tx.type) {
-    case TransactionType.IN:
-      return '';
-    case TransactionType.OUT:
-      return '-';
-    case TransactionType.UNKNOWN:
-      return '?';
   }
 }
 

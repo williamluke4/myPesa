@@ -8,11 +8,14 @@ import 'package:my_pesa/widgets/transaction_list_widget.dart';
 class TransactionPage extends StatelessWidget {
   const TransactionPage({
     Key? key,
-    required this.transaction,
+    required this.txRef,
   }) : super(key: key);
-  final Transaction transaction;
+  final String txRef;
   @override
   Widget build(BuildContext context) {
+    final transaction = context.select<SettingsCubit, Transaction>(
+      (c) => c.state.transactions.firstWhere((element) => element.ref == txRef),
+    );
     final transactions = context
         .read<SettingsCubit>()
         .state
