@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/pages/settings_page.dart';
 import 'package:my_pesa/pages/transactions_page.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
 
 class App extends StatelessWidget {
-  const App({Key? key}) : super(key: key);
+  App({Key? key})
+      : settingsCubit = SettingsCubit(),
+        categoriesCubit = CategoriesCubit(),
+        super(key: key);
 
+  final SettingsCubit settingsCubit;
+  final CategoriesCubit categoriesCubit;
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => SettingsCubit()..refreshTransactions(),
+          create: (_) => settingsCubit,
+        ),
+        BlocProvider(
+          create: (_) => categoriesCubit,
         ),
       ],
       child: const AppView(),

@@ -7,7 +7,7 @@ DateFormat dateFormat = DateFormat('dd-MM-yyyy');
 
 class TransactionRowWidget extends StatelessWidget {
   const TransactionRowWidget({
-    Key? key,
+    required Key key,
     required this.transaction,
     required this.disabled,
   }) : super(key: key);
@@ -23,7 +23,8 @@ class TransactionRowWidget extends StatelessWidget {
                 context,
                 MaterialPageRoute<Widget>(
                   builder: (context) => TransactionPage(
-                    transaction: transaction,
+                    key: key,
+                    txRef: transaction.ref,
                   ),
                 ),
               );

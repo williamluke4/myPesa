@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/widgets.dart';
+import 'package:my_pesa/data/export.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
 import 'package:my_pesa/settings/settings_state.dart';
 import 'package:settings_ui/settings_ui.dart';
@@ -88,6 +89,36 @@ class SettingsPage extends StatelessWidget {
                       onChanged: (ThemeMode? newValue) {
                         if (newValue != null) {
                           context.read<SettingsCubit>().setThemeMode(newValue);
+                        }
+                      },
+                    ),
+                  ),
+                  SettingsTile.navigation(
+                    leading: const Icon(Icons.outbox),
+                    title: const Text('Export Type'),
+                    trailing: DropdownButton(
+                      // Initial Value
+                      value: state.exportType,
+
+                      // Down Arrow Icon
+                      icon: const Icon(Icons.keyboard_arrow_down),
+
+                      // Array list of items
+                      items: const [
+                        DropdownMenuItem(
+                          value: ExportType.single,
+                          child: Text('Single'),
+                        ),
+                        DropdownMenuItem(
+                          value: ExportType.split,
+                          child: Text('Split'),
+                        )
+                      ],
+                      // After selecting the desired option,it will
+                      // change button value to selected value
+                      onChanged: (ExportType? newValue) {
+                        if (newValue != null) {
+                          context.read<SettingsCubit>().setExportType(newValue);
                         }
                       },
                     ),

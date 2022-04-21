@@ -27,29 +27,24 @@ class TransactionsPage extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        if (state.transactions.isNotEmpty) {
-          return Column(
-            children: <Widget>[
-              BalanceWidget(balance: state.balance ?? ''),
-              if (state.isLoading)
-                const CircularProgressIndicator.adaptive()
-              else
-                ElevatedButton(
-                  onPressed: () =>
-                      context.read<SettingsCubit>().exportToGoogleSheets(),
-                  child: const Text('Export'),
-                ),
-              Expanded(
-                child: TransactionListWidget(
-                  disabled: false,
-                  transactions: state.transactions,
-                ),
+        return Column(
+          children: <Widget>[
+            BalanceWidget(balance: state.balance),
+            if (state.isLoading)
+              const CircularProgressIndicator.adaptive()
+            else
+              ElevatedButton(
+                onPressed: () =>
+                    context.read<SettingsCubit>().exportToGoogleSheets(),
+                child: const Text('Export'),
               ),
-            ],
-          );
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
+            Expanded(
+              child: TransactionListWidget(
+                disabled: false,
+                transactions: state.transactions,
+              ),
+            ),
+          ],
         );
       },
     );

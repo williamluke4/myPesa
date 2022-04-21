@@ -2,5 +2,5 @@ import 'package:my_pesa/app.dart';
 import 'package:my_pesa/bootstrap.dart';
 
 void main() {
-  bootstrap(() => const App());
+  bootstrap(App.new);
 }
