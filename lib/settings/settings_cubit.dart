@@ -79,9 +79,20 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
       type: state.exportType,
     );
     if (spreadsheet != null) {
-      // TODO(williamluke4): Set SpreadsheetID
+      emit(
+        state.copyWith(
+          isLoading: false,
+          spreadsheetId: spreadsheet.spreadsheetId,
+        ),
+      );
+    } else {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: const UserError(message: 'Oops Somthing When Wrong'),
+        ),
+      );
     }
-    emit(state.copyWith(isLoading: false));
   }
 
   Future<void> setExportType(ExportType exportType) async {

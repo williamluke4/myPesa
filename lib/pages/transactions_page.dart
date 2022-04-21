@@ -29,7 +29,7 @@ class TransactionsPage extends StatelessWidget {
       builder: (context, state) {
         return Column(
           children: <Widget>[
-            BalanceWidget(balance: state.balance ?? ''),
+            BalanceWidget(balance: state.balance),
             if (state.isLoading)
               const CircularProgressIndicator.adaptive()
             else

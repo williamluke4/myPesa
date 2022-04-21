@@ -13,10 +13,9 @@ class SettingsState extends Equatable {
     this.themeMode = ThemeMode.system,
     this.exportType = ExportType.single,
     this.transactions = const <Transaction>[],
-    this.balance,
+    this.balance = '0.00',
     this.spreadsheetId,
   });
-  // TODO(x): I think theres a bug here
   factory SettingsState.fromJson(Map<String, dynamic> map) {
     final transactions = map['transactions'] is List
         ? List<Map<String, dynamic>>.from(map['transactions'] as List)
@@ -41,7 +40,7 @@ class SettingsState extends Equatable {
   final bool isLoading;
   final GoogleSignInAccount? user;
   final UserError? error;
-  final String? balance;
+  final String balance;
   final ExportType exportType;
   final List<Transaction> transactions;
   final ThemeMode themeMode;
