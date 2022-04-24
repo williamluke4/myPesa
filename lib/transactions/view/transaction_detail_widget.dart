@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
+import 'package:my_pesa/categories/view/category_form.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
-import 'package:my_pesa/settings/settings_cubit.dart';
+import 'package:my_pesa/transactions/transactions_cubit.dart';
 
 class TransactionDetailWidget extends StatelessWidget {
   const TransactionDetailWidget({
@@ -49,7 +50,10 @@ class TransactionDetailWidget extends StatelessWidget {
                     children: [
                       DropdownButton(
                         // Initial Value
-                        value: transaction.category,
+                        value: categories.firstWhere(
+                          (element) => element.id == transaction.categoryId,
+                          orElse: () => defaultCategory,
+                        ),
 
                         // Down Arrow Icon
                         icon: const Icon(Icons.keyboard_arrow_down),
@@ -62,13 +66,11 @@ class TransactionDetailWidget extends StatelessWidget {
                             child: Text(c.name),
                           );
                         }).toList(),
-                        onChanged: (Category? newValue) {
-                          if (newValue != null) {
-                            context
-                                .read<SettingsCubit>()
-                                .updateTrasactionCategory(
+                        onChanged: (Category? category) {
+                          if (category != null) {
+                            context.read<TransactionsCubit>().updateTrasaction(
                                   transaction.ref,
-                                  newValue,
+                                  transaction.copyWith(categoryId: category.id),
                                 );
                           }
                         },
@@ -80,13 +82,8 @@ class TransactionDetailWidget extends StatelessWidget {
                           showModalBottomSheet<void>(
                             context: context,
                             builder: (BuildContext c) {
-                              final _categoryNameController =
-                                  TextEditingController();
-
-                              return NewCategoryForm(
-                                categories: categories,
+                              return CategoryForm(
                                 formKey: _formKey,
-                                categoryNameController: _categoryNameController,
                               );
                             },
                           );
@@ -120,89 +117,6 @@ class TransactionDetailWidget extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class NewCategoryForm extends StatelessWidget {
-  const NewCategoryForm({
-    Key? key,
-    required this.formKey,
-    required this.categories,
-    required this.categoryNameController,
-  }) : super(key: key);
-
-  final GlobalKey<FormState> formKey;
-  final TextEditingController categoryNameController;
-  final List<Category> categories;
-
-  @override
-  Widget build(BuildContext context) {
-    return Form(
-      key: formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(8),
-        child: Center(
-          child: Column(
-            children: [
-              TextFormField(
-                controller: categoryNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Category Name',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter a name';
-                  }
-                  final existingName = categories.any(
-                    (element) => element.name == value,
-                  );
-
-                  if (existingName) {
-                    return 'This Category name already exists';
-                  }
-                  return null;
-                },
-              ),
-              AddCategoryButton(
-                formKey: formKey,
-                categoryNameController: categoryNameController,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class AddCategoryButton extends StatelessWidget {
-  const AddCategoryButton({
-    Key? key,
-    required this.formKey,
-    required this.categoryNameController,
-  }) : super(key: key);
-
-  final GlobalKey<FormState> formKey;
-  final TextEditingController categoryNameController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      child: ElevatedButton(
-        onPressed: () {
-          // Validate returns true if the form is valid, or false otherwise.
-          if (formKey.currentState!.validate()) {
-            // If the form is valid, display a snackbar. In the real world,
-            // you'd often call a server or save the information in a database.
-            context.read<CategoriesCubit>().addCategory(
-                  categoryNameController.text,
-                );
-          }
-        },
-        child: const Text('Add'),
       ),
     );
   }

@@ -1,13 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_sign_in/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_pesa/data/export.dart';
+import 'package:my_pesa/data/sheet_repository.dart';
+import 'package:my_pesa/export/export_cubit.dart';
+import 'package:my_pesa/export/export_screen.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
 import 'package:my_pesa/settings/settings_state.dart';
-import 'package:settings_ui/settings_ui.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({Key? key}) : super(key: key);
+  Widget __buildUserAvatar(GoogleSignInAccount? user) {
+    if (user != null) {
+      return GoogleUserCircleAvatar(
+        identity: user,
+      );
+    } else {
+      return Container();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,35 +45,66 @@ class SettingsPage extends StatelessWidget {
             return const Center(child: CircularProgressIndicator());
           }
           final user = state.user;
-          return SettingsList(
-            sections: [
-              SettingsSection(
-                title: const Text('Account'),
-                tiles: <SettingsTile>[
-                  if (user != null)
-                    SettingsTile.navigation(
-                      leading: GoogleUserCircleAvatar(
-                        identity: user,
-                      ),
-                      title: Text(user.displayName ?? ''),
-                      description: Text(user.email),
-                      trailing: ElevatedButton(
-                        onPressed: () =>
-                            context.read<SettingsCubit>().signout(),
-                        child: const Text('Sign Out'),
-                      ),
-                    )
-                  else
-                    SettingsTile.navigation(
-                      title: ElevatedButton(
-                        onPressed: () => context.read<SettingsCubit>().signin(),
-                        child: const Text('Sign In'),
+          return Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              children: [
+                Row(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.all(8),
+                      child: Text('Account'),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    __buildUserAvatar(user),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          user?.displayName ?? '',
+                          textAlign: TextAlign.start,
+                        ),
+                        Text(user?.email ?? '', textAlign: TextAlign.start),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        if (user != null)
+                          ElevatedButton(
+                            onPressed: () =>
+                                context.read<SettingsCubit>().signout(),
+                            child: const Text('Sign Out'),
+                          )
+                        else
+                          ElevatedButton(
+                            onPressed: () =>
+                                context.read<SettingsCubit>().signin(),
+                            child: const Text('Sign In'),
+                          )
+                      ],
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: const [
+                          Icon(Icons.format_paint),
+                          Padding(
+                            padding: EdgeInsets.all(8),
+                            child: Text('Dark Mode'),
+                          ),
+                        ],
                       ),
                     ),
-                  SettingsTile.navigation(
-                    leading: const Icon(Icons.format_paint),
-                    title: const Text('Dark Mode'),
-                    trailing: DropdownButton(
+                    DropdownButton(
                       // Initial Value
                       value: state.themeMode,
 
@@ -92,11 +134,21 @@ class SettingsPage extends StatelessWidget {
                         }
                       },
                     ),
-                  ),
-                  SettingsTile.navigation(
-                    leading: const Icon(Icons.outbox),
-                    title: const Text('Export Type'),
-                    trailing: DropdownButton(
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: const [
+                        Icon(Icons.outbox),
+                        Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Text('Export Type'),
+                        ),
+                      ],
+                    ),
+                    DropdownButton(
                       // Initial Value
                       value: state.exportType,
 
@@ -121,11 +173,31 @@ class SettingsPage extends StatelessWidget {
                           context.read<SettingsCubit>().setExportType(newValue);
                         }
                       },
-                    ),
-                  ),
-                ],
-              ),
-            ],
+                    )
+                  ],
+                ),
+                if (user != null)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () => showModalBottomSheet<Widget>(
+                          context: context,
+                          builder: (context) {
+                            return BlocProvider(
+                              create: (BuildContext context) => ExportCubit(
+                                sheetRepository: SheetRepository(user: user),
+                              ),
+                              child: const ExportView(),
+                            );
+                          },
+                        ),
+                        child: const Text('Export'),
+                      ),
+                    ],
+                  )
+              ],
+            ),
           );
         },
       ),

@@ -30,7 +30,7 @@ List<RowData> exportTransaction(Transaction tx, ExportType type) {
             cell(stringValue: tx.ref),
             cell(stringValue: tx.recipient),
             cell(stringValue: '${txTypeToString(tx)}${tx.amount}'),
-            cell(stringValue: tx.category.name),
+            cell(stringValue: tx.categoryId),
             cell(stringValue: tx.balance),
             if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
           ],
@@ -42,7 +42,7 @@ List<RowData> exportTransaction(Transaction tx, ExportType type) {
               cell(stringValue: tx.ref),
               cell(stringValue: 'MPESA Transaction Fee'),
               cell(stringValue: '-${tx.txCost}'),
-              cell(stringValue: tx.category.name),
+              cell(stringValue: tx.categoryId),
               cell(stringValue: tx.balance),
               if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
             ],
@@ -57,7 +57,7 @@ List<RowData> exportTransaction(Transaction tx, ExportType type) {
             cell(stringValue: tx.recipient),
             cell(stringValue: '${txTypeToString(tx)}${tx.amount}'),
             cell(stringValue: tx.txCost),
-            cell(stringValue: tx.category.name),
+            cell(stringValue: tx.categoryId),
             cell(stringValue: tx.balance),
             if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
           ],

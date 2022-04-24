@@ -1,27 +1,54 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'package:uuid/uuid.dart';
 
-const unCategorized = Category(name: 'Uncategorized');
+part 'category.g.dart';
 
+Uuid uuid = const Uuid();
+
+Category unCategorizedCategory =
+    Category(name: 'Uncategorized', id: 'dd978c2d-0d0c-4ebf-aa2d-b2032b6eb128');
+Category mpesaTransactionFeeCategory = Category(
+  name: 'MPESA Transaction Fee',
+  id: '61f82a3c-5e87-4fff-8057-44fa62b52704',
+);
+Category groseriesCategory =
+    Category(name: 'Groseries', id: '7d126025-0763-41a1-8279-d42b3ab1a9da');
+
+List<Category> defaultCategories = [
+  mpesaTransactionFeeCategory,
+  groseriesCategory,
+  unCategorizedCategory,
+];
+Category defaultCategory = unCategorizedCategory;
+
+const schemaVersion = 1;
+
+@JsonSerializable()
 class Category extends Equatable {
-  const Category({required this.name});
+  Category({required this.name, this.schema = schemaVersion, String? id})
+      : id = id ?? uuid.v4();
 
-  factory Category.fromJson(Map<String, dynamic> json) {
-    return Category(
-      name: json['name'] is String ? json['name'] as String : 'None',
-    );
-  }
-  Map<String, String> toJson() {
-    return <String, String>{'name': name};
-  }
+  factory Category.fromJson(Map<String, dynamic> json) =>
+      _$CategoryFromJson(json);
 
+  /// Connect the generated [_$CategoryToJson] function to the `toJson` method.
+  Map<String, dynamic> toJson() => _$CategoryToJson(this);
+
+  final String id;
   final String name;
-
+  final int schema;
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [id, name, schema];
 
   Category copyWith({
     String? name,
+    int? schema,
   }) {
-    return Category(name: name ?? this.name);
+    return Category(
+      id: id,
+      name: name ?? this.name,
+      schema: schema ?? this.schema,
+    );
   }
 }

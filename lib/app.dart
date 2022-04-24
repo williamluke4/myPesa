@@ -1,18 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
+import 'package:my_pesa/pages/categories_page.dart';
 import 'package:my_pesa/pages/settings_page.dart';
 import 'package:my_pesa/pages/transactions_page.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
+import 'package:my_pesa/transactions/transactions_cubit.dart';
 
 class App extends StatelessWidget {
   App({Key? key})
       : settingsCubit = SettingsCubit(),
         categoriesCubit = CategoriesCubit(),
+        transactionsCubit = TransactionsCubit(),
         super(key: key);
 
   final SettingsCubit settingsCubit;
   final CategoriesCubit categoriesCubit;
+  final TransactionsCubit transactionsCubit;
+
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -22,6 +27,9 @@ class App extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => categoriesCubit,
+        ),
+        BlocProvider(
+          create: (_) => transactionsCubit,
         ),
       ],
       child: const AppView(),
@@ -65,10 +73,14 @@ class HomeState extends State<Home> {
 
   final PageController _pageController = PageController();
 
-  final _bottomNavigationBarItems = const [
+  final bottomNavigationBarItems = const [
     BottomNavigationBarItem(
       icon: Icon(Icons.home),
       label: 'Transactions',
+    ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.category),
+      label: 'Categories',
     ),
     BottomNavigationBarItem(
       icon: Icon(Icons.settings),
@@ -87,14 +99,17 @@ class HomeState extends State<Home> {
             });
           },
           controller: _pageController,
+          physics:
+              _currentIndex == 1 ? const NeverScrollableScrollPhysics() : null,
           children: const [
             TransactionsPage(),
+            CategoriesPage(),
             SettingsPage(),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
-          items: _bottomNavigationBarItems,
+          items: bottomNavigationBarItems,
           onTap: (index) {
             _pageController.animateToPage(
               index,

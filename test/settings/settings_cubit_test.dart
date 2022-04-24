@@ -2,7 +2,6 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:my_pesa/errors.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
 import 'package:my_pesa/settings/settings_state.dart';
 
@@ -26,16 +25,6 @@ void main() {
       build: build,
       act: (cubit) => cubit.setThemeMode(ThemeMode.dark),
       expect: () => [const SettingsState(themeMode: ThemeMode.dark)],
-    );
-    blocTest<SettingsCubit, SettingsState>(
-      '''
-emits [error: noTransactionsError] when exportToGoogleSheets with no transactions''',
-      build: build,
-      act: (cubit) => cubit.exportToGoogleSheets(),
-      expect: () => [
-        const SettingsState(isLoading: true),
-        SettingsState(error: noTransactionsError)
-      ],
     );
   });
 }

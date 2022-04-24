@@ -4,7 +4,9 @@ abstract class CategoriesState extends Equatable {
   const CategoriesState({
     required this.categories,
     required this.defaultCategory,
+    this.error,
   });
+  final UserError? error;
   final List<Category> categories;
   final Category defaultCategory;
   @override
@@ -12,10 +14,10 @@ abstract class CategoriesState extends Equatable {
 }
 
 class CategoriesInitial extends CategoriesState {
-  const CategoriesInitial()
+  CategoriesInitial()
       : super(
-          categories: const [unCategorized],
-          defaultCategory: unCategorized,
+          categories: defaultCategories,
+          defaultCategory: defaultCategory,
         );
 }
 
@@ -23,5 +25,10 @@ class CategoriesLoaded extends CategoriesState {
   const CategoriesLoaded({
     required List<Category> categories,
     required Category defaultCategory,
-  }) : super(categories: categories, defaultCategory: defaultCategory);
+    UserError? error,
+  }) : super(
+          categories: categories,
+          defaultCategory: defaultCategory,
+          error: error,
+        );
 }

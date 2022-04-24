@@ -9,15 +9,25 @@ class TransactionRowWidget extends StatelessWidget {
   const TransactionRowWidget({
     required Key key,
     required this.transaction,
-    required this.disabled,
+    required this.replace,
   }) : super(key: key);
   final Transaction transaction;
-  final bool disabled;
+  final bool replace;
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: disabled
-          ? () {}
+      onTap: replace
+          ? () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute<Widget>(
+                  builder: (context) => TransactionPage(
+                    key: key,
+                    txRef: transaction.ref,
+                  ),
+                ),
+              );
+            }
           : () {
               Navigator.push(
                 context,
@@ -34,7 +44,7 @@ class TransactionRowWidget extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Expanded(
-              flex: 6,
+              flex: 4,
               child: Text(
                 transaction.recipient,
               ),
@@ -51,13 +61,6 @@ class TransactionRowWidget extends StatelessWidget {
                 textAlign: TextAlign.right,
               ),
             ),
-            Expanded(
-              flex: 2,
-              child: Text(
-                transaction.balance,
-                textAlign: TextAlign.right,
-              ),
-            )
           ],
         ),
       ),

@@ -1,4 +1,5 @@
 # myPesa
+
 ## Info
 
 Works by looking for messages from `MPESA` then parses them using regex. I am not a flutter dev, was just experimenting and **Safaricom** don't provide a nice way to view/export transactions.
@@ -33,6 +34,12 @@ $ flutter run --flavor staging --target lib/main_staging.dart
 
 # Production
 $ flutter run --flavor production --target lib/main_production.dart
+```
+
+### JSON Seriablizable code generations
+
+```
+flutter pub run build_runner build
 ```
 
 _\*myPesa works on Android._

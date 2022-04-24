@@ -7,7 +7,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_pesa/data/models/transaction.dart';
-import 'package:my_pesa/utils/parse.dart';
+import 'package:my_pesa/utils/parse/mpesa.dart';
 
 String sentTransaction =
     '''QC352PDIVL Confirmed. Ksh1,000.00 sent to SOPHIA  MWENI 0702972812 on 3/3/22 at 5:28 PM. New M-PESA balance is Ksh25,203.19. Transaction cost, Ksh12.00. Amount you can transact within the day is 292,600.00. Send KES100 & below to POCHI LA BIASHARA for FREE! To reverse, foward this message to 456.''';

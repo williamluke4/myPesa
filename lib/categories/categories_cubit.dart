@@ -1,12 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:my_pesa/data/models/category.dart';
+import 'package:my_pesa/errors.dart';
 import 'package:my_pesa/utils/logger.dart';
 
 part 'categories_state.dart';
 
 class CategoriesCubit extends HydratedCubit<CategoriesState> {
-  CategoriesCubit() : super(const CategoriesInitial());
+  CategoriesCubit() : super(CategoriesInitial());
 
   @override
   void onError(Object error, StackTrace stackTrace) {
@@ -22,10 +23,45 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
     super.onChange(change);
   }
 
+  Future<void> editCategory(String name, Category category) async {
+    final idx = state.categories.indexWhere((c) => c.name == name);
+    if (idx != -1 &&
+        !state.categories.any((element) => element.name == category.name)) {
+      final updatedCategories = List<Category>.from(state.categories);
+      updatedCategories[idx] = category;
+      emit(
+        CategoriesLoaded(
+          categories: updatedCategories,
+          defaultCategory: state.defaultCategory,
+        ),
+      );
+    } else {
+      emit(
+        CategoriesLoaded(
+          categories: state.categories,
+          defaultCategory: state.defaultCategory,
+          error: const UserError(message: 'Unable to Update Transaction'),
+        ),
+      );
+    }
+  }
+
   Future<void> addCategory(String name) async {
     log.d('Adding category $name');
-    final categories = [...state.categories, Category(name: name)];
-    log.d(categories);
+    if (name.isEmpty || state.categories.any((c) => c.name == name)) {
+      return;
+    }
+    final categories = [...state.categories, Category(name: name.trim())];
+    emit(
+      CategoriesLoaded(
+        categories: categories,
+        defaultCategory: state.defaultCategory,
+      ),
+    );
+  }
+
+  Future<void> deleteCategory(int idx) async {
+    final categories = [...state.categories]..removeAt(idx);
     emit(
       CategoriesLoaded(
         categories: categories,

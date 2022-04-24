@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:collection/collection.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/sheets/v4.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -16,16 +17,16 @@ String dateTimeToString(DateTime date) {
 class SheetRepository {
   // This class is not meant to be instantiated or extended; this constructor
   // prevents instantiation and extension.
-  SheetRepository({required this.authHeaders})
-      : sheetsAPI = SheetsApi(AuthClient(authHeaders, http.Client()));
+  SheetRepository({required this.user});
 
-  final SheetsApi sheetsAPI;
-  final Map<String, String> authHeaders;
+  final GoogleSignInAccount user;
 
   Future<Spreadsheet?> createSheet({
     required List<Transaction> transactions,
     required ExportType type,
   }) async {
+    final authHeaders = await user.authHeaders;
+    final sheetsAPI = SheetsApi(AuthClient(authHeaders, http.Client()));
     try {
       final monthYearTransactions = groupBy<Transaction, String>(
         transactions,

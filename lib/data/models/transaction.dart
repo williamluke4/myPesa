@@ -1,10 +1,14 @@
 import 'package:equatable/equatable.dart';
+import 'package:json_annotation/json_annotation.dart';
 import 'package:my_pesa/data/models/category.dart';
-import 'package:my_pesa/utils/parse.dart';
+import 'package:my_pesa/utils/parse/mpesa.dart';
+
+part 'transaction.g.dart';
 
 // ignore: constant_identifier_names
 enum TransactionType { IN, OUT, UNKNOWN }
 
+@JsonSerializable()
 class Transaction extends Equatable {
   Transaction({
     this.recipient = '',
@@ -12,27 +16,17 @@ class Transaction extends Equatable {
     this.amount = '',
     this.txCost = '',
     this.balance = '',
+    this.notes = '',
     this.type = TransactionType.UNKNOWN,
-    this.category = unCategorized,
+    String? categoryId,
     this.body = '',
     this.dateTime,
-  }) : date = dateTime != null ? dateTimeToString(dateTime) : '';
+  })  : date = dateTime != null ? dateTimeToString(dateTime) : '',
+        categoryId = categoryId ?? defaultCategory.id;
 
-  factory Transaction.fromJson(Map<String, dynamic> json) {
-    return Transaction(
-      amount: json['amount'] as String,
-      ref: json['ref'] as String,
-      txCost: json['txCost'] as String,
-      recipient: json['recipient'] as String,
-      balance: json['balance'] as String,
-      category: Category.fromJson(json['category'] as Map<String, dynamic>),
-      body: json['body'] as String,
-      dateTime: DateTime.tryParse(json['dateTime'] as String),
-      type: json['networkPreset'] is String
-          ? TransactionType.values.byName(json['networkPreset'] as String)
-          : TransactionType.UNKNOWN,
-    );
-  }
+  factory Transaction.fromJson(Map<String, dynamic> json) =>
+      _$TransactionFromJson(json);
+
   final String amount;
   final String ref;
   final String txCost;
@@ -40,22 +34,13 @@ class Transaction extends Equatable {
   final String date;
   final String balance;
   final String body;
+  final String notes;
+
   final DateTime? dateTime;
-  final Category category;
+  final String categoryId;
   final TransactionType type;
-  Map<String, dynamic> toJson() {
-    return <String, dynamic>{
-      'amount': amount,
-      'ref': ref,
-      'txCost': txCost,
-      'recipient': recipient,
-      'category': category.toJson(),
-      'balance': balance,
-      'body': body,
-      'dateTime': dateTime?.toString() ?? '',
-      'type': type.name,
-    };
-  }
+
+  Map<String, dynamic> toJson() => _$TransactionToJson(this);
 
   Transaction copyWith({
     String? amount,
@@ -64,9 +49,10 @@ class Transaction extends Equatable {
     String? recipient,
     String? date,
     String? balance,
+    String? notes,
     String? body,
     DateTime? dateTime,
-    Category? category,
+    String? categoryId,
     TransactionType? type,
   }) {
     return Transaction(
@@ -75,14 +61,24 @@ class Transaction extends Equatable {
       txCost: txCost ?? this.txCost,
       recipient: recipient ?? this.recipient,
       balance: balance ?? this.balance,
+      notes: notes ?? this.notes,
       body: body ?? this.body,
       dateTime: dateTime ?? this.dateTime,
-      category: category ?? this.category,
+      categoryId: categoryId ?? this.categoryId,
       type: type ?? this.type,
     );
   }
 
   @override
-  List<Object?> get props =>
-      [amount, ref, txCost, recipient, balance, body, dateTime, category, type];
+  List<Object?> get props => [
+        amount,
+        ref,
+        txCost,
+        recipient,
+        balance,
+        body,
+        dateTime,
+        categoryId,
+        type
+      ];
 }
