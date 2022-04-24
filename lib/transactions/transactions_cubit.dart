@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/data/transactions_repository.dart';
 import 'package:my_pesa/errors.dart';
@@ -35,6 +36,16 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
     // Loading of messages
     final transactions =
         await _transactionsRepository.getTransactionsFromMessages();
+    // TODO(x): This is not efficient
+    for (final tx in state.transactions) {
+      if (tx.categoryId != unCategorizedCategory.id) {
+        final idx = transactions.indexWhere((element) => element.ref == tx.ref);
+        if (idx != -1) {
+          transactions[idx] =
+              transactions[idx].copyWith(categoryId: tx.categoryId);
+        }
+      }
+    }
     emit(
       state.copyWith(
         transactions: transactions,
