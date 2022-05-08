@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "com.example.verygoodcore.my-pesa" "\0"
+            VALUE "CompanyName", "com.attobyte.my-pesa" "\0"
             VALUE "FileDescription", "my_pesa" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "my_pesa" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2022 com.example.verygoodcore.my-pesa. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2022 com.attobyte.my-pesa. All rights reserved." "\0"
             VALUE "OriginalFilename", "my_pesa.exe" "\0"
             VALUE "ProductName", "myPesa" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
