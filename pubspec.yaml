@@ -1,5 +1,5 @@
 name: my_pesa
-version: 2.0.7+1
+version: 2.0.8+1
 publish_to: none
 description: Lets you View MPESA Transactions
 environment:
