@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/data/export.dart';
+import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/data/sheet_repository.dart';
 import 'package:my_pesa/errors.dart';
@@ -11,6 +12,7 @@ class ExportCubit extends Cubit<ExportState> {
 
   Future<void> exportToGoogleSheets(
     List<Transaction> txs,
+    List<Category> categories,
     ExportType exportType,
   ) async {
     if (txs.isEmpty) {
@@ -26,6 +28,7 @@ class ExportCubit extends Cubit<ExportState> {
     emit(state.copyWith(isLoading: true));
     final spreadsheet = await sheetRepository.createSheet(
       transactions: txs,
+      categories: categories,
       type: exportType,
     );
     if (spreadsheet != null) {
@@ -38,7 +41,7 @@ class ExportCubit extends Cubit<ExportState> {
       emit(
         state.copyWith(
           isLoading: false,
-          error: const UserError(message: 'Oops Somthing When Wrong'),
+          error: const UserError(message: 'Oops Something When Wrong'),
         ),
       );
     }

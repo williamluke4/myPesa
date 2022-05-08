@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/export/export_cubit.dart';
 import 'package:my_pesa/export/export_state.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
@@ -30,7 +31,7 @@ class ExportView extends StatelessWidget {
         final transactions =
             context.read<TransactionsCubit>().state.transactions;
         final exportType = context.read<SettingsCubit>().state.exportType;
-
+        final categories = context.read<CategoriesCubit>().state.categories;
         return Column(
           children: <Widget>[
             if (state.isLoading)
@@ -39,7 +40,7 @@ class ExportView extends StatelessWidget {
               ElevatedButton(
                 onPressed: () => context
                     .read<ExportCubit>()
-                    .exportToGoogleSheets(transactions, exportType),
+                    .exportToGoogleSheets(transactions, categories, exportType),
                 child: const Text('Export'),
               ),
           ],

@@ -1,4 +1,5 @@
 import 'package:googleapis/sheets/v4.dart';
+import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 
 CellData cell({String? stringValue}) {
@@ -20,7 +21,12 @@ String txTypeToString(Transaction tx) {
 
 enum ExportType { split, single }
 
-List<RowData> exportTransaction(Transaction tx, ExportType type) {
+List<RowData> exportTransaction(
+    Transaction tx, List<Category> categories, ExportType type) {
+  Category getCategoryById(String categoryId) {
+    return categories.firstWhere((element) => element.name == categoryId);
+  }
+
   switch (type) {
     case ExportType.split:
       return [
@@ -30,7 +36,7 @@ List<RowData> exportTransaction(Transaction tx, ExportType type) {
             cell(stringValue: tx.ref),
             cell(stringValue: tx.recipient),
             cell(stringValue: '${txTypeToString(tx)}${tx.amount}'),
-            cell(stringValue: tx.categoryId),
+            cell(stringValue: getCategoryById(tx.categoryId).name),
             cell(stringValue: tx.balance),
             if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
           ],
@@ -42,7 +48,7 @@ List<RowData> exportTransaction(Transaction tx, ExportType type) {
               cell(stringValue: tx.ref),
               cell(stringValue: 'MPESA Transaction Fee'),
               cell(stringValue: '-${tx.txCost}'),
-              cell(stringValue: tx.categoryId),
+              cell(stringValue: getCategoryById(tx.categoryId).name),
               cell(stringValue: tx.balance),
               if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
             ],
@@ -57,7 +63,7 @@ List<RowData> exportTransaction(Transaction tx, ExportType type) {
             cell(stringValue: tx.recipient),
             cell(stringValue: '${txTypeToString(tx)}${tx.amount}'),
             cell(stringValue: tx.txCost),
-            cell(stringValue: tx.categoryId),
+            cell(stringValue: getCategoryById(tx.categoryId).name),
             cell(stringValue: tx.balance),
             if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
           ],

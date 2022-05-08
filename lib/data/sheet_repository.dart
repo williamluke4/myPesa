@@ -5,7 +5,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/sheets/v4.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/data/export.dart';
+import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 
 DateFormat dateFormat = DateFormat('MMMM yyyy');
@@ -23,6 +25,7 @@ class SheetRepository {
 
   Future<Spreadsheet?> createSheet({
     required List<Transaction> transactions,
+    required List<Category> categories,
     required ExportType type,
   }) async {
     final authHeaders = await user.authHeaders;
@@ -37,7 +40,7 @@ class SheetRepository {
       final sheets = monthYearTransactions.keys.map((date) {
         final txs = monthYearTransactions[date];
         final rowData = txs?.fold<List<RowData>>([], (value, tx) {
-          value.addAll(exportTransaction(tx, type));
+          value.addAll(exportTransaction(tx,categories, type));
           return value;
         });
 
