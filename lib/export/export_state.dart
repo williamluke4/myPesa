@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:my_pesa/errors.dart';
 
-class ExportState {
+class ExportState extends Equatable {
   const ExportState({
     this.isLoading = false,
     this.error,
@@ -17,6 +18,9 @@ class ExportState {
       error: error ?? this.error,
     );
   }
+
+  @override
+  List<Object?> get props => [error, isLoading];
 }
 
 class ExportedState extends ExportState {
