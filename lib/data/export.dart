@@ -22,9 +22,12 @@ String txTypeToString(Transaction tx) {
 enum ExportType { split, single }
 
 List<RowData> exportTransaction(
-    Transaction tx, List<Category> categories, ExportType type) {
+  Transaction tx,
+  List<Category> categories,
+  ExportType type,
+) {
   Category getCategoryById(String categoryId) {
-    return categories.firstWhere((element) => element.name == categoryId);
+    return categories.firstWhere((element) => element.id == categoryId);
   }
 
   switch (type) {

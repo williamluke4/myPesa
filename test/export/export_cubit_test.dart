@@ -11,8 +11,10 @@ MockSheetRepository mockSheetsRepository = MockSheetRepository();
 void main() {
   group('ExportCubit', () {
     test('check state equality ', () {
-      expect(ExportCubit(sheetRepository: mockSheetsRepository).state,
-          ExportCubit(sheetRepository: mockSheetsRepository).state);
+      expect(
+        ExportCubit(sheetRepository: mockSheetsRepository).state,
+        ExportCubit(sheetRepository: mockSheetsRepository).state,
+      );
     });
 
     blocTest<ExportCubit, ExportState>(
