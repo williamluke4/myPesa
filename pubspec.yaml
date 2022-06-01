@@ -17,7 +17,7 @@ dependencies:
   flutter_sms_inbox: ^1.0.1
   flutter_swipe_action_cell: ^2.2.0
   google_sign_in: ^5.3.0
-  googleapis: ^8.1.0
+  googleapis: ^9.0.0
   hydrated_bloc: ^8.1.0
   intl: ^0.17.0
   json_annotation: ^4.4.0
