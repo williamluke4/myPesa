@@ -38,7 +38,7 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
         await _transactionsRepository.getTransactionsFromMessages();
     // TODO(x): This is not efficient
     for (final tx in state.transactions) {
-      if (tx.categoryId != unCategorizedCategory.id) {
+      if (tx.categoryId != Category.none().id) {
         final idx = transactions.indexWhere((element) => element.ref == tx.ref);
         if (idx != -1) {
           transactions[idx] =

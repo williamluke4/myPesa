@@ -6,22 +6,19 @@ part 'category.g.dart';
 
 Uuid uuid = const Uuid();
 
-Category unCategorizedCategory =
-    Category(name: 'Uncategorized', id: 'dd978c2d-0d0c-4ebf-aa2d-b2032b6eb128');
 Category mpesaTransactionFeeCategory = Category(
   name: 'MPESA Transaction Fee',
   id: '61f82a3c-5e87-4fff-8057-44fa62b52704',
 );
-Category groseriesCategory =
+Category groceriesCategory =
     Category(name: 'Groseries', id: '7d126025-0763-41a1-8279-d42b3ab1a9da');
 
+Category defaultCategory = Category.none();
 List<Category> defaultCategories = [
   mpesaTransactionFeeCategory,
-  groseriesCategory,
-  unCategorizedCategory,
+  groceriesCategory,
+  defaultCategory,
 ];
-Category defaultCategory = unCategorizedCategory;
-
 const schemaVersion = 1;
 
 @JsonSerializable()
@@ -32,9 +29,11 @@ class Category extends Equatable {
   factory Category.fromJson(Map<String, dynamic> json) =>
       _$CategoryFromJson(json);
 
+  factory Category.none() => Category(
+      name: 'Uncategorized', id: 'dd978c2d-0d0c-4ebf-aa2d-b2032b6eb128');
+
   /// Connect the generated [_$CategoryToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
-
   final String id;
   final String name;
   final int schema;

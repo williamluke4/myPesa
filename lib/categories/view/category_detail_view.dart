@@ -88,7 +88,7 @@ List<charts.Series<CategoryData, String>> buildTransactionDataSet(
 ) {
   final groupedByCategory =
       groupBy<Transaction, String>(transactions, (obj) => obj.categoryId)
-        ..remove(unCategorizedCategory.id);
+        ..remove(Category.none().id);
   final categoriesKeys = groupedByCategory.keys.toList();
   var idx = 0;
   final data = categoriesKeys.map((categoryKey) {
