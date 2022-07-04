@@ -29,6 +29,7 @@ class TransactionPage extends StatelessWidget {
         title: const Text('Transaction'),
       ),
       body: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           TransactionDetailWidget(transaction: transaction),
           const Text('All Transactions'),

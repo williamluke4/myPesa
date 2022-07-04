@@ -30,7 +30,9 @@ class Category extends Equatable {
       _$CategoryFromJson(json);
 
   factory Category.none() => Category(
-      name: 'Uncategorized', id: 'dd978c2d-0d0c-4ebf-aa2d-b2032b6eb128');
+        name: 'Uncategorized',
+        id: 'dd978c2d-0d0c-4ebf-aa2d-b2032b6eb128',
+      );
 
   /// Connect the generated [_$CategoryToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$CategoryToJson(this);

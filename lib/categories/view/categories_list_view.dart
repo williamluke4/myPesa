@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
-import 'package:my_pesa/categories/view/categories_pie_view.dart';
 import 'package:my_pesa/categories/view/category_form.dart';
 
 class CategoriesListView extends StatelessWidget {
@@ -42,6 +41,7 @@ class CategoriesListView extends StatelessWidget {
                       context: context,
                       builder: (BuildContext c) {
                         return CategoryForm(
+                          onSubmitted: () => Navigator.pop(c),
                           formKey: _formKey,
                           category: state.categories[idx],
                         );
@@ -51,21 +51,11 @@ class CategoriesListView extends StatelessWidget {
                   color: Colors.green,
                 ),
               ],
-              child: InkWell(
-                onTap: () {
-                  showModalBottomSheet<void>(
-                    context: context,
-                    builder: (BuildContext c) {
-                      return const CategoriesPieChart();
-                    },
-                  );
-                },
-                child: Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Text(
-                    state.categories[idx].name,
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+              child: Padding(
+                padding: const EdgeInsets.all(8),
+                child: Text(
+                  state.categories[idx].name,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
             );

@@ -25,7 +25,7 @@ class TransactionListWidget extends StatelessWidget {
     final categoriesMap = {for (var e in categories) e.id: e};
 
     final dates = groupedByDate.keys.toList();
-    final test = groupedByDate.map((String key, List<Transaction> value) {
+    final datesMap = groupedByDate.map((String key, List<Transaction> value) {
       return MapEntry(
         key,
         groupBy<Transaction, String>(value, (obj) => obj.categoryId),
@@ -37,18 +37,19 @@ class TransactionListWidget extends StatelessWidget {
         onRefresh: () =>
             context.read<TransactionsCubit>().refreshTransactions(),
         child: ListView.builder(
-          itemCount: test.length,
+          itemCount: datesMap.length,
           key: const PageStorageKey<String>('transactions_list_controller'),
           restorationId: 'transactions_list',
           itemBuilder: (context, index) {
-            final categories = test[dates[index]];
+            final date = dates[index];
+            final categories = datesMap[date];
             final categoryKeys = categories?.keys ?? [];
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  dates[index],
-                  style: const TextStyle(fontWeight: FontWeight.bold),
+                  date,
+                  style: const TextStyle(fontWeight: FontWeight.w100),
                 ),
                 ...categoryKeys.map<Column>((key) {
                   final transactions = categories?[key] ?? [];
