@@ -49,35 +49,15 @@ class CategoriesPieChart extends StatelessWidget {
       defaultRenderer: charts.ArcRendererConfig<String>(
         arcWidth: 20,
         arcRendererDecorators: [
-          // charts.ArcLabelDecorator(
-          //   labelPadding: 8,
-          //   outsideLabelStyleSpec: const charts.TextStyleSpec(
-          //     fontSize: 12,
-          //     color: charts.MaterialPalette.white,
-          //   ),
-          // )
+          charts.ArcLabelDecorator(
+            labelPadding: 8,
+            outsideLabelStyleSpec: const charts.TextStyleSpec(
+              fontSize: 12,
+              color: charts.MaterialPalette.white,
+            ),
+          )
         ],
       ),
-      behaviors: [
-        charts.DatumLegend<String>(
-          // Positions for "start" and "end" will be left and right respectively
-          // for widgets with a build context that has directionality ltr.
-          // For rtl, "start" and "end" will be right and left respectively.
-          //
-          // Since this example has directionality of ltr, the legend is
-          // positioned on the right side of the chart.
-          position: charts.BehaviorPosition.bottom,
-          // By default, if the position of the chart is on the left or right of
-          // the chart, [horizontalFirst] is set to false. This means that the
-          // legend entries will grow as new rows first instead of a new column.
-          horizontalFirst: false,
-          // This defines the padding around each legend entry.
-          cellPadding: const EdgeInsets.only(right: 4, bottom: 4),
-          // Set show measures to true to display measures in series legend,
-          // when the datum is selected.
-          showMeasures: true,
-        ),
-      ],
     );
   }
 }

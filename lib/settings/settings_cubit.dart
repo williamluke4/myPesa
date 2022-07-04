@@ -23,13 +23,26 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
   );
 
   Future<void> signInSilently() async {
+    try {
+      await _googleSignIn.signInSilently();
+    } catch (error) {
+      log.d(error);
+      emit(
+        state.copyWith(
+          error: signInError,
+        ),
+      );
+    }
     await _googleSignIn.signInSilently();
   }
 
   Future<void> signin() async {
+    log.i('Trying to signin');
+
     try {
       await _googleSignIn.signIn();
     } catch (error) {
+      log.i(error.toString());
       emit(
         state.copyWith(
           error: signInError,

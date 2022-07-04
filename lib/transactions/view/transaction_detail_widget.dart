@@ -17,102 +17,109 @@ class TransactionDetailWidget extends StatelessWidget {
     final categories = context
         .select<CategoriesCubit, List<Category>>((c) => c.state.categories);
     return Padding(
-      padding: const EdgeInsets.all(5),
+      padding: const EdgeInsets.all(3),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: const EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(transaction.date),
-                    Row(
-                      children: <Widget>[
-                        const Text('Ref: '),
-                        SelectableText(
-                          transaction.ref,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        )
-                      ],
-                    )
-                  ],
-                ),
-              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text('Category'),
+                children: <Widget>[
+                  Text(transaction.date),
                   Row(
-                    children: [
-                      DropdownButton(
-                        // Initial Value
-                        value: categories.firstWhere(
-                          (element) => element.id == transaction.categoryId,
-                          orElse: () => defaultCategory,
-                        ),
-
-                        // Down Arrow Icon
-                        icon: const Icon(Icons.keyboard_arrow_down),
-
-                        // Array list of items
-
-                        items: categories.map((c) {
-                          return DropdownMenuItem(
-                            value: c,
-                            child: Text(c.name),
-                          );
-                        }).toList(),
-                        onChanged: (Category? category) {
-                          if (category != null) {
-                            context.read<TransactionsCubit>().updateTrasaction(
-                                  transaction.ref,
-                                  transaction.copyWith(categoryId: category.id),
-                                );
-                          }
-                        },
-                      ),
-                      IconButton(
-                        onPressed: () {
-                          final _formKey = GlobalKey<FormState>();
-
-                          showModalBottomSheet<void>(
-                            context: context,
-                            builder: (BuildContext c) {
-                              return CategoryForm(
-                                formKey: _formKey,
-                              );
-                            },
-                          );
-                        },
-                        icon: const Icon(Icons.add),
-                      ),
+                    children: <Widget>[
+                      const Text('Ref: '),
+                      SelectableText(
+                        transaction.ref,
+                        style: const TextStyle(fontWeight: FontWeight.bold),
+                      )
                     ],
                   )
                 ],
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Expanded(
-                      child: SelectableText(transaction.recipient),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Expanded(
+                    child: SelectableText(transaction.recipient),
+                  ),
+                  SelectableText(
+                    transaction.amount,
+                    style: TextStyle(
+                      color: transaction.type != TransactionType.IN
+                          ? Colors.red
+                          : Colors.green,
                     ),
-                    SelectableText(
-                      transaction.amount,
-                      style: TextStyle(
-                        color: transaction.type != TransactionType.IN
-                            ? Colors.red
-                            : Colors.green,
-                      ),
-                      textAlign: TextAlign.right,
-                    ),
-                  ],
+                    textAlign: TextAlign.right,
+                  ),
+                ],
+              ),
+              InputDecorator(
+                decoration: InputDecoration(
+                  labelText: 'Category',
+                  suffix: IconButton(
+                    onPressed: () {
+                      final _formKey = GlobalKey<FormState>();
+
+                      showModalBottomSheet<void>(
+                        context: context,
+                        builder: (BuildContext c) {
+                          return CategoryForm(
+                            onSubmitted: () => Navigator.pop(c),
+                            formKey: _formKey,
+                          );
+                        },
+                      );
+                    },
+                    icon: const Icon(Icons.add),
+                  ),
                 ),
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton(
+                    value: categories.firstWhere(
+                      (element) => element.id == transaction.categoryId,
+                      orElse: () => defaultCategory,
+                    ),
+
+                    // Down Arrow Icon
+                    icon: const Icon(Icons.keyboard_arrow_down),
+
+                    // Array list of items
+
+                    items: categories.map((c) {
+                      return DropdownMenuItem(
+                        value: c,
+                        child: Text(c.name),
+                      );
+                    }).toList(),
+                    onChanged: (Category? category) {
+                      if (category != null) {
+                        context.read<TransactionsCubit>().updateTransaction(
+                              transaction.ref,
+                              transaction.copyWith(categoryId: category.id),
+                            );
+                      }
+                    },
+                  ),
+                ),
+                // Initial Value
+              ),
+              TextField(
+                decoration: const InputDecoration(
+                  labelText: 'Notes',
+                ),
+                onSubmitted: (String? value) {
+                  if (value != null) {
+                    context.read<TransactionsCubit>().updateTransaction(
+                          transaction.ref,
+                          transaction.copyWith(notes: value),
+                        );
+                  }
+                },
               ),
             ],
           ),

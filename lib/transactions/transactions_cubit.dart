@@ -14,11 +14,12 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
   final TransactionsRepository _transactionsRepository =
       TransactionsRepository();
 
-  Future<void> updateTrasaction(String ref, Transaction tx) async {
+  Future<void> updateTransaction(String ref, Transaction tx) async {
     final txIdx = state.transactions.indexWhere((tx) => tx.ref == ref);
     if (txIdx != -1) {
       final updatedTransactions = List<Transaction>.from(state.transactions);
       updatedTransactions[txIdx] = tx;
+      log.d('Updated transaction: $tx');
       emit(state.copyWith(transactions: updatedTransactions));
     } else {
       emit(

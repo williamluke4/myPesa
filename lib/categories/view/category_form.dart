@@ -7,15 +7,15 @@ class CategoryForm extends StatelessWidget {
   const CategoryForm({
     Key? key,
     this.category,
+    required this.onSubmitted,
     required this.formKey,
   }) : super(key: key);
 
   final GlobalKey<FormState> formKey;
   final Category? category;
-
+  final void Function() onSubmitted;
   @override
   Widget build(BuildContext context) {
-    final _categoryNameController = TextEditingController(text: category?.name);
     final categories = context
         .select<CategoriesCubit, List<Category>>((c) => c.state.categories);
     return Form(
@@ -26,10 +26,10 @@ class CategoryForm extends StatelessWidget {
           child: Column(
             children: [
               TextFormField(
-                controller: _categoryNameController,
                 decoration: const InputDecoration(
                   labelText: 'Category Name',
                 ),
+                autofocus: true,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a name';
@@ -43,26 +43,23 @@ class CategoryForm extends StatelessWidget {
                   }
                   return null;
                 },
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (formKey.currentState!.validate()) {
-                      if (category != null) {
-                        context.read<CategoriesCubit>().editCategory(
-                              category!.name,
-                              Category(name: _categoryNameController.text),
-                            );
-                      } else {
-                        context.read<CategoriesCubit>().addCategory(
-                              _categoryNameController.text,
-                            );
-                      }
-                    }
-                  },
-                  child: Text(category == null ? 'Add' : 'Update'),
-                ),
+                onFieldSubmitted: (value) {
+                  final isValid = formKey.currentState!.validate();
+                  if (!isValid) {
+                    return;
+                  }
+                  if (category != null) {
+                    context.read<CategoriesCubit>().editCategory(
+                          category!.name,
+                          Category(name: value),
+                        );
+                  } else {
+                    context.read<CategoriesCubit>().addCategory(
+                          value,
+                        );
+                  }
+                  onSubmitted();
+                },
               ),
             ],
           ),

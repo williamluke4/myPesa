@@ -77,6 +77,7 @@ class Transaction extends Equatable {
         recipient,
         balance,
         body,
+        notes,
         dateTime,
         categoryId,
         type
