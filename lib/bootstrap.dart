@@ -11,7 +11,8 @@ import 'package:path_provider/path_provider.dart';
 
 Future<Directory> getConfigDir() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
-  final configDir = Directory(p.join(documentsDirectory.path, 'myPesa'));
+  // Changing this causes updates to lose old data
+  final configDir = Directory(p.join(documentsDirectory.path, 'sarafu'));
   log.d(configDir.path);
   if (configDir.existsSync()) {
     return configDir;
@@ -53,10 +54,12 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
   await runZonedGuarded(
     () async {
       WidgetsFlutterBinding.ensureInitialized();
+      final storageDirectoryPath =
+          kIsWeb ? HydratedStorage.webStorageDirectory : await getConfigDir();
       final storage = await HydratedStorage.build(
-        storageDirectory:
-            kIsWeb ? HydratedStorage.webStorageDirectory : await getConfigDir(),
+        storageDirectory: storageDirectoryPath,
       );
+      log.d(storageDirectoryPath);
       await HydratedBlocOverrides.runZoned(
         () async => runApp(await builder()),
         storage: storage,
