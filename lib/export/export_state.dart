@@ -30,7 +30,8 @@ class ExportedState extends ExportState {
     this.spreadsheetId,
   }) : super(error: error, isLoading: isLoading);
   final String? spreadsheetId;
-
+  String get spreadsheetUrl =>
+      'https://docs.google.com/spreadsheets/d/$spreadsheetId/edit#gid=0';
   @override
   ExportedState copyWith({
     bool? isLoading,

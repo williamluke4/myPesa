@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
+import 'package:my_pesa/data/transactions_repository.dart';
 import 'package:my_pesa/pages/categories_page.dart';
 import 'package:my_pesa/pages/settings_page.dart';
 import 'package:my_pesa/pages/transactions_page.dart';
@@ -11,7 +12,8 @@ class App extends StatelessWidget {
   App({Key? key})
       : settingsCubit = SettingsCubit(),
         categoriesCubit = CategoriesCubit(),
-        transactionsCubit = TransactionsCubit(),
+        transactionsCubit =
+            TransactionsCubit(transactionsRepository: TransactionsRepository()),
         super(key: key);
 
   final SettingsCubit settingsCubit;

@@ -24,11 +24,10 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
   }
 
   Future<void> editCategory(String name, Category category) async {
-    final idx = state.categories.indexWhere((c) => c.name == name);
-    if (idx != -1 &&
-        !state.categories.any((element) => element.name == category.name)) {
+    final idx = state.categories.indexWhere((c) => c.id == category.id);
+    if (idx != -1) {
       final updatedCategories = List<Category>.from(state.categories);
-      updatedCategories[idx] = category;
+      updatedCategories[idx] = updatedCategories[idx].copyWith(name: name);
       emit(
         CategoriesLoaded(
           categories: updatedCategories,
@@ -46,21 +45,33 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
     }
   }
 
-  Future<void> addCategory(String name) async {
+  Future<Category?> addCategory(String name) async {
     log.d('Adding category $name');
     if (name.isEmpty || state.categories.any((c) => c.name == name)) {
-      return;
+      return null;
     }
-    final categories = [...state.categories, Category(name: name.trim())];
+    final category = Category(name: name.trim());
+    final categories = [...state.categories, category];
     emit(
       CategoriesLoaded(
         categories: categories,
         defaultCategory: state.defaultCategory,
       ),
     );
+    return category;
   }
 
-  Future<void> deleteCategory(int idx) async {
+  Category? findCategory(String id) {
+    log.d('Finding category $id');
+    if (id.isEmpty) {
+      return null;
+    }
+    return state.categories.firstWhere((c) => c.id == id);
+  }
+
+  Future<void> deleteCategory(Category category) async {
+    final idx = state.categories.indexWhere((c) => c.id == category.id);
+
     final categories = [...state.categories]..removeAt(idx);
     emit(
       CategoriesLoaded(

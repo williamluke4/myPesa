@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "494460574670",
+    "firebase_url": "https://mypesa-d095d-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "mypesa-d095d",
     "storage_bucket": "mypesa-d095d.appspot.com"
   },
@@ -14,19 +15,48 @@
       },
       "oauth_client": [
         {
-          "client_id": "494460574670-85v7op5b341l3nta32gv5gc9cjk00fot.apps.googleusercontent.com",
+          "client_id": "494460574670-kf1614h32emi1llf49ilkv1fgvs5nrst.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.attobyte.myPesa",
-            "certificate_hash": "90eebb02967eb059139fc34e5867572d5a76e91e"
+            "certificate_hash": "44a7d39cb93176333233ef18ced272a58e424a79"
           }
         },
         {
-          "client_id": "494460574670-utu35m44ph6kdp8n4phmpg5aainfqfdo.apps.googleusercontent.com",
+          "client_id": "494460574670-8qjpdp7bj092l4i6cg6v7imli5e70otk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJbEkMZcGvQbuFt_Pmcw5FkbUOeCl8JnY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "494460574670-8qjpdp7bj092l4i6cg6v7imli5e70otk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:494460574670:android:a2939c2a6bab274d46299f",
+        "android_client_info": {
+          "package_name": "com.attobyte.myPesa.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "494460574670-gdrcb32hjv4h3mb7lgdba48ni1jg8452.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.attobyte.myPesa",
-            "certificate_hash": "3fa1297a8c6b94f599c0bcfcee70d01d13c59f79"
+            "package_name": "com.attobyte.myPesa.dev",
+            "certificate_hash": "44a7d39cb93176333233ef18ced272a58e424a79"
           }
         },
         {

@@ -26,7 +26,7 @@ class CategoriesListView extends StatelessWidget {
                   nestedAction: SwipeNestedAction(title: 'Are you Sure?'),
                   onTap: (CompletionHandler handler) async {
                     await handler(true);
-                    await categoryCubit.deleteCategory(idx);
+                    await categoryCubit.deleteCategory(state.categories[idx]);
                   },
                   color: Colors.redAccent,
                 ),

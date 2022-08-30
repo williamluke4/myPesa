@@ -5,6 +5,7 @@ import 'package:my_pesa/categories/view/category_form.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/transactions/transactions_cubit.dart';
+import 'package:my_pesa/utils/logger.dart';
 
 class TransactionDetailWidget extends StatelessWidget {
   const TransactionDetailWidget({
@@ -108,12 +109,14 @@ class TransactionDetailWidget extends StatelessWidget {
                 ),
                 // Initial Value
               ),
-              TextField(
+              TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Notes',
                 ),
-                onSubmitted: (String? value) {
+                initialValue: transaction.notes,
+                onFieldSubmitted: (String? value) {
                   if (value != null) {
+                    log.d(value);
                     context.read<TransactionsCubit>().updateTransaction(
                           transaction.ref,
                           transaction.copyWith(notes: value),
@@ -121,6 +124,14 @@ class TransactionDetailWidget extends StatelessWidget {
                   }
                 },
               ),
+              TextButton(
+                onPressed: () =>
+                    context.read<TransactionsCubit>().applyCategoryToRecipient(
+                          transaction.recipient,
+                          transaction.categoryId,
+                        ),
+                child: const Text('Apply To All'),
+              )
             ],
           ),
         ),
