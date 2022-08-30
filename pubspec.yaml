@@ -17,6 +17,7 @@ dependencies:
   flutter_sms_inbox: ^1.0.1
   flutter_swipe_action_cell: ^3.0.4
   google_sign_in: ^5.3.3
+  google_sign_in_dartio: ^0.2.1
   googleapis: ^9.1.0
   hydrated_bloc: ^8.1.0
   intl: ^0.17.0
@@ -27,6 +28,7 @@ dependencies:
   permission_handler: ^9.2.0
   provider: ^6.0.3
   settings_ui: ^2.0.2
+  url_launcher: ^6.1.5
   uuid: ^3.0.6
 
 dev_dependencies:

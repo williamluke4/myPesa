@@ -13,6 +13,7 @@ class TransactionsRepository {
   // This class is not meant to be instantiated or extended; this constructor
   // prevents instantiation and extension.
   TransactionsRepository();
+
   Future<List<Transaction>> getTransactionsFromMessages() async {
     final query = SmsQuery();
     final transactions = <Transaction>[];

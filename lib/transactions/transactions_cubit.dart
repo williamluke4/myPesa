@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
@@ -10,9 +11,9 @@ import 'package:permission_handler/permission_handler.dart';
 part 'transactions_state.dart';
 
 class TransactionsCubit extends HydratedCubit<TransactionsState> {
-  TransactionsCubit() : super(const TransactionsState(transactions: []));
-  final TransactionsRepository _transactionsRepository =
-      TransactionsRepository();
+  TransactionsCubit({required this.transactionsRepository})
+      : super(const TransactionsState(transactions: []));
+  final TransactionsRepository transactionsRepository;
 
   Future<void> updateTransaction(String ref, Transaction tx) async {
     final txIdx = state.transactions.indexWhere((tx) => tx.ref == ref);
@@ -30,13 +31,31 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
     }
   }
 
-  Future<void> refreshTransactions() async {
-    if (await Permission.sms.isGranted == false) {
+  Future<void> applyCategoryToRecipient(
+    String recipient,
+    String categoryId,
+  ) async {
+    log.d('Applying $categoryId to all transactions from $recipient');
+
+    final updatedTransactions =
+        List<Transaction>.from(state.transactions).map((e) {
+      if (e.recipient == recipient) {
+        return e.copyWith(categoryId: categoryId);
+      }
+      return e;
+    }).toList();
+    emit(state.copyWith(transactions: updatedTransactions));
+  }
+
+  Future<void> refreshTransactions({
+    @visibleForTesting bool test = false,
+  }) async {
+    if (!test && await Permission.sms.isGranted == false) {
       await Permission.sms.request();
     }
     // Loading of messages
     final transactions =
-        await _transactionsRepository.getTransactionsFromMessages();
+        await transactionsRepository.getTransactionsFromMessages();
     // TODO(x): This is not efficient
     for (final tx in state.transactions) {
       if (tx.categoryId != Category.none().id) {

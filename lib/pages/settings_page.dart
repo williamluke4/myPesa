@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:my_pesa/data/export.dart';
 import 'package:my_pesa/data/sheet_repository.dart';
 import 'package:my_pesa/export/export_cubit.dart';
 import 'package:my_pesa/export/export_screen.dart';
@@ -136,64 +135,16 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: const [
-                        Icon(Icons.outbox),
-                        Padding(
-                          padding: EdgeInsets.all(8),
-                          child: Text('Export Type'),
-                        ),
-                      ],
-                    ),
-                    DropdownButton(
-                      // Initial Value
-                      value: state.exportType,
-
-                      // Down Arrow Icon
-                      icon: const Icon(Icons.keyboard_arrow_down),
-
-                      // Array list of items
-                      items: const [
-                        DropdownMenuItem(
-                          value: ExportType.single,
-                          child: Text('Single'),
-                        ),
-                        DropdownMenuItem(
-                          value: ExportType.split,
-                          child: Text('Split'),
-                        )
-                      ],
-                      // After selecting the desired option,it will
-                      // change button value to selected value
-                      onChanged: (ExportType? newValue) {
-                        if (newValue != null) {
-                          context.read<SettingsCubit>().setExportType(newValue);
-                        }
-                      },
-                    )
-                  ],
-                ),
                 if (user != null)
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      ElevatedButton(
-                        onPressed: () => showModalBottomSheet<Widget>(
-                          context: context,
-                          builder: (context) {
-                            return BlocProvider(
-                              create: (BuildContext context) => ExportCubit(
-                                sheetRepository: SheetRepository(user: user),
-                              ),
-                              child: const ExportView(),
-                            );
-                          },
+                      BlocProvider(
+                        create: (BuildContext context) => ExportCubit(
+                          sheetRepository: SheetRepository(user: user),
                         ),
-                        child: const Text('Export'),
-                      ),
+                        child: const ExportView(),
+                      )
                     ],
                   )
               ],

@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "494460574670",
+    "firebase_url": "https://mypesa-d095d-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "mypesa-d095d",
     "storage_bucket": "mypesa-d095d.appspot.com"
   },
@@ -19,6 +20,14 @@
           "android_info": {
             "package_name": "com.attobyte.myPesa",
             "certificate_hash": "90eebb02967eb059139fc34e5867572d5a76e91e"
+          }
+        },
+        {
+          "client_id": "494460574670-kf1614h32emi1llf49ilkv1fgvs5nrst.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.attobyte.myPesa",
+            "certificate_hash": "44a7d39cb93176333233ef18ced272a58e424a79"
           }
         },
         {
@@ -58,6 +67,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "494460574670-gdrcb32hjv4h3mb7lgdba48ni1jg8452.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.attobyte.myPesa.dev",
+            "certificate_hash": "44a7d39cb93176333233ef18ced272a58e424a79"
+          }
+        },
         {
           "client_id": "494460574670-8qjpdp7bj092l4i6cg6v7imli5e70otk.apps.googleusercontent.com",
           "client_type": 3

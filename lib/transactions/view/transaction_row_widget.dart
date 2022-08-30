@@ -10,7 +10,9 @@ class TransactionRowWidget extends StatelessWidget {
     required Key key,
     required this.transaction,
     required this.replace,
+    this.selected = false,
   }) : super(key: key);
+  final bool selected;
   final Transaction transaction;
   final bool replace;
   @override

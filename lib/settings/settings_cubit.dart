@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
-import 'package:my_pesa/data/export.dart';
 import 'package:my_pesa/errors.dart';
 import 'package:my_pesa/settings/settings_state.dart';
 import 'package:my_pesa/utils/logger.dart';
@@ -9,6 +8,7 @@ import 'package:my_pesa/utils/logger.dart';
 class SettingsCubit extends HydratedCubit<SettingsState> {
   SettingsCubit() : super(const SettingsState()) {
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      log.i('onCurrentUserChanged: $account');
       if (account == null && state.user != null) {
         // ignore: avoid_redundant_argument_values
         emit(state.signout());
@@ -40,9 +40,16 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
     log.i('Trying to signin');
 
     try {
+      final signedIn = await _googleSignIn.isSignedIn();
+      if (signedIn) {
+        await _googleSignIn.signOut();
+        log.i('Reseting google auth');
+      }
       await _googleSignIn.signIn();
     } catch (error) {
-      log.i(error.toString());
+      log
+        ..e(error)
+        ..i(error.toString());
       emit(
         state.copyWith(
           error: signInError,
@@ -57,10 +64,6 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
 
   Future<void> signout() async {
     await _googleSignIn.disconnect();
-  }
-
-  Future<void> setExportType(ExportType exportType) async {
-    emit(state.copyWith(exportType: exportType));
   }
 
   @override
