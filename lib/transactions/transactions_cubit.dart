@@ -58,11 +58,11 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
         await transactionsRepository.getTransactionsFromMessages();
     // TODO(x): This is not efficient
     for (final tx in state.transactions) {
-      if (tx.categoryId != Category.none().id) {
+      if (tx.categoryId != Category.none().id || tx.notes.isNotEmpty) {
         final idx = transactions.indexWhere((element) => element.ref == tx.ref);
         if (idx != -1) {
-          transactions[idx] =
-              transactions[idx].copyWith(categoryId: tx.categoryId);
+          transactions[idx] = transactions[idx]
+              .copyWith(categoryId: tx.categoryId, notes: tx.notes);
         }
       }
     }
