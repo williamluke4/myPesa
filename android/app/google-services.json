@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "494460574670-k1hsj6thgu862bpvut1hh3nn7rp8bk82.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.attobyte.myPesa",
+            "certificate_hash": "9c65fcf8974322e92b11380700fb81dcac72b8f3"
+          }
+        },
+        {
           "client_id": "494460574670-kf1614h32emi1llf49ilkv1fgvs5nrst.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
