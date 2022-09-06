@@ -2,6 +2,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/sheets/v4.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
+import 'package:multiple_result/multiple_result.dart';
 import 'package:my_pesa/data/export.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
@@ -61,7 +62,7 @@ class SheetRepository {
     return sheetsAPI;
   }
 
-  Future<Spreadsheet?> createSheet({
+  Future<Result<Exception, Spreadsheet>> createSheet({
     required List<Transaction> transactions,
     required List<Category> categories,
   }) async {
@@ -80,17 +81,21 @@ class SheetRepository {
           )
         ],
       );
+      final now = DateTime.now();
+      final formatter = DateFormat('yyyy-MM-dd');
+      final formattedDate = formatter.format(now);
 
       final spreadsheet = await sheetsAPI.spreadsheets.create(
         Spreadsheet(
-          properties: SpreadsheetProperties(title: 'myPesa'),
+          properties:
+              SpreadsheetProperties(title: 'myPesa-export-$formattedDate'),
           sheets: [sheet],
         ),
       );
-      return spreadsheet;
+      return Success(spreadsheet);
     } catch (e) {
       log.e(e.toString());
-      rethrow;
+      return Error(Exception(e));
     }
   }
 }

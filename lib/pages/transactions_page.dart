@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/pages/transaction_page.dart';
 import 'package:my_pesa/transactions/transactions_cubit.dart';
 import 'package:my_pesa/transactions/view/transaction_list_widget.dart';
 
@@ -29,7 +30,17 @@ class TransactionsPage extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: TransactionListWidget(
-                replace: false,
+                onTransactionTap: (tx) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute<Widget>(
+                      builder: (context) => TransactionPage(
+                        key: key,
+                        txRef: tx.ref,
+                      ),
+                    ),
+                  );
+                },
                 transactions: state.transactions,
               ),
             ),

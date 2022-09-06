@@ -43,6 +43,7 @@ class ExportCubit extends HydratedCubit<ExportState> {
     List<Transaction> txs,
     List<Category> categories,
   ) async {
+    emit(state.copyWith(isLoading: true));
     if (txs.isEmpty) {
       emit(
         state.copyWith(
@@ -52,16 +53,15 @@ class ExportCubit extends HydratedCubit<ExportState> {
       );
       return;
     }
-
-    emit(state.copyWith(isLoading: true));
-    final spreadsheet = await sheetRepository.createSheet(
+    final created = await sheetRepository.createSheet(
       transactions: txs,
       categories: categories,
     );
-    if (spreadsheet != null) {
+
+    if (created.isSuccess() && created.getSuccess() != null) {
       emit(
         ExportedState(
-          spreadsheetId: spreadsheet.spreadsheetId,
+          spreadsheetId: created.getSuccess()!.spreadsheetId,
         ),
       );
     } else {

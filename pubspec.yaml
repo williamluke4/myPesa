@@ -5,6 +5,7 @@ description: Lets you View and Export MPESA Transactions
 environment:
   sdk: ">=2.17.0-266.0.dev <3.1.0"
 dependencies:
+
   basic_utils: ^4.2.2
   bloc: ^8.0.3
   charts_flutter: ^0.12.0
@@ -24,9 +25,11 @@ dependencies:
   json_annotation: ^4.5.0
   json_serializable: ^6.2.0
   logger: ^1.1.0
+  multiple_result: ^1.0.4
   path_provider: ^2.0.11
   permission_handler: ^9.2.0
   provider: ^6.0.3
+  sentry_flutter: ^6.9.1
   settings_ui: ^2.0.2
   url_launcher: ^6.1.5
   uuid: ^3.0.6
