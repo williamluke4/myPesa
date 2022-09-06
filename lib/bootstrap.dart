@@ -8,6 +8,7 @@ import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:my_pesa/utils/logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 Future<Directory> getConfigDir() async {
   final documentsDirectory = await getApplicationDocumentsDirectory();
@@ -51,21 +52,32 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
           '1022854879658-mlt4j7plt9uogtjch9uh28nqjquf5sa9.apps.googleusercontent.com',
     );
   }
-  await runZonedGuarded(
-    () async {
-      WidgetsFlutterBinding.ensureInitialized();
-      final storageDirectoryPath =
-          kIsWeb ? HydratedStorage.webStorageDirectory : await getConfigDir();
-      final storage = await HydratedStorage.build(
-        storageDirectory: storageDirectoryPath,
-      );
-      log.d(storageDirectoryPath);
-      await HydratedBlocOverrides.runZoned(
-        () async => runApp(await builder()),
-        storage: storage,
-        blocObserver: AppBlocObserver(),
-      );
+  await SentryFlutter.init(
+    (options) {
+      options
+        ..dsn =
+            'https://2b4cc6cc552e4ff19f624690c6785a4a@o1394110.ingest.sentry.io/6716041'
+        // Set tracesSampleRate to 1.0 to capture 100% of transactions for
+        // performance monitoring.
+        // Adjusting this value in production.
+        ..tracesSampleRate = 1.0;
     },
-    (error, stackTrace) => log.e(error.toString(), [stackTrace]),
+    appRunner: () => runZonedGuarded(
+      () async {
+        WidgetsFlutterBinding.ensureInitialized();
+        final storageDirectoryPath =
+            kIsWeb ? HydratedStorage.webStorageDirectory : await getConfigDir();
+        final storage = await HydratedStorage.build(
+          storageDirectory: storageDirectoryPath,
+        );
+        log.d(storageDirectoryPath);
+        await HydratedBlocOverrides.runZoned(
+          () async => runApp(await builder()),
+          storage: storage,
+          blocObserver: AppBlocObserver(),
+        );
+      },
+      (error, stackTrace) => log.e(error.toString(), [stackTrace]),
+    ),
   );
 }

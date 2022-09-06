@@ -36,7 +36,17 @@ class TransactionPage extends StatelessWidget {
           Expanded(
             child: TransactionListWidget(
               transactions: filteredTransactions,
-              replace: true,
+              onTransactionTap: (tx) {
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute<Widget>(
+                    builder: (context) => TransactionPage(
+                      key: key,
+                      txRef: tx.ref,
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

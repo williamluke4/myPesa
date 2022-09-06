@@ -11,10 +11,11 @@ class TransactionListWidget extends StatelessWidget {
   const TransactionListWidget({
     Key? key,
     required this.transactions,
-    required this.replace,
+    required this.onTransactionTap,
   }) : super(key: key);
   final List<Transaction> transactions;
-  final bool replace;
+
+  final void Function(Transaction transaction)? onTransactionTap;
   @override
   Widget build(BuildContext context) {
     final groupedByDate =
@@ -65,7 +66,7 @@ class TransactionListWidget extends StatelessWidget {
                         (tx) => TransactionRowWidget(
                           key: Key(tx.ref),
                           transaction: tx,
-                          replace: replace,
+                          onTap: onTransactionTap,
                         ),
                       ),
                     ],

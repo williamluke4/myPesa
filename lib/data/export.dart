@@ -36,10 +36,10 @@ final List<String> transactionHeaders = [
   'Date',
   'Ref',
   'Recipient',
-  'Amount',
+  'In',
+  'Out',
   'TxFee',
   'Category',
-  'CategoryID',
   'Balance',
   'Notes'
 ];
@@ -60,10 +60,12 @@ List<RowData> exportTransaction(Transaction tx, List<Category> categories) {
         cell(stringValue: tx.date),
         cell(stringValue: tx.ref),
         cell(stringValue: tx.recipient),
-        cell(stringValue: '${txTypeToString(tx)}${tx.amount}'),
+        // In
+        cell(stringValue: tx.type == TransactionType.IN ? tx.amount : ''),
+        // Out
+        cell(stringValue: tx.type == TransactionType.OUT ? tx.amount : ''),
         cell(stringValue: tx.txCost),
         cell(stringValue: getCategoryById(tx.categoryId).name),
-        cell(stringValue: tx.categoryId),
         cell(stringValue: tx.balance),
         cell(stringValue: tx.notes),
         if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
