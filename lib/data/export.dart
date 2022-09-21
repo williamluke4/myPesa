@@ -61,12 +61,20 @@ List<RowData> exportTransaction(Transaction tx, List<Category> categories) {
         cell(stringValue: tx.ref),
         cell(stringValue: tx.recipient),
         // In
-        cell(stringValue: tx.type == TransactionType.IN ? tx.amount : ''),
+        cell(
+          stringValue: tx.type == TransactionType.IN
+              ? tx.amount.replaceAll(',', '')
+              : '',
+        ),
         // Out
-        cell(stringValue: tx.type == TransactionType.OUT ? tx.amount : ''),
+        cell(
+          stringValue: tx.type == TransactionType.OUT
+              ? tx.amount.replaceAll(',', '')
+              : '',
+        ),
         cell(stringValue: tx.txCost),
         cell(stringValue: getCategoryById(tx.categoryId).name),
-        cell(stringValue: tx.balance),
+        cell(stringValue: tx.balance.replaceAll(',', '')),
         cell(stringValue: tx.notes),
         if (tx.type == TransactionType.UNKNOWN) cell(stringValue: tx.body)
       ],

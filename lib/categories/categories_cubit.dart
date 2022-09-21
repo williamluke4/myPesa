@@ -70,6 +70,16 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
   }
 
   Future<void> deleteCategory(Category category) async {
+    if (category.id == Category.none().id) {
+      emit(
+        CategoriesLoaded(
+          categories: state.categories,
+          defaultCategory: state.defaultCategory,
+          error: notAllowedToDeleteError,
+        ),
+      );
+      return;
+    }
     final idx = state.categories.indexWhere((c) => c.id == category.id);
 
     final categories = [...state.categories]..removeAt(idx);

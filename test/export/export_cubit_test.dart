@@ -20,7 +20,10 @@ void main() {
       'emits [error: noTransactionsError] when there are no transactions',
       build: () => ExportCubit(sheetRepository: mockSheetsRepository),
       act: (cubit) => cubit.exportToGoogleSheets([], []),
-      expect: () => [ExportState(error: noTransactionsError)],
+      expect: () => [
+        const ExportState(isLoading: true),
+        ExportState(error: noTransactionsError)
+      ],
     );
   });
 }

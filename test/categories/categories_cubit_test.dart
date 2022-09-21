@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
+import 'package:my_pesa/errors.dart';
 
 import '../helpers/hydrated_bloc.dart';
 
@@ -30,7 +31,7 @@ void main() {
       expect(
         categoriesCubit1.state,
         CategoriesLoaded(
-          categories: [...defaultCategories, c1!, c2!],
+          categories: [c1!, c2!],
           defaultCategory: defaultCategory,
         ),
       );
@@ -41,6 +42,17 @@ void main() {
         categoriesCubit1.state,
       );
     });
+    test('unable to delete default', () async {
+      await categoriesCubit1.deleteCategory(Category.none());
+      expect(
+        categoriesCubit1.state,
+        CategoriesLoaded(
+          error: notAllowedToDeleteError,
+          categories: categoriesCubit1.state.categories,
+          defaultCategory: defaultCategory,
+        ),
+      );
+    });
     group('operations', () {
       test('crud', () async {
         // Add
@@ -49,7 +61,7 @@ void main() {
         expect(
           categoriesCubit1.state,
           CategoriesLoaded(
-            categories: [...defaultCategories, c1!, c2!],
+            categories: [c1!, c2!],
             defaultCategory: defaultCategory,
           ),
         );
@@ -59,7 +71,7 @@ void main() {
         expect(
           categoriesCubit1.state,
           CategoriesLoaded(
-            categories: [...defaultCategories, c2],
+            categories: [c2],
             defaultCategory: defaultCategory,
           ),
         );

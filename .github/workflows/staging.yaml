@@ -1,0 +1,56 @@
+name: my_pesa
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  test:
+    uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
+    with:
+      flutter_channel: beta
+
+  publish:
+    # Only Run on tags
+    runs-on: "ubuntu-latest"
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-java@v2
+        with:
+          distribution: "zulu"
+          java-version: "11"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: "beta" # or: 'beta' or 'master'
+          cache: true
+          cache-key: flutter # optional, change this to force refresh cache
+          cache-path: ${{ runner.tool_cache }}/flutter # optional, change this to specify the cache path
+      - run: flutter pub get
+      - run: flutter test
+      # Setup Keystore ANDROID_KEYSTORE=(openssl base64 -A -in my.keystore > base64)
+      - name: Setup Keystore
+        shell: bash
+        env:
+          ANDROID_KEYSTORE: ${{secrets.ANDROID_KEYSTORE}}
+          KEYSTORE_PASSWORD: ${{secrets.KEYSTORE_PASSWORD}}
+          ALIAS_NAME: ${{secrets.ALIAS_NAME}}
+          KEY_PASSWORD: ${{secrets.KEY_PASSWORD}}
+        run: |
+          sh ./.github/workflows/scripts/setup_keystore.sh
+
+      # Build
+      - name: Build APK
+        run: flutter build apk --flavor staging -t ./lib/main_staging.dart
+
+      - name: Build AppBundle
+        run: flutter build appbundle  --flavor staging -t ./lib/main_staging.dart
+
+      - name: Publish
+        uses: softprops/action-gh-release@v1
+        with:
+          prerelease: true
+          name: Staging
+          files: |
+            build/app/outputs/bundle/productionRelease/app-staging-release.aab
+            build/app/outputs/flutter-apk/app-staging-release.apk
