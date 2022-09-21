@@ -1,16 +1,69 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/data/sheet_repository.dart';
 import 'package:my_pesa/errors.dart';
 import 'package:my_pesa/export/export_state.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ExportCubit extends HydratedCubit<ExportState> {
-  ExportCubit({required this.sheetRepository}) : super(const ExportState());
-  SheetRepository sheetRepository;
+  ExportCubit({this.sheetRepository}) : super(const ExportState());
+  SheetRepository? sheetRepository;
+
   Future<void> remoteSheetId() async {
     emit(const ExportState());
+  }
+
+  Future<void> backup(
+    List<Transaction> txs,
+    List<Category> categories,
+  ) async {
+    emit(state.copyWith(isLoading: true));
+    if (!Platform.isAndroid) {
+      // ignore: only_throw_errors
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: const UserError(message: 'Only Supported on Android'),
+        ),
+      );
+      return;
+    }
+    Directory? directory;
+    directory = await getExternalStorageDirectory();
+
+    if (directory == null || !directory.existsSync()) {
+      state.copyWith(
+        isLoading: false,
+        error: const UserError(message: 'Could not find downloads directory'),
+      );
+      return;
+    }
+
+    final data = jsonEncode(
+        {'transactions': txs, 'categories': categories, 'version': 1});
+    final now = DateTime.now();
+    final formatter = DateFormat('yyyy-MM-dd');
+    final formattedDate = formatter.format(now);
+    final file = File('${directory.path}/myPesa-backup-$formattedDate.json');
+    if (file.existsSync()) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: UserError(message: 'File Already Exists: ${file.path}'),
+        ),
+      );
+      return;
+    }
+    await file.create(recursive: true);
+    await file.writeAsString(data);
+    emit(state.copyWith(isLoading: false));
+    // url_launcher -> file:<path>
   }
 
   Future<void> openSheet() async {
@@ -30,16 +83,18 @@ class ExportCubit extends HydratedCubit<ExportState> {
   }
 
   Future<void> readTransactions(String spreadsheetId) async {
-    await sheetRepository.getTransactionsFromSheet(
-      spreadsheetId: spreadsheetId,
-    );
+    if (sheetRepository != null) {
+      await sheetRepository!.getTransactionsFromSheet(
+        spreadsheetId: spreadsheetId,
+      );
+    }
   }
 
   Future<void> setSpreadsheetId(String spreadsheetId) async {
     return emit(ExportedState(spreadsheetId: spreadsheetId));
   }
 
-  Future<void> createAndExport(
+  Future<void> exportToGoogleSheets(
     List<Transaction> txs,
     List<Category> categories,
   ) async {
@@ -53,7 +108,16 @@ class ExportCubit extends HydratedCubit<ExportState> {
       );
       return;
     }
-    final created = await sheetRepository.createSheet(
+    if (sheetRepository == null) {
+      emit(
+        state.copyWith(
+          isLoading: false,
+          error: const UserError(message: 'You must be signed In'),
+        ),
+      );
+      return;
+    }
+    final created = await sheetRepository!.createSheet(
       transactions: txs,
       categories: categories,
     );

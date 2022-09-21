@@ -32,61 +32,37 @@ class ExportView extends StatelessWidget {
         final categories = context.read<CategoriesCubit>().state.categories;
         if (state.isLoading) {
           return const CircularProgressIndicator.adaptive();
-        }
-        if (state is ExportedState) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              ElevatedButton(
-                onPressed: () {
-                  context.read<ExportCubit>().openSheet();
-                },
-                child: const Text('Open Spreadsheet'),
+        } else {
+          return Column(
+            children: [
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed:
+                        (state is ExportedState && state.spreadsheetId != null)
+                            ? () {
+                                context.read<ExportCubit>().openSheet();
+                              }
+                            : null,
+                    child: const Text('Open Spreadsheet'),
+                  ),
+                  ElevatedButton(
+                    onPressed: () => context
+                        .read<ExportCubit>()
+                        .exportToGoogleSheets(transactions, categories),
+                    child: const Text('Export to Google Sheets'),
+                  ),
+                ],
               ),
-              const ElevatedButton(
-                onPressed: null,
-                child: Text('Sync'),
-              ),
               ElevatedButton(
-                onPressed: () {
-                  context.read<ExportCubit>().remoteSheetId();
-                },
-                child: const Text('Clear'),
+                onPressed: () => context
+                    .read<ExportCubit>()
+                    .backup(transactions, categories),
+                child: const Text('Backup'),
               ),
             ],
           );
         }
-        return Row(
-          children: <Widget>[
-            ElevatedButton(
-              onPressed: () {
-                showBottomSheet<Widget>(
-                  context: context,
-                  builder: (c) {
-                    return TextField(
-                      onSubmitted: (value) {
-                        context.read<ExportCubit>().setSpreadsheetId(value);
-                        Navigator.pop(context);
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Spreadsheet ID',
-                      ),
-                    );
-                  },
-                );
-              },
-              child: const Text('Enter Spreadsheet ID'),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                context
-                    .read<ExportCubit>()
-                    .createAndExport(transactions, categories);
-              },
-              child: const Text('Create Spreadsheet'),
-            ),
-          ],
-        );
       },
     );
   }

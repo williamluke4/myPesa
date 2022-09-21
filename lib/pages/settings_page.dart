@@ -135,18 +135,18 @@ class SettingsPage extends StatelessWidget {
                     ),
                   ],
                 ),
-                if (user != null)
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      BlocProvider(
-                        create: (BuildContext context) => ExportCubit(
-                          sheetRepository: SheetRepository(user: user),
-                        ),
-                        child: const ExportView(),
-                      )
-                    ],
-                  )
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    BlocProvider(
+                      create: (BuildContext context) => ExportCubit(
+                        sheetRepository:
+                            user != null ? SheetRepository(user: user) : null,
+                      ),
+                      child: const ExportView(),
+                    )
+                  ],
+                )
               ],
             ),
           );
