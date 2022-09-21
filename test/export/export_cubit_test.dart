@@ -17,9 +17,9 @@ void main() {
     });
 
     blocTest<ExportCubit, ExportState>(
-      'emits [themeMode: ThemeMode.dark] when setThemeMode',
+      'emits [error: noTransactionsError] when there are no transactions',
       build: () => ExportCubit(sheetRepository: mockSheetsRepository),
-      act: (cubit) => cubit.createAndExport([], []),
+      act: (cubit) => cubit.exportToGoogleSheets([], []),
       expect: () => [ExportState(error: noTransactionsError)],
     );
   });
