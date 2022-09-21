@@ -44,7 +44,7 @@ class ExportView extends StatelessWidget {
                                 context.read<ExportCubit>().openSheet();
                               }
                             : null,
-                    child: const Text('Open Spreadsheet'),
+                    child: const Text('Open Last Export'),
                   ),
                   ElevatedButton(
                     onPressed: () => context
@@ -54,11 +54,19 @@ class ExportView extends StatelessWidget {
                   ),
                 ],
               ),
-              ElevatedButton(
-                onPressed: () => context
-                    .read<ExportCubit>()
-                    .backup(transactions, categories),
-                child: const Text('Backup'),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => context
+                        .read<ExportCubit>()
+                        .backup(transactions, categories),
+                    child: const Text('Backup'),
+                  ),
+                  const ElevatedButton(
+                    onPressed: null,
+                    child: Text('Import'),
+                  ),
+                ],
               ),
             ],
           );

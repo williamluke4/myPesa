@@ -46,11 +46,12 @@ class ExportCubit extends HydratedCubit<ExportState> {
     }
 
     final data = jsonEncode(
-        {'transactions': txs, 'categories': categories, 'version': 1});
+      {'transactions': txs, 'categories': categories, 'version': 1},
+    );
     final now = DateTime.now();
     final formatter = DateFormat('yyyy-MM-dd');
     final formattedDate = formatter.format(now);
-    final file = File('${directory.path}/myPesa-backup-$formattedDate.json');
+    final file = File('${directory.path}/mypesa-backup-$formattedDate.json');
     if (file.existsSync()) {
       emit(
         state.copyWith(
