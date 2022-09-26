@@ -39,7 +39,10 @@ class ChartData {
 
 class TransactionsInMonth {
   TransactionsInMonth(
-      this.dateTime, Map<String, Category> categoriesMap, this.transactions) {
+    this.dateTime,
+    Map<String, Category> categoriesMap,
+    this.transactions,
+  ) {
     for (final entry in categoriesMap.entries) {
       final total = transactions
           .where((element) => element.categoryId == entry.key)
@@ -53,7 +56,7 @@ class TransactionsInMonth {
   }
 
   final DateTime dateTime;
-  final Map<String, int> categoriesTotal = Map();
+  final Map<String, int> categoriesTotal = {};
   final List<Transaction> transactions;
 }
 
@@ -61,9 +64,7 @@ List<ChartSeries<TransactionsInMonth, DateTime>> buildLineChart(
   List<Transaction> transactions,
   Map<String, Category> categoriesMap,
 ) {
-  final now = DateTime.now();
   final series = <ChartSeries<TransactionsInMonth, DateTime>>[];
-  for (final entry in categoriesMap.entries) {}
   final filteredTxs = transactions
       .where((tx) => tx.dateTime != null && tx.type == TransactionType.OUT);
 
@@ -71,20 +72,22 @@ List<ChartSeries<TransactionsInMonth, DateTime>> buildLineChart(
 
   groupBy<Transaction, DateTime>(
     filteredTxs,
-    (obj) => DateTime(obj.dateTime!.year, obj.dateTime!.month, 1),
+    (obj) => DateTime(obj.dateTime!.year, obj.dateTime!.month),
   ).forEach((yearMonth, txs) {
     data.add(TransactionsInMonth(yearMonth, categoriesMap, txs));
   });
   for (final entry in categoriesMap.entries) {
-    series.add(StackedAreaSeries(
-      dataSource: data,
-      color: colorFrom(entry.value.name),
-      groupName: entry.value.name,
-      name: entry.value.name,
-      xValueMapper: (TransactionsInMonth data, _) => data.dateTime,
-      yValueMapper: (TransactionsInMonth data, _) =>
-          data.categoriesTotal[entry.key],
-    ));
+    series.add(
+      StackedAreaSeries(
+        dataSource: data,
+        color: colorFrom(entry.value.name),
+        groupName: entry.value.name,
+        name: entry.value.name,
+        xValueMapper: (TransactionsInMonth data, _) => data.dateTime,
+        yValueMapper: (TransactionsInMonth data, _) =>
+            data.categoriesTotal[entry.key],
+      ),
+    );
   }
 
   return series;

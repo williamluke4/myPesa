@@ -28,8 +28,9 @@ class InsightsPage extends StatelessWidget {
         title: const Text('Insights'),
       ),
       body: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: StackedLineChart(buildLineChart(transactions, categoriesMap))),
+        padding: const EdgeInsets.all(8),
+        child: StackedLineChart(buildLineChart(transactions, categoriesMap)),
+      ),
     );
   }
 }

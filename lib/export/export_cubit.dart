@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:my_pesa/data/models/category.dart';
@@ -12,8 +13,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ExportCubit extends HydratedCubit<ExportState> {
-  ExportCubit({this.sheetRepository}) : super(const ExportState());
-  SheetRepository? sheetRepository;
+  ExportCubit({required this.sheetRepository}) : super(const ExportState());
+  SheetRepository sheetRepository;
 
   Future<void> remoteSheetId() async {
     emit(const ExportState());
@@ -83,12 +84,14 @@ class ExportCubit extends HydratedCubit<ExportState> {
     }
   }
 
-  Future<void> readTransactions(String spreadsheetId) async {
-    if (sheetRepository != null) {
-      await sheetRepository!.getTransactionsFromSheet(
-        spreadsheetId: spreadsheetId,
-      );
-    }
+  Future<void> readTransactions(
+    GoogleSignInAccount user,
+    String spreadsheetId,
+  ) async {
+    await sheetRepository.getTransactionsFromSheet(
+      user: user,
+      spreadsheetId: spreadsheetId,
+    );
   }
 
   Future<void> setSpreadsheetId(String spreadsheetId) async {
@@ -96,6 +99,7 @@ class ExportCubit extends HydratedCubit<ExportState> {
   }
 
   Future<void> exportToGoogleSheets(
+    GoogleSignInAccount user,
     List<Transaction> txs,
     List<Category> categories,
   ) async {
@@ -109,16 +113,8 @@ class ExportCubit extends HydratedCubit<ExportState> {
       );
       return;
     }
-    if (sheetRepository == null) {
-      emit(
-        state.copyWith(
-          isLoading: false,
-          error: const UserError(message: 'You must be signed In'),
-        ),
-      );
-      return;
-    }
-    final created = await sheetRepository!.createSheet(
+    final created = await sheetRepository.createSheet(
+      user: user,
       transactions: txs,
       categories: categories,
     );
@@ -127,6 +123,7 @@ class ExportCubit extends HydratedCubit<ExportState> {
       emit(
         ExportedState(
           spreadsheetId: created.getSuccess()!.spreadsheetId,
+          success: 'Export Success',
         ),
       );
     } else {

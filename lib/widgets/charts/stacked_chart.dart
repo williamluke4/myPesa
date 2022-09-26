@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:my_pesa/utils/charts.dart';
 
 class StackedBarChart extends StatelessWidget {
-  StackedBarChart(this.seriesList, {this.animate = false});
+  const StackedBarChart(this.seriesList, {super.key, this.animate = false});
   final List<charts.Series<CategoryData, String>> seriesList;
   final bool animate;
 
@@ -27,7 +27,7 @@ class StackedBarChart extends StatelessWidget {
           horizontalFirst: false,
           desiredMaxRows: 5,
           showMeasures: true,
-          cellPadding: new EdgeInsets.only(right: 2.0, bottom: 4.0),
+          cellPadding: const EdgeInsets.only(right: 2, bottom: 4),
         )
       ],
     );

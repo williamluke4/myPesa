@@ -12,7 +12,7 @@ class CategoriesPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Categories'),
       ),
-      body: CategoriesListView(),
+      body: const CategoriesListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final _formKey = GlobalKey<FormState>();

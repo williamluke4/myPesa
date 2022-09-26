@@ -37,13 +37,12 @@ List<charts.Series<CategoryData, String>> buildPieChartDataSet(
   ];
 }
 
-
 List<charts.Series<CategoryData, String>> buildChartSeries(
   List<Transaction> transactions,
   Map<String, Category> categoriesMap,
 ) {
   final now = DateTime.now();
-  final from = DateTime(now.year, now.month - 3, 1);
+  final from = DateTime(now.year, now.month - 3);
   final formatter = DateFormat('MMM y');
   final series = <charts.Series<CategoryData, String>>[];
   final filteredTxs = transactions
