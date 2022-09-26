@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:my_pesa/categories/view/categories_list_view.dart';
-import 'package:my_pesa/categories/view/categories_pie_view.dart';
 import 'package:my_pesa/categories/view/category_form.dart';
 
 class CategoriesPage extends StatelessWidget {
@@ -13,16 +12,7 @@ class CategoriesPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Categories'),
       ),
-      body: Column(
-        children: [
-          Container(
-            height: 200,
-            padding: const EdgeInsets.all(8),
-            child: const CategoriesPieChart(),
-          ),
-          const Expanded(child: CategoriesListView()),
-        ],
-      ),
+      body: CategoriesListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           final _formKey = GlobalKey<FormState>();

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/data/transactions_repository.dart';
 import 'package:my_pesa/pages/categories_page.dart';
+// import 'package:my_pesa/pages/insights_page.dart';
 import 'package:my_pesa/pages/settings_page.dart';
 import 'package:my_pesa/pages/transactions_page.dart';
 import 'package:my_pesa/settings/settings_cubit.dart';
@@ -80,6 +81,10 @@ class HomeState extends State<Home> {
       icon: Icon(Icons.home),
       label: 'Transactions',
     ),
+    // BottomNavigationBarItem(
+    //   icon: Icon(Icons.data_exploration),
+    //   label: 'Insights',
+    // ),
     BottomNavigationBarItem(
       icon: Icon(Icons.category),
       label: 'Categories',
@@ -101,8 +106,7 @@ class HomeState extends State<Home> {
             });
           },
           controller: _pageController,
-          physics:
-              _currentIndex == 1 ? const NeverScrollableScrollPhysics() : null,
+          physics: const NeverScrollableScrollPhysics(),
           children: const [
             TransactionsPage(),
             CategoriesPage(),

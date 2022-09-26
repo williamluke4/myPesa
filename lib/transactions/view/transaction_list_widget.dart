@@ -45,34 +45,37 @@ class TransactionListWidget extends StatelessWidget {
             final date = dates[index];
             final categories = datesMap[date];
             final categoryKeys = categories?.keys ?? [];
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Text(
-                  date,
-                  style: const TextStyle(fontWeight: FontWeight.w100),
-                ),
-                ...categoryKeys.map<Column>((key) {
-                  final transactions = categories?[key] ?? [];
-                  return Column(
-                    children: [
-                      Chip(
-                        label: Text(
-                          categoriesMap[key]?.name ?? '',
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+            return Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8.0, 0, 0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(
+                    textAlign: TextAlign.center,
+                    date,
+                  ),
+                  ...categoryKeys.map<Column>((key) {
+                    final transactions = categories?[key] ?? [];
+                    return Column(
+                      children: [
+                        Chip(
+                          label: Text(
+                            categoriesMap[key]?.name ?? '',
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
-                      ),
-                      ...transactions.map<TransactionRowWidget>(
-                        (tx) => TransactionRowWidget(
-                          key: Key(tx.ref),
-                          transaction: tx,
-                          onTap: onTransactionTap,
+                        ...transactions.map<TransactionRowWidget>(
+                          (tx) => TransactionRowWidget(
+                            key: Key(tx.ref),
+                            transaction: tx,
+                            onTap: onTransactionTap,
+                          ),
                         ),
-                      ),
-                    ],
-                  );
-                })
-              ],
+                      ],
+                    );
+                  })
+                ],
+              ),
             );
           },
         ),

@@ -26,6 +26,7 @@ class TransactionRowWidget extends StatelessWidget {
               flex: 4,
               child: Text(
                 transaction.recipient,
+                style: const TextStyle(fontWeight: FontWeight.w100),
               ),
             ),
             Expanded(
