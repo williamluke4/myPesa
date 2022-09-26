@@ -71,7 +71,7 @@ void main() {
         expect(
           categoriesCubit1.state,
           CategoriesLoaded(
-            categories: [...defaultCategories,c2],
+            categories: [...defaultCategories, c2],
             defaultCategory: defaultCategory,
           ),
         );
