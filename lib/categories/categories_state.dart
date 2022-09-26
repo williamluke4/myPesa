@@ -16,7 +16,7 @@ abstract class CategoriesState extends Equatable {
 class CategoriesInitial extends CategoriesState {
   CategoriesInitial()
       : super(
-          categories: [],
+          categories: defaultCategories,
           defaultCategory: defaultCategory,
         );
 }
