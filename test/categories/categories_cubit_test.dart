@@ -31,7 +31,7 @@ void main() {
       expect(
         categoriesCubit1.state,
         CategoriesLoaded(
-          categories: [c1!, c2!],
+          categories: [...defaultCategories, c1!, c2!],
           defaultCategory: defaultCategory,
         ),
       );
@@ -61,7 +61,7 @@ void main() {
         expect(
           categoriesCubit1.state,
           CategoriesLoaded(
-            categories: [c1!, c2!],
+            categories: [...defaultCategories, c1!, c2!],
             defaultCategory: defaultCategory,
           ),
         );
@@ -71,7 +71,7 @@ void main() {
         expect(
           categoriesCubit1.state,
           CategoriesLoaded(
-            categories: [c2],
+            categories: [...defaultCategories,c2],
             defaultCategory: defaultCategory,
           ),
         );
