@@ -70,7 +70,8 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
   }
 
   Future<void> deleteCategory(Category category) async {
-    if (category.id == Category.none().id) {
+    if (category.id == Category.none().id ||
+        defaultCategories.contains(category)) {
       emit(
         CategoriesLoaded(
           categories: state.categories,

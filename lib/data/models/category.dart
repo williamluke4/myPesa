@@ -6,8 +6,20 @@ part 'category.g.dart';
 
 Uuid uuid = const Uuid();
 
+Category mpesaTransactionFeeCategory = Category(
+  name: 'MPESA Transaction Fee',
+  id: '61f82a3c-5e87-4fff-8057-44fa62b52704',
+);
+Category groceriesCategory =
+    Category(name: 'Groseries', id: '7d126025-0763-41a1-8279-d42b3ab1a9da');
+
 Category defaultCategory = Category.none();
 
+List<Category> defaultCategories = [
+  mpesaTransactionFeeCategory,
+  groceriesCategory,
+  defaultCategory,
+];
 const schemaVersion = 1;
 
 @JsonSerializable()
