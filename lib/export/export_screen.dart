@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/export/export_cubit.dart';
 import 'package:my_pesa/export/export_state.dart';
+import 'package:my_pesa/settings/settings_cubit.dart';
 import 'package:my_pesa/transactions/transactions_cubit.dart';
 
 class ExportView extends StatelessWidget {
@@ -29,6 +31,9 @@ class ExportView extends StatelessWidget {
       builder: (context, state) {
         final transactions =
             context.read<TransactionsCubit>().state.transactions;
+        final user = context
+            .select<SettingsCubit, GoogleSignInAccount?>((s) => s.state.user);
+
         final categories = context.read<CategoriesCubit>().state.categories;
         if (state.isLoading) {
           return const CircularProgressIndicator.adaptive();
@@ -47,9 +52,14 @@ class ExportView extends StatelessWidget {
                     child: const Text('Open Last Export'),
                   ),
                   ElevatedButton(
-                    onPressed: () => context
-                        .read<ExportCubit>()
-                        .exportToGoogleSheets(transactions, categories),
+                    onPressed: user == null
+                        ? null
+                        : () =>
+                            context.read<ExportCubit>().exportToGoogleSheets(
+                                  user,
+                                  transactions,
+                                  categories,
+                                ),
                     child: const Text('Export to Google Sheets'),
                   ),
                 ],

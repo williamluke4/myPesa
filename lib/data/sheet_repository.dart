@@ -17,14 +17,13 @@ String dateTimeToString(DateTime date) {
 class SheetRepository {
   // This class is not meant to be instantiated or extended; this constructor
   // prevents instantiation and extension.
-  SheetRepository({required this.user});
-
-  final GoogleSignInAccount user;
+  SheetRepository();
 
   Future<void> getTransactionsFromSheet({
+    required GoogleSignInAccount user,
     required String spreadsheetId,
   }) async {
-    final sheetsAPI = await getAPI();
+    final sheetsAPI = await getAPI(user);
     final sheet =
         await sheetsAPI.spreadsheets.get(spreadsheetId, includeGridData: true);
     final data = sheet.sheets![0].data;
@@ -56,17 +55,18 @@ class SheetRepository {
     log.d(rowData);
   }
 
-  Future<SheetsApi> getAPI() async {
+  Future<SheetsApi> getAPI(GoogleSignInAccount user) async {
     final authHeaders = await user.authHeaders;
     final sheetsAPI = SheetsApi(AuthClient(authHeaders, http.Client()));
     return sheetsAPI;
   }
 
   Future<Result<Exception, Spreadsheet>> createSheet({
+    required GoogleSignInAccount user,
     required List<Transaction> transactions,
     required List<Category> categories,
   }) async {
-    final sheetsAPI = await getAPI();
+    final sheetsAPI = await getAPI(user);
     try {
       final rowData = transactions.fold<List<RowData>>([], (value, tx) {
         value.addAll(exportTransaction(tx, categories));

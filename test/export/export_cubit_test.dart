@@ -7,6 +7,8 @@ import 'package:my_pesa/export/export_state.dart';
 import '../helpers/sheets_repository.dart';
 
 MockSheetRepository mockSheetsRepository = MockSheetRepository();
+MockGoogleSignInAccount mockUser = MockGoogleSignInAccount();
+
 void main() {
   group('ExportCubit', () {
     test('check state equality ', () {
@@ -19,7 +21,7 @@ void main() {
     blocTest<ExportCubit, ExportState>(
       'emits [error: noTransactionsError] when there are no transactions',
       build: () => ExportCubit(sheetRepository: mockSheetsRepository),
-      act: (cubit) => cubit.exportToGoogleSheets([], []),
+      act: (cubit) => cubit.exportToGoogleSheets(mockUser, [], []),
       expect: () => [
         const ExportState(isLoading: true),
         ExportState(error: noTransactionsError)

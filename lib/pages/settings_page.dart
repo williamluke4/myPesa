@@ -140,8 +140,7 @@ class SettingsPage extends StatelessWidget {
                   children: [
                     BlocProvider(
                       create: (BuildContext context) => ExportCubit(
-                        sheetRepository:
-                            user != null ? SheetRepository(user: user) : null,
+                        sheetRepository: SheetRepository(),
                       ),
                       child: const ExportView(),
                     )
