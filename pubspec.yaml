@@ -26,7 +26,7 @@ dependencies:
   logger: ^1.1.0
   multiple_result: ^1.0.4
   path_provider: ^2.0.11
-  permission_handler: ^9.2.0
+  permission_handler: ^10.0.0
   provider: ^6.0.3
   sentry_flutter: ^6.9.1
   settings_ui: ^2.0.2
