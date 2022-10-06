@@ -6,7 +6,7 @@ abstract class CategoriesState extends Equatable {
     required this.defaultCategory,
     this.error,
   });
-  
+
   final UserError? error;
   final List<Category> categories;
   final Category defaultCategory;
