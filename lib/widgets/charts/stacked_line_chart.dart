@@ -18,8 +18,12 @@ class StackedLineChart extends StatelessWidget {
     return SfCartesianChart(
       series: seriesList,
       primaryXAxis: DateTimeCategoryAxis(dateFormat: formatter),
-      zoomPanBehavior:
-          ZoomPanBehavior(enablePinching: true, enablePanning: true),
+      zoomPanBehavior: ZoomPanBehavior(
+        enableMouseWheelZooming: true,
+        enablePinching: true,
+        enablePanning: true,
+        enableSelectionZooming: true,
+      ),
       legend: Legend(isVisible: true, position: LegendPosition.bottom),
     );
   }

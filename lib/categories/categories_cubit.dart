@@ -23,11 +23,11 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
     super.onChange(change);
   }
 
-  Future<void> editCategory(String name, Category category) async {
+  Future<void> editCategory(String newName, Category category) async {
     final idx = state.categories.indexWhere((c) => c.id == category.id);
     if (idx != -1) {
       final updatedCategories = List<Category>.from(state.categories);
-      updatedCategories[idx] = updatedCategories[idx].copyWith(name: name);
+      updatedCategories[idx] = updatedCategories[idx].copyWith(name: newName);
       emit(
         CategoriesLoaded(
           categories: updatedCategories,
@@ -51,7 +51,8 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
       return null;
     }
     final category = Category(name: name.trim());
-    final categories = [...state.categories, category];
+    final categories = [...state.categories, category]
+      ..sort((a, b) => a.name.compareTo(b.name));
     emit(
       CategoriesLoaded(
         categories: categories,
@@ -66,7 +67,8 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
     if (id.isEmpty) {
       return null;
     }
-    return state.categories.firstWhere((c) => c.id == id);
+    return state.categories
+        .firstWhere((c) => c.id == id, orElse: Category.none);
   }
 
   Future<void> deleteCategory(Category category) async {
@@ -92,14 +94,33 @@ class CategoriesCubit extends HydratedCubit<CategoriesState> {
     );
   }
 
+  Future<void> import(List<Category> categories) async {
+    final newCategories = <Category>[...state.categories];
+    for (final c in categories) {
+      final idx = state.categories.indexWhere((element) => element.id == c.id);
+      if (idx == -1) newCategories.add(c);
+    }
+    newCategories.sort((a, b) => a.name.compareTo(b.name));
+    emit(
+      CategoriesLoaded(
+        categories: newCategories,
+        defaultCategory: state.defaultCategory,
+      ),
+    );
+  }
+
+  Future<void> reset() async {
+    emit(CategoriesInitial());
+  }
+
   @override
   CategoriesState? fromJson(Map<String, dynamic> json) {
     final categories = json['categories'] is List<dynamic>
         ? List<Map<String, dynamic>>.from(json['categories'] as List)
             .map<Category>(Category.fromJson)
             .toList()
-        : <Category>[];
-
+        : <Category>[]
+      ..sort((a, b) => a.name.compareTo(b.name));
     final defaultCategory =
         Category.fromJson(json['defaultCategory'] as Map<String, dynamic>);
     return CategoriesLoaded(

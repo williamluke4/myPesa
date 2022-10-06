@@ -33,7 +33,6 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
         ),
       );
     }
-    await _googleSignIn.signInSilently();
   }
 
   Future<void> signin() async {
@@ -43,7 +42,7 @@ class SettingsCubit extends HydratedCubit<SettingsState> {
       final signedIn = await _googleSignIn.isSignedIn();
       if (signedIn) {
         await _googleSignIn.signOut();
-        log.i('Reseting google auth');
+        log.i('Resetting google auth');
       }
       await _googleSignIn.signIn();
     } catch (error) {

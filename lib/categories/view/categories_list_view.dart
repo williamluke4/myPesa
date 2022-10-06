@@ -4,6 +4,7 @@ import 'package:flutter_swipe_action_cell/flutter_swipe_action_cell.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/categories/view/category_form.dart';
 import 'package:my_pesa/pages/category_page.dart';
+import 'package:my_pesa/transactions/transactions_cubit.dart';
 
 class CategoriesListView extends StatelessWidget {
   const CategoriesListView({Key? key}) : super(key: key);
@@ -16,13 +17,15 @@ class CategoriesListView extends StatelessWidget {
           itemCount: state.categories.length,
           itemBuilder: (BuildContext context, int idx) {
             final categoryCubit = context.read<CategoriesCubit>();
+            final transactionsCubit = context.read<TransactionsCubit>();
+
             return InkWell(
               onTap: () => Navigator.push(
                 context,
                 MaterialPageRoute<Widget>(
                   builder: (context) => CategoryPage(
                     key: key,
-                    category: state.categories[idx],
+                    categoryId: state.categories[idx].id,
                   ),
                 ),
               ),
@@ -37,6 +40,9 @@ class CategoriesListView extends StatelessWidget {
                     nestedAction: SwipeNestedAction(title: 'Are you Sure?'),
                     onTap: (CompletionHandler handler) async {
                       await handler(true);
+                      await transactionsCubit.changeCategory(
+                        fromCategoryId: state.categories[idx].id,
+                      );
                       await categoryCubit.deleteCategory(state.categories[idx]);
                     },
                     color: Colors.redAccent,

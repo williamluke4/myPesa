@@ -31,6 +31,22 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
     }
   }
 
+  Future<void> import(List<Transaction> transactions) async {
+    final newTransactions = <Transaction>[...state.transactions];
+    for (final c in transactions) {
+      final idx =
+          state.transactions.indexWhere((element) => element.ref == c.ref);
+      if (idx == -1) newTransactions.add(c);
+    }
+    emit(state.copyWith(
+      transactions: newTransactions,
+    ));
+  }
+
+  Future<void> reset() async {
+    emit(const TransactionsState(transactions: []));
+  }
+
   Future<void> applyCategoryToRecipient(
     String recipient,
     String categoryId,
@@ -44,6 +60,33 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
       }
       return e;
     }).toList();
+    emit(state.copyWith(transactions: updatedTransactions));
+  }
+
+  Future<void> changeCategory({
+    String? fromCategoryId,
+    String? toCategoryId,
+    List<String>? txRefs,
+  }) async {
+    log.d('Changing to ${toCategoryId ?? Category.none().id}');
+    var updatedTransactions = List<Transaction>.from(state.transactions);
+    if (txRefs == null || txRefs.isEmpty && fromCategoryId != null) {
+      // Apply to all
+      updatedTransactions = updatedTransactions.map((e) {
+        if (e.categoryId != fromCategoryId) return e;
+        return e.copyWith(categoryId: toCategoryId ?? Category.none().id);
+      }).toList();
+    } else {
+      // Only apply to transactions contained in list
+      updatedTransactions = updatedTransactions.map((e) {
+        if ((fromCategoryId != null && e.categoryId != fromCategoryId) ||
+            !txRefs.contains(e.ref)) {
+          return e;
+        }
+        return e.copyWith(categoryId: toCategoryId ?? Category.none().id);
+      }).toList();
+    }
+
     emit(state.copyWith(transactions: updatedTransactions));
   }
 

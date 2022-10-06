@@ -15,7 +15,6 @@ class StackedBarChart extends StatelessWidget {
       animate: animate,
       barGroupingType: charts.BarGroupingType.groupedStacked,
       barRendererDecorator: charts.BarLabelDecorator(
-        labelPadding: 8,
         outsideLabelStyleSpec: const charts.TextStyleSpec(
           fontSize: 12,
           color: charts.MaterialPalette.black,
@@ -23,10 +22,10 @@ class StackedBarChart extends StatelessWidget {
       ),
       behaviors: [
         charts.SeriesLegend(
+          showMeasures: true,
           position: charts.BehaviorPosition.bottom,
           horizontalFirst: false,
           desiredMaxRows: 5,
-          showMeasures: true,
           cellPadding: const EdgeInsets.only(right: 2, bottom: 4),
         )
       ],

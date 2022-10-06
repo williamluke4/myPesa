@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/data/transactions_repository.dart';
 import 'package:my_pesa/pages/categories_page.dart';
+import 'package:my_pesa/pages/insights_page.dart';
 // import 'package:my_pesa/pages/insights_page.dart';
 import 'package:my_pesa/pages/settings_page.dart';
 import 'package:my_pesa/pages/transactions_page.dart';
@@ -48,6 +49,7 @@ class AppView extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'myPesa',
+      debugShowCheckedModeBanner: false,
       themeMode: context
           .select<SettingsCubit, ThemeMode>((cubit) => cubit.state.themeMode),
       theme: ThemeData(
@@ -81,10 +83,10 @@ class HomeState extends State<Home> {
       icon: Icon(Icons.home),
       label: 'Transactions',
     ),
-    // BottomNavigationBarItem(
-    //   icon: Icon(Icons.data_exploration),
-    //   label: 'Insights',
-    // ),
+    BottomNavigationBarItem(
+      icon: Icon(Icons.data_exploration),
+      label: 'Insights',
+    ),
     BottomNavigationBarItem(
       icon: Icon(Icons.category),
       label: 'Categories',
@@ -109,6 +111,7 @@ class HomeState extends State<Home> {
           physics: const NeverScrollableScrollPhysics(),
           children: const [
             TransactionsPage(),
+            InsightsPage(),
             CategoriesPage(),
             SettingsPage(),
           ],
@@ -116,6 +119,7 @@ class HomeState extends State<Home> {
         bottomNavigationBar: BottomNavigationBar(
           currentIndex: _currentIndex,
           items: bottomNavigationBarItems,
+          type: BottomNavigationBarType.fixed,
           onTap: (index) {
             _pageController.animateToPage(
               index,

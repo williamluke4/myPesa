@@ -14,8 +14,8 @@ class ExportState extends Equatable {
   ExportState copyWith({bool? isLoading, UserError? error, String? success}) {
     return ExportState(
       isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      success: success ?? this.success,
+      error: error,
+      success: success,
     );
   }
 

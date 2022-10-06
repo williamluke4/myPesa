@@ -9,6 +9,28 @@ import 'package:my_pesa/transactions/transactions_cubit.dart';
 
 class ExportView extends StatelessWidget {
   const ExportView({Key? key}) : super(key: key);
+  Future<void> _handleDelete(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (BuildContext context) => AlertDialog(
+        title: const Text('Are You Sure?'),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Noop'),
+          ),
+          TextButton(
+            onPressed: () {
+              context.read<CategoriesCubit>().reset();
+              context.read<TransactionsCubit>().reset();
+              Navigator.pop(context);
+            },
+            child: const Text('Yes Delete it'),
+          ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +44,16 @@ class ExportView extends StatelessWidget {
             ),
             backgroundColor: Colors.redAccent,
           );
-
-          // Find the ScaffoldMessenger in the widget tree
-          // and use it to show a SnackBar.
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+        if (state.success != null) {
+          final snackBar = SnackBar(
+            content: Text(
+              state.success!,
+              style: const TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.greenAccent,
+          );
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       },
@@ -72,9 +101,29 @@ class ExportView extends StatelessWidget {
                         .backup(transactions, categories),
                     child: const Text('Backup'),
                   ),
-                  const ElevatedButton(
-                    onPressed: null,
+                  ElevatedButton(
+                    onPressed: () async {
+                      final result = await context.read<ExportCubit>().import();
+                      if (result == null) {
+                        return;
+                      }
+
+                      await context
+                          .read<TransactionsCubit>()
+                          .import(result.item1);
+                      await context
+                          .read<CategoriesCubit>()
+                          .import(result.item2);
+                    },
                     child: Text('Import'),
+                  ),
+                ],
+              ),
+              Row(
+                children: [
+                  ElevatedButton(
+                    onPressed: () => _handleDelete(context),
+                    child: const Text('Delete All Data'),
                   ),
                 ],
               ),

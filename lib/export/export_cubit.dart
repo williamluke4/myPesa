@@ -1,6 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:file_picker/file_picker.dart';
+import 'package:flutter_file_dialog/flutter_file_dialog.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:intl/intl.dart';
@@ -10,6 +12,7 @@ import 'package:my_pesa/data/sheet_repository.dart';
 import 'package:my_pesa/errors.dart';
 import 'package:my_pesa/export/export_state.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:tuple/tuple.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ExportCubit extends HydratedCubit<ExportState> {
@@ -20,31 +23,48 @@ class ExportCubit extends HydratedCubit<ExportState> {
     emit(const ExportState());
   }
 
+  Future<Tuple2<List<Transaction>, List<Category>>?> import() async {
+    String? filePath;
+    if (Platform.isAndroid || Platform.isIOS) {
+      filePath = await FlutterFileDialog.pickFile(
+        params: const OpenFileDialogParams(),
+      );
+    } else {
+      final result = await FilePicker.platform.pickFiles();
+      filePath = result?.files.single.path;
+    }
+
+    if (filePath != null) {
+      final file = File(filePath);
+      final data = jsonDecode(file.readAsStringSync()) as Map<String, dynamic>;
+      final t = data['transactions'] as List<dynamic>;
+      final c = data['categories'] as List<dynamic>;
+      final transactions = t
+          .map((dynamic e) => Transaction.fromJson(e as Map<String, dynamic>))
+          .toList();
+      final categories = c
+          .map((dynamic e) => Category.fromJson(e as Map<String, dynamic>))
+          .toList();
+      emit(
+        state.copyWith(
+          success:
+              'Found ${transactions.length} Transactions and ${categories.length} Categories',
+        ),
+      );
+      return Tuple2(transactions, categories);
+    } else {
+      // User canceled the picker
+      return null;
+    }
+  }
+
   Future<void> backup(
     List<Transaction> txs,
     List<Category> categories,
   ) async {
     emit(state.copyWith(isLoading: true));
-    if (!Platform.isAndroid) {
-      // ignore: only_throw_errors
-      emit(
-        state.copyWith(
-          isLoading: false,
-          error: const UserError(message: 'Only Supported on Android'),
-        ),
-      );
-      return;
-    }
-    Directory? directory;
-    directory = await getExternalStorageDirectory();
 
-    if (directory == null || !directory.existsSync()) {
-      state.copyWith(
-        isLoading: false,
-        error: const UserError(message: 'Could not find downloads directory'),
-      );
-      return;
-    }
+    final directory = await getTemporaryDirectory();
 
     final data = jsonEncode(
       {'transactions': txs, 'categories': categories, 'version': 1},
@@ -52,19 +72,42 @@ class ExportCubit extends HydratedCubit<ExportState> {
     final now = DateTime.now();
     final formatter = DateFormat('yyyy-MM-dd');
     final formattedDate = formatter.format(now);
-    final file = File('${directory.path}/mypesa-backup-$formattedDate.json');
-    if (file.existsSync()) {
+    final fileName = 'mypesa-backup-$formattedDate.json';
+
+    String? filePath;
+    if (Platform.isAndroid || Platform.isAndroid) {
+      final file = File('${directory.path}/$fileName');
+      if (file.existsSync()) file.deleteSync();
+
+      await file.create(recursive: true);
+      await file.writeAsString(data);
+      filePath = await FlutterFileDialog.saveFile(
+        params: SaveFileDialogParams(sourceFilePath: file.path),
+      );
+    } else {
+      filePath = await FilePicker.platform.saveFile(
+        dialogTitle: 'Where would you like it:',
+        fileName: fileName,
+      );
+      if (filePath != null) {
+        final file = File(filePath);
+        await file.create(recursive: true);
+        await file.writeAsString(data);
+      }
+    }
+    if (filePath == null) {
       emit(
         state.copyWith(
           isLoading: false,
-          error: UserError(message: 'File Already Exists: ${file.path}'),
+          error: const UserError(message: 'Oops something went wrong'),
         ),
       );
-      return;
+    } else {
+      emit(
+        state.copyWith(isLoading: false, success: 'Backup Saved to $filePath'),
+      );
     }
-    await file.create(recursive: true);
-    await file.writeAsString(data);
-    emit(state.copyWith(isLoading: false));
+
     // url_launcher -> file:<path>
   }
 

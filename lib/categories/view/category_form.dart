@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
+import 'package:my_pesa/utils/logger.dart';
 
 class CategoryForm extends StatelessWidget {
   const CategoryForm({
@@ -30,6 +31,7 @@ class CategoryForm extends StatelessWidget {
                   labelText: 'Category Name',
                 ),
                 autofocus: true,
+                initialValue: category?.name,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return 'Please enter a name';
@@ -49,9 +51,10 @@ class CategoryForm extends StatelessWidget {
                     return;
                   }
                   if (category != null) {
+                    log.d('Editing: $value');
                     context.read<CategoriesCubit>().editCategory(
-                          category!.name,
-                          Category(name: value),
+                          value,
+                          category!,
                         );
                   } else {
                     context.read<CategoriesCubit>().addCategory(

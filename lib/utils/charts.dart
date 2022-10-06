@@ -41,14 +41,14 @@ List<charts.Series<CategoryData, String>> buildChartSeries(
   List<Transaction> transactions,
   Map<String, Category> categoriesMap,
 ) {
-  final now = DateTime.now();
-  final from = DateTime(now.year, now.month - 3);
+  // final now = DateTime.now();
+  // final from = DateTime(now.year, now.month - 3);
   final formatter = DateFormat('MMM y');
   final series = <charts.Series<CategoryData, String>>[];
-  final filteredTxs = transactions
-      .where((tx) => tx.dateTime != null && tx.dateTime!.isAfter(from));
+  // final filteredTxs = transactions
+  //     .where((tx) => tx.dateTime != null && tx.dateTime!.isAfter(from));
   groupBy<Transaction, String>(
-    filteredTxs,
+    transactions,
     (tx) => tx.type.name,
   ).forEach((type, groupedByType) {
     groupBy<Transaction, String>(
@@ -74,7 +74,7 @@ List<charts.Series<CategoryData, String>> buildChartSeries(
           domainFn: (CategoryData d, _) => d.name,
           measureFn: (CategoryData d, _) => d.total,
           data: data,
-          labelAccessorFn: (CategoryData row, _) => '${row.name}: ${row.total}',
+          labelAccessorFn: (CategoryData row, _) => '$category: ${row.total}',
           colorFn: (CategoryData d, _) => colorFor(category),
         ),
       );
