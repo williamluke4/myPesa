@@ -27,11 +27,12 @@ void main() {
     test('hydration', () async {
       final c1 = await categoriesCubit1.addCategory('Test');
       final c2 = await categoriesCubit1.addCategory('Test 🤔');
-
+      final expectedCategories = [...defaultCategories, c1!, c2!]
+        ..sort((a, b) => a.name.compareTo(b.name));
       expect(
         categoriesCubit1.state,
         CategoriesLoaded(
-          categories: [...defaultCategories, c1!, c2!],
+          categories: expectedCategories,
           defaultCategory: defaultCategory,
         ),
       );
@@ -58,20 +59,25 @@ void main() {
         // Add
         final c1 = await categoriesCubit1.addCategory('Test');
         final c2 = await categoriesCubit1.addCategory('Test 🤔');
+        var expectedCategories = [...defaultCategories, c1!, c2!]
+          ..sort((a, b) => a.name.compareTo(b.name));
         expect(
           categoriesCubit1.state,
           CategoriesLoaded(
-            categories: [...defaultCategories, c1!, c2!],
+            categories: expectedCategories,
             defaultCategory: defaultCategory,
           ),
         );
 
         // Delete
         await categoriesCubit1.deleteCategory(c1);
+        expectedCategories = [...defaultCategories, c2]
+          ..sort((a, b) => a.name.compareTo(b.name));
+
         expect(
           categoriesCubit1.state,
           CategoriesLoaded(
-            categories: [...defaultCategories, c2],
+            categories: expectedCategories,
             defaultCategory: defaultCategory,
           ),
         );
