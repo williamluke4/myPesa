@@ -7,9 +7,9 @@ import 'package:my_pesa/transactions/view/transaction_list_widget.dart';
 
 class TransactionPage extends StatelessWidget {
   const TransactionPage({
-    Key? key,
+    super.key,
     required this.txRef,
-  }) : super(key: key);
+  });
   final String txRef;
   @override
   Widget build(BuildContext context) {

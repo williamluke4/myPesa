@@ -6,11 +6,11 @@ import 'package:my_pesa/utils/logger.dart';
 
 class CategoryForm extends StatelessWidget {
   const CategoryForm({
-    Key? key,
+    super.key,
     this.category,
     required this.onSubmitted,
     required this.formKey,
-  }) : super(key: key);
+  });
 
   final GlobalKey<FormState> formKey;
   final Category? category;

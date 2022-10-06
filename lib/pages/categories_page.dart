@@ -4,8 +4,8 @@ import 'package:my_pesa/categories/view/category_form.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,13 +15,13 @@ class CategoriesPage extends StatelessWidget {
       body: const CategoriesListView(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final _formKey = GlobalKey<FormState>();
+          final formKey = GlobalKey<FormState>();
           showModalBottomSheet<void>(
             context: context,
             builder: (BuildContext c) {
               return CategoryForm(
                 onSubmitted: () => Navigator.pop(c),
-                formKey: _formKey,
+                formKey: formKey,
               );
             },
           );

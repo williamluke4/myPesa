@@ -9,9 +9,9 @@ import 'package:my_pesa/utils/logger.dart';
 
 class TransactionDetailWidget extends StatelessWidget {
   const TransactionDetailWidget({
-    Key? key,
+    super.key,
     required this.transaction,
-  }) : super(key: key);
+  });
   final Transaction transaction;
   @override
   Widget build(BuildContext context) {
@@ -64,14 +64,14 @@ class TransactionDetailWidget extends StatelessWidget {
                   labelText: 'Category',
                   suffix: IconButton(
                     onPressed: () {
-                      final _formKey = GlobalKey<FormState>();
+                      final formKey = GlobalKey<FormState>();
 
                       showModalBottomSheet<void>(
                         context: context,
                         builder: (BuildContext c) {
                           return CategoryForm(
                             onSubmitted: () => Navigator.pop(c),
-                            formKey: _formKey,
+                            formKey: formKey,
                           );
                         },
                       );

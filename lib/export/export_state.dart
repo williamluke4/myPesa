@@ -25,11 +25,11 @@ class ExportState extends Equatable {
 
 class ExportedState extends ExportState {
   const ExportedState({
-    bool isLoading = false,
-    UserError? error,
-    String? success,
+    super.isLoading,
+    super.error,
+    super.success,
     this.spreadsheetId,
-  }) : super(error: error, success: success, isLoading: isLoading);
+  });
   final String? spreadsheetId;
   String get spreadsheetUrl =>
       'https://docs.google.com/spreadsheets/d/$spreadsheetId/edit#gid=0';

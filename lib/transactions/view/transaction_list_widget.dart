@@ -10,11 +10,11 @@ import 'package:my_pesa/transactions/view/transaction_row_widget.dart';
 
 class TransactionListWidget extends StatefulWidget {
   const TransactionListWidget({
-    Key? key,
+    super.key,
     required this.transactions,
     required this.onTransactionTap,
     this.showCategories = true,
-  }) : super(key: key);
+  });
   final List<Transaction> transactions;
   final bool showCategories;
 
@@ -46,7 +46,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
       children: [
         if (selectedRefs.isNotEmpty)
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -56,38 +56,40 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                     TextButton(
                       onPressed: () async {
                         await showDialog<void>(
-                            context: context,
-                            builder: (ctx) {
-                              return Dialog(
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton(
-                                    value: defaultCategory,
+                          context: context,
+                          builder: (ctx) {
+                            return Dialog(
+                              child: DropdownButtonHideUnderline(
+                                child: DropdownButton(
+                                  value: defaultCategory,
 
-                                    // Down Arrow Icon
-                                    icon: const Icon(Icons.keyboard_arrow_down),
+                                  // Down Arrow Icon
+                                  icon: const Icon(Icons.keyboard_arrow_down),
 
-                                    // Array list of items
+                                  // Array list of items
 
-                                    items: categories.map((c) {
-                                      return DropdownMenuItem(
-                                        value: c,
-                                        child: Text(c.name),
-                                      );
-                                    }).toList(),
-                                    onChanged: (Category? category) {
-                                      if (category != null) {
-                                        context
-                                            .read<TransactionsCubit>()
-                                            .changeCategory(
-                                                toCategoryId: category.id,
-                                                txRefs: selectedRefs);
-                                      }
-                                      Navigator.pop(ctx);
-                                    },
-                                  ),
+                                  items: categories.map((c) {
+                                    return DropdownMenuItem(
+                                      value: c,
+                                      child: Text(c.name),
+                                    );
+                                  }).toList(),
+                                  onChanged: (Category? category) {
+                                    if (category != null) {
+                                      context
+                                          .read<TransactionsCubit>()
+                                          .changeCategory(
+                                            toCategoryId: category.id,
+                                            txRefs: selectedRefs,
+                                          );
+                                    }
+                                    Navigator.pop(ctx);
+                                  },
                                 ),
-                              );
-                            });
+                              ),
+                            );
+                          },
+                        );
                         setState(() {
                           selectedRefs = [];
                         });
@@ -133,7 +135,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(8),
                       child: Text(
                         textAlign: TextAlign.center,
                         date,
@@ -145,7 +147,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                         children: [
                           if (widget.showCategories)
                             Padding(
-                              padding: const EdgeInsets.all(8.0),
+                              padding: const EdgeInsets.all(8),
                               child: InkWell(
                                 onTap: () => Navigator.push(
                                   context,

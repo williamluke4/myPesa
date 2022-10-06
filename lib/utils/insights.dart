@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
-import 'package:intl/intl.dart';
 import 'package:my_pesa/data/models/transaction.dart';
+import 'package:my_pesa/utils/datetime.dart';
+import 'package:my_pesa/utils/logger.dart';
 
 int stringToInt(String value) {
   final strVal = value.replaceAll(',', '');
@@ -22,29 +23,30 @@ class Total {
 }
 
 class CategoryInsight {
-  CategoryInsight({required this.txs, required this.categoryId})
-      : total = Total();
+  CategoryInsight({required this.categoryId}) : total = Total();
   final String categoryId;
-  List<Transaction> txs;
+  List<Transaction> txs = [];
   final Total total;
+  void add(Transaction tx) {
+    txs.add(tx);
+    total.add(tx);
+  }
 }
 
 class Insight {
-  Insight({required this.name, required this.txs}) {
+  Insight({required this.name, required this.datetime, required this.txs}) {
     for (final tx in txs) {
       total.add(tx);
       final idx = categories.indexWhere((e) => e.categoryId == tx.categoryId);
       if (idx != -1) {
-        categories[idx]!.total.add(tx);
+        categories[idx].total.add(tx);
       } else {
-        final i = CategoryInsight(txs: [tx], categoryId: tx.categoryId);
-        i.txs.add(tx);
-        i.total.add(tx);
-        categories.add(i);
+        categories.add(CategoryInsight(categoryId: tx.categoryId)..add(tx));
       }
     }
   }
   final String name;
+  final DateTime datetime;
   final List<Transaction> txs;
   final Total total = Total();
   final categories = <CategoryInsight>[];
@@ -55,8 +57,16 @@ List<Insight> buildInsights(List<Transaction> txs) {
   final insights = <Insight>[];
   for (final month in months.keys) {
     final txsInMonth = months[month];
-    final insight = Insight(name: month, txs: txsInMonth ?? []);
-    insights.add(insight);
+    try {
+      final insight = Insight(
+        name: month,
+        datetime: mmmyDateFormat.parse(month),
+        txs: txsInMonth ?? [],
+      );
+      insights.add(insight);
+    } catch (e) {
+      log.e(e);
+    }
   }
   return insights;
 }
@@ -64,12 +74,9 @@ List<Insight> buildInsights(List<Transaction> txs) {
 Map<String, List<Transaction>> groupTransactionsByMonth(
   List<Transaction> txs,
 ) {
-  // final now = DateTime.now();
-  // final from = DateTime(now.year, now.month - 3);
-  final formatter = DateFormat('MMM y');
-
   return groupBy<Transaction, String>(
     txs,
-    (obj) => obj.dateTime != null ? formatter.format(obj.dateTime!) : 'Unknown',
+    (obj) =>
+        obj.dateTime != null ? mmmyDateFormat.format(obj.dateTime!) : 'Unknown',
   );
 }

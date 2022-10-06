@@ -48,6 +48,7 @@ class ExportCubit extends HydratedCubit<ExportState> {
       emit(
         state.copyWith(
           success:
+              // ignore: lines_longer_than_80_chars
               'Found ${transactions.length} Transactions and ${categories.length} Categories',
         ),
       );
@@ -115,8 +116,8 @@ class ExportCubit extends HydratedCubit<ExportState> {
     emit(state.copyWith(isLoading: true));
     if (state is ExportedState) {
       try {
-        final _url = Uri.parse((state as ExportedState).spreadsheetUrl);
-        await launchUrl(_url, mode: LaunchMode.externalApplication);
+        final url = Uri.parse((state as ExportedState).spreadsheetUrl);
+        await launchUrl(url, mode: LaunchMode.externalApplication);
         // final spreadsheetUrl =
         //     'https://docs.google.com/spreadsheets/d/$spreadsheetId/edit#gid=0';
       } on UserError catch (e) {

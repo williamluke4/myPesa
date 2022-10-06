@@ -8,7 +8,26 @@ import 'package:my_pesa/settings/settings_cubit.dart';
 import 'package:my_pesa/transactions/transactions_cubit.dart';
 
 class ExportView extends StatelessWidget {
-  const ExportView({Key? key}) : super(key: key);
+  const ExportView({super.key});
+
+  Future<void> _handleImport(
+    BuildContext context, [
+    bool mounted = true,
+  ]) async {
+    if (!mounted) return;
+    final exportCubit = context.read<ExportCubit>();
+    final txsCubit = context.read<TransactionsCubit>();
+    final categoriesCubit = context.read<CategoriesCubit>();
+
+    final result = await exportCubit.import();
+    if (result == null) {
+      return;
+    }
+
+    await txsCubit.import(result.item1);
+    await categoriesCubit.import(result.item2);
+  }
+
   Future<void> _handleDelete(BuildContext context) async {
     await showDialog<void>(
       context: context,
@@ -102,20 +121,8 @@ class ExportView extends StatelessWidget {
                     child: const Text('Backup'),
                   ),
                   ElevatedButton(
-                    onPressed: () async {
-                      final result = await context.read<ExportCubit>().import();
-                      if (result == null) {
-                        return;
-                      }
-
-                      await context
-                          .read<TransactionsCubit>()
-                          .import(result.item1);
-                      await context
-                          .read<CategoriesCubit>()
-                          .import(result.item2);
-                    },
-                    child: Text('Import'),
+                    onPressed: () => _handleImport(context),
+                    child: const Text('Import'),
                   ),
                 ],
               ),

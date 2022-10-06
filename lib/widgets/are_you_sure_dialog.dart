@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:my_pesa/utils/logger.dart';
 
 class AreYouSureDialog extends StatelessWidget {
   const AreYouSureDialog({
@@ -18,7 +17,6 @@ class AreYouSureDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log.d("Here2");
     return AlertDialog(
       title: const Text('Are You Sure?'),
       actions: <Widget>[

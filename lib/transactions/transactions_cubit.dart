@@ -38,9 +38,11 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
           state.transactions.indexWhere((element) => element.ref == c.ref);
       if (idx == -1) newTransactions.add(c);
     }
-    emit(state.copyWith(
-      transactions: newTransactions,
-    ));
+    emit(
+      state.copyWith(
+        transactions: newTransactions,
+      ),
+    );
   }
 
   Future<void> reset() async {

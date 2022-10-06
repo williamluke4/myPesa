@@ -11,12 +11,11 @@ import 'package:my_pesa/settings/settings_cubit.dart';
 import 'package:my_pesa/transactions/transactions_cubit.dart';
 
 class App extends StatelessWidget {
-  App({Key? key})
+  App({super.key})
       : settingsCubit = SettingsCubit(),
         categoriesCubit = CategoriesCubit(),
         transactionsCubit =
-            TransactionsCubit(transactionsRepository: TransactionsRepository()),
-        super(key: key);
+            TransactionsCubit(transactionsRepository: TransactionsRepository());
 
   final SettingsCubit settingsCubit;
   final CategoriesCubit categoriesCubit;
@@ -42,7 +41,7 @@ class App extends StatelessWidget {
 }
 
 class AppView extends StatelessWidget {
-  const AppView({Key? key}) : super(key: key);
+  const AppView({super.key});
 
   // This widget is the root of your application.
   @override
@@ -67,7 +66,7 @@ class AppView extends StatelessWidget {
 }
 
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   HomeState createState() => HomeState();

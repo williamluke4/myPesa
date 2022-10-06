@@ -5,57 +5,57 @@ import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/pages/transaction_page.dart';
 import 'package:my_pesa/transactions/transactions_cubit.dart';
 import 'package:my_pesa/transactions/view/transaction_list_widget.dart';
-import 'package:my_pesa/utils/logger.dart';
+import 'package:my_pesa/utils/datetime.dart';
+import 'package:my_pesa/utils/insights.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class CategoryDetailsView extends StatelessWidget {
   const CategoryDetailsView({
-    Key? key,
+    super.key,
     required this.category,
-  }) : super(key: key);
+  });
 
   final Category category;
+
+  Widget _buildBarChart(List<Transaction> txs) {
+    final insights = buildInsights(txs);
+    return SfCartesianChart(
+      primaryXAxis: DateTimeCategoryAxis(dateFormat: mmmyDateFormat),
+      series: <ColumnSeries<Insight, DateTime>>[
+        ColumnSeries<Insight, DateTime>(
+          color: Colors.green,
+          borderRadius: BorderRadius.circular(10),
+          dataSource: insights,
+          xValueMapper: (Insight data, _) => data.datetime,
+          yValueMapper: (Insight data, _) => data.total.incoming,
+          name: 'Income',
+        ),
+        ColumnSeries<Insight, DateTime>(
+          dataSource: insights,
+          color: Colors.red,
+          borderRadius: BorderRadius.circular(10),
+          xValueMapper: (Insight data, _) => data.datetime,
+          yValueMapper: (Insight data, _) => data.total.outgoing,
+          name: 'Expense',
+        )
+      ],
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final transactions = context.select<TransactionsCubit, List<Transaction>>(
       (settingsCubit) => settingsCubit.state.transactions,
     );
-    final filteredTransactions =
+    final categoryTransactions =
         transactions.where((element) => element.categoryId == category.id);
 
-    final totalIn = filteredTransactions.fold<double>(0, (value, tx) {
-      if (tx.type == TransactionType.IN) {
-        final amount = double.tryParse(tx.amount.replaceAll(',', ''));
-        if (amount == null) {
-          log.e('Failed to Convert ${tx.amount} to double');
-          return value;
-        }
-
-        return value + amount;
-      }
-      return value;
-    });
-    final totalOut = filteredTransactions.fold<double>(0, (value, tx) {
-      if (tx.type == TransactionType.OUT) {
-        final amount = double.tryParse(tx.amount.replaceAll(',', ''));
-        if (amount == null) {
-          log.e('Failed to Convert ${tx.amount} to double');
-          return value;
-        }
-
-        return value + amount;
-      }
-      return value;
-    });
     return Column(
       children: <Widget>[
         Container(
-          height: 50,
+          height: 200,
           padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [Text('In: $totalIn'), Text('Out: $totalOut')],
-          ),
+          child: _buildBarChart(categoryTransactions.toList()),
         ),
         Expanded(
           child: TransactionListWidget(
@@ -71,7 +71,7 @@ class CategoryDetailsView extends StatelessWidget {
               );
             },
             showCategories: false,
-            transactions: filteredTransactions.toList(),
+            transactions: categoryTransactions.toList(),
           ),
         ),
       ],

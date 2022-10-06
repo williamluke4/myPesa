@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class BalanceWidget extends StatelessWidget {
-  const BalanceWidget({Key? key, required this.balance}) : super(key: key);
+  const BalanceWidget({super.key, required this.balance});
   final String balance;
   @override
   Widget build(BuildContext context) {

@@ -6,7 +6,7 @@ import 'package:mocktail/mocktail.dart';
 
 class MockStorage extends Mock implements Storage {
   MockStorage();
-  Map data = <String, dynamic>{};
+  Map<String, dynamic> data = <String, dynamic>{};
 
   @override
   dynamic read(String key) => data[key];

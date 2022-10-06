@@ -9,9 +9,9 @@ import 'package:my_pesa/widgets/are_you_sure_dialog.dart';
 
 class CategoryPage extends StatelessWidget {
   const CategoryPage({
-    Key? key,
+    super.key,
     required this.categoryId,
-  }) : super(key: key);
+  });
 
   final String categoryId;
 
@@ -27,44 +27,45 @@ class CategoryPage extends StatelessWidget {
             icon: const Icon(Icons.edit),
             tooltip: 'Edit',
             onPressed: () async {
-              final _formKey = GlobalKey<FormState>();
+              final formKey = GlobalKey<FormState>();
               await showModalBottomSheet<void>(
                 context: context,
                 builder: (BuildContext c) {
                   return CategoryForm(
                     onSubmitted: () => Navigator.pop(c),
-                    formKey: _formKey,
+                    formKey: formKey,
                     category: category,
                   );
                 },
               );
             },
           ),
-          PopupMenuButton<PopupMenuItem>(
+          PopupMenuButton<PopupMenuItem<void>>(
             itemBuilder: (context) => [
               PopupMenuItem(
-                  child: const Text('Delete'),
-                  onTap: () async {
-                    //https://stackoverflow.com/questions/69568862/flutter-showdialog-is-not-shown-on-popupmenuitem-tap
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      showDialog<void>(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AreYouSureDialog(
-                            onYes: () {
-                              context
-                                  .read<TransactionsCubit>()
-                                  .changeCategory(fromCategoryId: category.id);
-                              context
-                                  .read<CategoriesCubit>()
-                                  .deleteCategory(category);
-                              Navigator.pop(context);
-                            },
-                          );
-                        },
-                      );
-                    });
-                  })
+                child: const Text('Delete'),
+                onTap: () async {
+                  //https://stackoverflow.com/questions/69568862/flutter-showdialog-is-not-shown-on-popupmenuitem-tap
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    showDialog<void>(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AreYouSureDialog(
+                          onYes: () {
+                            context
+                                .read<TransactionsCubit>()
+                                .changeCategory(fromCategoryId: category.id);
+                            context
+                                .read<CategoriesCubit>()
+                                .deleteCategory(category);
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    );
+                  });
+                },
+              )
             ],
           )
         ],

@@ -5,7 +5,7 @@ import 'package:my_pesa/transactions/transactions_cubit.dart';
 import 'package:my_pesa/transactions/view/transaction_list_widget.dart';
 
 class TransactionsPage extends StatelessWidget {
-  const TransactionsPage({Key? key}) : super(key: key);
+  const TransactionsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

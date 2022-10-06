@@ -23,12 +23,8 @@ class CategoriesInitial extends CategoriesState {
 
 class CategoriesLoaded extends CategoriesState {
   const CategoriesLoaded({
-    required List<Category> categories,
-    required Category defaultCategory,
-    UserError? error,
-  }) : super(
-          categories: categories,
-          defaultCategory: defaultCategory,
-          error: error,
-        );
+    required super.categories,
+    required super.defaultCategory,
+    super.error,
+  });
 }

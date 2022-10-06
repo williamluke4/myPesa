@@ -8,7 +8,7 @@ import 'package:my_pesa/settings/settings_cubit.dart';
 import 'package:my_pesa/settings/settings_state.dart';
 
 class SettingsPage extends StatelessWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
   Widget __buildUserAvatar(GoogleSignInAccount? user) {
     if (user != null) {
       return GoogleUserCircleAvatar(

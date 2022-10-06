@@ -4,14 +4,14 @@ import 'package:my_pesa/categories/categories_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/transactions/transactions_cubit.dart';
+import 'package:my_pesa/utils/color.dart';
 import 'package:my_pesa/utils/insights.dart';
-import 'package:my_pesa/widgets/charts/stacked_line_chart.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class InsightsPage extends StatelessWidget {
   const InsightsPage({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
   @override
   Widget build(BuildContext context) {
     final transactions = context.select<TransactionsCubit, List<Transaction>>(
@@ -25,9 +25,7 @@ class InsightsPage extends StatelessWidget {
     // Use Pie Chart To Display Monthly Spending and Income by category
     // Do something clever to spit out insights of monthly data
     final insights = buildInsights(transactions);
-    num kMinWidthOfLargeScreen = 600;
-    bool isScreenWide =
-        MediaQuery.of(context).size.width >= kMinWidthOfLargeScreen;
+    final isScreenWide = MediaQuery.of(context).size.width >= 600;
 
     return Scaffold(
       appBar: AppBar(
@@ -51,19 +49,24 @@ class InsightsPage extends StatelessWidget {
                         child: SfCircularChart(
                           annotations: <CircularChartAnnotation>[
                             CircularChartAnnotation(
-                                height: '100%',
-                                width: '100%',
-                                widget: PhysicalModel(
-                                  shape: BoxShape.circle,
-                                  elevation: 10,
-                                  color: const Color.fromRGBO(230, 230, 230, 1),
-                                  child: Container(),
-                                )),
+                              height: '100%',
+                              width: '100%',
+                              widget: PhysicalModel(
+                                shape: BoxShape.circle,
+                                elevation: 10,
+                                color: const Color.fromRGBO(230, 230, 230, 1),
+                                child: Container(),
+                              ),
+                            ),
                             CircularChartAnnotation(
-                                widget: Text('${insight.total.incoming}',
-                                    style: TextStyle(
-                                        color: Color.fromRGBO(0, 0, 0, 0.5),
-                                        fontSize: 25)))
+                              widget: Text(
+                                '${insight.total.incoming}',
+                                style: const TextStyle(
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                  fontSize: 25,
+                                ),
+                              ),
+                            )
                           ],
                           title: ChartTitle(text: 'Income'),
                           tooltipBehavior: TooltipBehavior(enable: true),
@@ -71,7 +74,8 @@ class InsightsPage extends StatelessWidget {
                             DoughnutSeries<CategoryInsight, String>(
                               dataSource: insight.categories
                                   .where(
-                                      (element) => element.total.incoming != 0)
+                                    (element) => element.total.incoming != 0,
+                                  )
                                   .toList(),
                               xValueMapper: (CategoryInsight data, _) =>
                                   categoriesMap[data.categoryId]?.name ??
@@ -96,49 +100,55 @@ class InsightsPage extends StatelessWidget {
                       ),
                       Expanded(
                         child: SfCircularChart(
-                            title: ChartTitle(text: 'Expenses'),
-                            annotations: <CircularChartAnnotation>[
-                              CircularChartAnnotation(
-                                  height: '100%',
-                                  width: '100%',
-                                  widget: PhysicalModel(
-                                    shape: BoxShape.circle,
-                                    elevation: 10,
-                                    color:
-                                        const Color.fromRGBO(230, 230, 230, 1),
-                                    child: Container(),
-                                  )),
-                              CircularChartAnnotation(
-                                  widget: Text('${insight.total.outgoing}',
-                                      style: TextStyle(
-                                          color: Color.fromRGBO(0, 0, 0, 0.5),
-                                          fontSize: 25)))
-                            ],
-                            tooltipBehavior: TooltipBehavior(enable: true),
-                            series: <DoughnutSeries<CategoryInsight, String>>[
-                              DoughnutSeries<CategoryInsight, String>(
-                                dataSource: insight.categories
-                                    .where((element) =>
-                                        element.total.outgoing != 0)
-                                    .toList(),
-                                pointColorMapper: (datum, index) =>
-                                    colorFrom(datum.categoryId),
-                                xValueMapper: (CategoryInsight data, _) =>
-                                    categoriesMap[data.categoryId]?.name ??
-                                    'Unknown',
-                                yValueMapper: (CategoryInsight data, _) =>
-                                    data.total.outgoing,
-                                name: 'Expense',
-                                dataLabelMapper: (CategoryInsight data, _) =>
-                                    categoriesMap[data.categoryId]?.name ??
-                                    'Unknown',
-                                dataLabelSettings: const DataLabelSettings(
-                                  isVisible: true,
-                                  showZeroValue: false,
-                                  labelPosition: ChartDataLabelPosition.outside,
+                          title: ChartTitle(text: 'Expenses'),
+                          annotations: <CircularChartAnnotation>[
+                            CircularChartAnnotation(
+                              height: '100%',
+                              width: '100%',
+                              widget: PhysicalModel(
+                                shape: BoxShape.circle,
+                                elevation: 10,
+                                color: const Color.fromRGBO(230, 230, 230, 1),
+                                child: Container(),
+                              ),
+                            ),
+                            CircularChartAnnotation(
+                              widget: Text(
+                                '${insight.total.outgoing}',
+                                style: const TextStyle(
+                                  color: Color.fromRGBO(0, 0, 0, 0.5),
+                                  fontSize: 25,
                                 ),
-                              )
-                            ]),
+                              ),
+                            )
+                          ],
+                          tooltipBehavior: TooltipBehavior(enable: true),
+                          series: <DoughnutSeries<CategoryInsight, String>>[
+                            DoughnutSeries<CategoryInsight, String>(
+                              dataSource: insight.categories
+                                  .where(
+                                    (element) => element.total.outgoing != 0,
+                                  )
+                                  .toList(),
+                              pointColorMapper: (datum, index) =>
+                                  colorFrom(datum.categoryId),
+                              xValueMapper: (CategoryInsight data, _) =>
+                                  categoriesMap[data.categoryId]?.name ??
+                                  'Unknown',
+                              yValueMapper: (CategoryInsight data, _) =>
+                                  data.total.outgoing,
+                              name: 'Expense',
+                              dataLabelMapper: (CategoryInsight data, _) =>
+                                  categoriesMap[data.categoryId]?.name ??
+                                  'Unknown',
+                              dataLabelSettings: const DataLabelSettings(
+                                isVisible: true,
+                                showZeroValue: false,
+                                labelPosition: ChartDataLabelPosition.outside,
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     ],
                   ),

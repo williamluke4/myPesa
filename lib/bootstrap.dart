@@ -23,19 +23,19 @@ Future<Directory> getConfigDir() async {
 
 class AppBlocObserver extends BlocObserver {
   @override
-  void onCreate(BlocBase bloc) {
+  void onCreate(BlocBase<dynamic> bloc) {
     super.onCreate(bloc);
     log.d('Bloc created: ${bloc.runtimeType}');
   }
 
   @override
-  void onChange(BlocBase bloc, Change change) {
+  void onChange(BlocBase<dynamic> bloc, Change<dynamic> change) {
     log.d('Bloc changed(${bloc.runtimeType})');
     super.onChange(bloc, change);
   }
 
   @override
-  void onError(BlocBase bloc, Object error, StackTrace stackTrace) {
+  void onError(BlocBase<dynamic> bloc, Object error, StackTrace stackTrace) {
     log.e('Bloc errored(${bloc.runtimeType}, $error', [stackTrace]);
     super.onError(bloc, error, stackTrace);
   }
