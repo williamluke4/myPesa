@@ -13,6 +13,45 @@ class TransactionDetailWidget extends StatelessWidget {
     required this.transaction,
   });
   final Transaction transaction;
+  Future<void> _handleApplyToAll(BuildContext context) async {
+    await showDialog<void>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Are You Sure?'),
+          content: const Text(
+            'This will overwrite all transactions with existing categories',
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                context.read<TransactionsCubit>().applyCategoryToRecipient(
+                      transaction.recipient,
+                      transaction.categoryId,
+                    );
+              },
+              child: const Text(
+                'Only Uncategorized',
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+                context.read<TransactionsCubit>().applyCategoryToRecipient(
+                      transaction.recipient,
+                      transaction.categoryId,
+                      overwrite: true,
+                    );
+              },
+              child: const Text('Yes All'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final categories = context
@@ -125,11 +164,7 @@ class TransactionDetailWidget extends StatelessWidget {
                 },
               ),
               TextButton(
-                onPressed: () =>
-                    context.read<TransactionsCubit>().applyCategoryToRecipient(
-                          transaction.recipient,
-                          transaction.categoryId,
-                        ),
+                onPressed: () => _handleApplyToAll(context),
                 child: const Text('Apply To All'),
               )
             ],

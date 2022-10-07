@@ -25,7 +25,8 @@ class TransactionListWidget extends StatefulWidget {
 }
 
 class _TransactionListWidgetState extends State<TransactionListWidget> {
-  List<String> selectedRefs = [];
+  List<String> selectedTxRefs = [];
+
   @override
   Widget build(BuildContext context) {
     final groupedByDate =
@@ -44,13 +45,13 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
     });
     return Column(
       children: [
-        if (selectedRefs.isNotEmpty)
+        if (selectedTxRefs.isNotEmpty)
           Padding(
             padding: const EdgeInsets.all(8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${selectedRefs.length} Selected'),
+                Text('${selectedTxRefs.length} Selected'),
                 Row(
                   children: [
                     TextButton(
@@ -80,7 +81,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                                           .read<TransactionsCubit>()
                                           .changeCategory(
                                             toCategoryId: category.id,
-                                            txRefs: selectedRefs,
+                                            txRefs: selectedTxRefs,
                                           );
                                     }
                                     Navigator.pop(ctx);
@@ -91,7 +92,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                           },
                         );
                         setState(() {
-                          selectedRefs = [];
+                          selectedTxRefs = [];
                         });
                       },
                       child: const Text('Move'),
@@ -99,7 +100,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          selectedRefs = widget.transactions
+                          selectedTxRefs = widget.transactions
                               .map<String>((e) => e.ref)
                               .toList();
                         });
@@ -109,7 +110,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          selectedRefs = [];
+                          selectedTxRefs = [];
                         });
                       },
                       child: const Text('Deselect All'),
@@ -171,27 +172,27 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                             (tx) => TransactionRowWidget(
                               key: Key(tx.ref),
                               transaction: tx,
-                              selected: selectedRefs.contains(tx.ref),
-                              onTap: selectedRefs.isEmpty
+                              selected: selectedTxRefs.contains(tx.ref),
+                              onTap: selectedTxRefs.isEmpty
                                   ? widget.onTransactionTap
                                   : (transaction) {
-                                      if (selectedRefs
+                                      if (selectedTxRefs
                                           .contains(transaction.ref)) {
                                         setState(
-                                          () => selectedRefs
+                                          () => selectedTxRefs
                                               .remove(transaction.ref),
                                         );
                                       } else {
                                         setState(
-                                          () =>
-                                              selectedRefs.add(transaction.ref),
+                                          () => selectedTxRefs
+                                              .add(transaction.ref),
                                         );
                                       }
                                     },
                               onLongPress: (tx) {
-                                if (selectedRefs.isEmpty) {
+                                if (selectedTxRefs.isEmpty) {
                                   setState(() {
-                                    selectedRefs.add(tx.ref);
+                                    selectedTxRefs.add(tx.ref);
                                   });
                                 }
                               },

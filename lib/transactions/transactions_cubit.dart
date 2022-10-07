@@ -51,13 +51,15 @@ class TransactionsCubit extends HydratedCubit<TransactionsState> {
 
   Future<void> applyCategoryToRecipient(
     String recipient,
-    String categoryId,
-  ) async {
+    String categoryId, {
+    bool overwrite = false,
+  }) async {
     log.d('Applying $categoryId to all transactions from $recipient');
 
     final updatedTransactions =
         List<Transaction>.from(state.transactions).map((e) {
-      if (e.recipient == recipient) {
+      if (e.recipient == recipient &&
+          (overwrite || e.categoryId == Category.none().id)) {
         return e.copyWith(categoryId: categoryId);
       }
       return e;
