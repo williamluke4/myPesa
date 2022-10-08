@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_pesa/categories/view/categories_list_view.dart';
-import 'package:my_pesa/categories/view/category_form.dart';
+import 'package:my_pesa/widgets/categories/categories_list_view.dart';
+import 'package:my_pesa/widgets/categories/category_form.dart';
 
 class CategoriesPage extends StatelessWidget {
   const CategoriesPage({

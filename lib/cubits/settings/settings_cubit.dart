@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
+import 'package:my_pesa/cubits/settings/settings_state.dart';
 import 'package:my_pesa/errors.dart';
-import 'package:my_pesa/settings/settings_state.dart';
 import 'package:my_pesa/utils/logger.dart';
 
 class SettingsCubit extends HydratedCubit<SettingsState> {

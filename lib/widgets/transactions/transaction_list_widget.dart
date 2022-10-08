@@ -1,12 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_pesa/categories/categories_cubit.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/pages/category_page.dart';
-import 'package:my_pesa/transactions/transactions_cubit.dart';
-import 'package:my_pesa/transactions/view/transaction_row_widget.dart';
+import 'package:my_pesa/widgets/transactions/transaction_row_widget.dart';
 
 class TransactionListWidget extends StatefulWidget {
   const TransactionListWidget({
@@ -31,7 +30,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
   Widget build(BuildContext context) {
     final groupedByDate =
         groupBy<Transaction, String>(widget.transactions, (obj) => obj.date);
-    final categories = context.select<CategoriesCubit, List<Category>>(
+    final categories = context.select<DatabaseCubit, List<Category>>(
       (c) => c.state.categories,
     );
     final categoriesMap = {for (var e in categories) e.id: e};
@@ -78,7 +77,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                                   onChanged: (Category? category) {
                                     if (category != null) {
                                       context
-                                          .read<TransactionsCubit>()
+                                          .read<DatabaseCubit>()
                                           .changeCategory(
                                             toCategoryId: category.id,
                                             txRefs: selectedTxRefs,
@@ -123,7 +122,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () =>
-                context.read<TransactionsCubit>().refreshTransactions(),
+                context.read<DatabaseCubit>().fetchTransactionsFromSMS(),
             child: ListView.builder(
               itemCount: datesMap.length,
               key: const PageStorageKey<String>('transactions_list_controller'),

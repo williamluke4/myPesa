@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_pesa/categories/categories_cubit.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
-import 'package:my_pesa/utils/logger.dart';
 
 class CategoryForm extends StatelessWidget {
   const CategoryForm({
@@ -18,7 +17,7 @@ class CategoryForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = context
-        .select<CategoriesCubit, List<Category>>((c) => c.state.categories);
+        .select<DatabaseCubit, List<Category>>((c) => c.state.categories);
     return Form(
       key: formKey,
       child: Padding(
@@ -51,13 +50,12 @@ class CategoryForm extends StatelessWidget {
                     return;
                   }
                   if (category != null) {
-                    log.d('Editing: $value');
-                    context.read<CategoriesCubit>().editCategory(
+                    context.read<DatabaseCubit>().editCategory(
                           value,
                           category!,
                         );
                   } else {
-                    context.read<CategoriesCubit>().addCategory(
+                    context.read<DatabaseCubit>().addCategory(
                           value,
                         );
                   }

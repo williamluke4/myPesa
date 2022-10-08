@@ -1,6 +1,7 @@
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/utils/parse/mpesa.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum TransactionProvider {
   mpesa('MPESA');
@@ -14,7 +15,10 @@ class TransactionsRepository {
   // prevents instantiation and extension.
   TransactionsRepository();
 
-  Future<List<Transaction>> getTransactionsFromMessages() async {
+  Future<List<Transaction>> getTxsFromSMS() async {
+    if (await Permission.sms.isGranted == false) {
+      await Permission.sms.request();
+    }
     final query = SmsQuery();
     final transactions = <Transaction>[];
     final messages = await query.querySms(

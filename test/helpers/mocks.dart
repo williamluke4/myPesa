@@ -54,7 +54,7 @@ final mockTransactions = [
 class MockTransactionsRepository extends Mock
     implements TransactionsRepository {
   @override
-  Future<List<Transaction>> getTransactionsFromMessages() async {
+  Future<List<Transaction>> getTxsFromSMS() async {
     return mockTransactions;
   }
 }

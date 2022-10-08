@@ -27,6 +27,7 @@ class Transaction extends Equatable {
   factory Transaction.fromJson(Map<String, dynamic> json) =>
       _$TransactionFromJson(json);
 
+  bool get isModified => categoryId != Category.none().id || notes.isNotEmpty;
   final String amount;
   final String ref;
   final String txCost;

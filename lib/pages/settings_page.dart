@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:my_pesa/cubits/export/export_cubit.dart';
+import 'package:my_pesa/cubits/export/export_screen.dart';
+import 'package:my_pesa/cubits/settings/settings_cubit.dart';
+import 'package:my_pesa/cubits/settings/settings_state.dart';
 import 'package:my_pesa/data/sheet_repository.dart';
-import 'package:my_pesa/export/export_cubit.dart';
-import 'package:my_pesa/export/export_screen.dart';
-import 'package:my_pesa/settings/settings_cubit.dart';
-import 'package:my_pesa/settings/settings_state.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});

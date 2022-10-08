@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_pesa/categories/categories_cubit.dart';
-import 'package:my_pesa/categories/view/category_detail_view.dart';
-import 'package:my_pesa/categories/view/category_form.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
-import 'package:my_pesa/transactions/transactions_cubit.dart';
 import 'package:my_pesa/widgets/are_you_sure_dialog.dart';
+import 'package:my_pesa/widgets/categories/category_detail_view.dart';
+import 'package:my_pesa/widgets/categories/category_form.dart';
 
 class CategoryPage extends StatelessWidget {
   const CategoryPage({
@@ -18,7 +17,7 @@ class CategoryPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final category = context
-        .select<CategoriesCubit, Category>((c) => c.findCategory(categoryId)!);
+        .select<DatabaseCubit, Category>((c) => c.findCategory(categoryId)!);
     return Scaffold(
       appBar: AppBar(
         title: Text(category.name),
@@ -53,10 +52,7 @@ class CategoryPage extends StatelessWidget {
                         return AreYouSureDialog(
                           onYes: () {
                             context
-                                .read<TransactionsCubit>()
-                                .changeCategory(fromCategoryId: category.id);
-                            context
-                                .read<CategoriesCubit>()
+                                .read<DatabaseCubit>()
                                 .deleteCategory(category);
                             Navigator.pop(context);
                           },

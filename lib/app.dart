@@ -1,25 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_pesa/categories/categories_cubit.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
+import 'package:my_pesa/cubits/settings/settings_cubit.dart';
 import 'package:my_pesa/data/transactions_repository.dart';
 import 'package:my_pesa/pages/categories_page.dart';
 import 'package:my_pesa/pages/insights_page.dart';
 // import 'package:my_pesa/pages/insights_page.dart';
 import 'package:my_pesa/pages/settings_page.dart';
 import 'package:my_pesa/pages/transactions_page.dart';
-import 'package:my_pesa/settings/settings_cubit.dart';
-import 'package:my_pesa/transactions/transactions_cubit.dart';
 
 class App extends StatelessWidget {
   App({super.key})
       : settingsCubit = SettingsCubit(),
-        categoriesCubit = CategoriesCubit(),
-        transactionsCubit =
-            TransactionsCubit(transactionsRepository: TransactionsRepository());
+        databaseCubit =
+            DatabaseCubit(transactionsRepository: TransactionsRepository());
 
   final SettingsCubit settingsCubit;
-  final CategoriesCubit categoriesCubit;
-  final TransactionsCubit transactionsCubit;
+  final DatabaseCubit databaseCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -29,10 +26,7 @@ class App extends StatelessWidget {
           create: (_) => settingsCubit,
         ),
         BlocProvider(
-          create: (_) => categoriesCubit,
-        ),
-        BlocProvider(
-          create: (_) => transactionsCubit,
+          create: (_) => databaseCubit,
         ),
       ],
       child: const AppView(),

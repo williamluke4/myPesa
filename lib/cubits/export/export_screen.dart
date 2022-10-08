@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:my_pesa/categories/categories_cubit.dart';
-import 'package:my_pesa/export/export_cubit.dart';
-import 'package:my_pesa/export/export_state.dart';
-import 'package:my_pesa/settings/settings_cubit.dart';
-import 'package:my_pesa/transactions/transactions_cubit.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
+import 'package:my_pesa/cubits/export/export_cubit.dart';
+import 'package:my_pesa/cubits/export/export_state.dart';
+import 'package:my_pesa/cubits/settings/settings_cubit.dart';
 
 class ExportView extends StatelessWidget {
   const ExportView({super.key});
@@ -15,17 +14,7 @@ class ExportView extends StatelessWidget {
     bool mounted = true,
   ]) async {
     if (!mounted) return;
-    final exportCubit = context.read<ExportCubit>();
-    final txsCubit = context.read<TransactionsCubit>();
-    final categoriesCubit = context.read<CategoriesCubit>();
-
-    final result = await exportCubit.import();
-    if (result == null) {
-      return;
-    }
-
-    await txsCubit.import(result.item1);
-    await categoriesCubit.import(result.item2);
+    await context.read<DatabaseCubit>().import();
   }
 
   Future<void> _handleDelete(BuildContext context) async {
@@ -40,8 +29,7 @@ class ExportView extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
-              context.read<CategoriesCubit>().reset();
-              context.read<TransactionsCubit>().reset();
+              context.read<DatabaseCubit>().reset();
               Navigator.pop(context);
             },
             child: const Text('Yes Delete it'),
@@ -77,12 +65,12 @@ class ExportView extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final transactions =
-            context.read<TransactionsCubit>().state.transactions;
+        final transactions = context.read<DatabaseCubit>().state.transactions;
+        final categories = context.read<DatabaseCubit>().state.categories;
+
         final user = context
             .select<SettingsCubit, GoogleSignInAccount?>((s) => s.state.user);
 
-        final categories = context.read<CategoriesCubit>().state.categories;
         if (state.isLoading) {
           return const CircularProgressIndicator.adaptive();
         } else {
@@ -115,9 +103,7 @@ class ExportView extends StatelessWidget {
               Row(
                 children: [
                   ElevatedButton(
-                    onPressed: () => context
-                        .read<ExportCubit>()
-                        .backup(transactions, categories),
+                    onPressed: () => context.read<DatabaseCubit>().backup(),
                     child: const Text('Backup'),
                   ),
                   ElevatedButton(

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/transaction.dart';
-import 'package:my_pesa/transactions/transactions_cubit.dart';
-import 'package:my_pesa/transactions/view/transaction_detail_widget.dart';
-import 'package:my_pesa/transactions/view/transaction_list_widget.dart';
+import 'package:my_pesa/widgets/transactions/transaction_detail_widget.dart';
+import 'package:my_pesa/widgets/transactions/transaction_list_widget.dart';
 
 class TransactionPage extends StatelessWidget {
   const TransactionPage({
@@ -13,7 +13,7 @@ class TransactionPage extends StatelessWidget {
   final String txRef;
   @override
   Widget build(BuildContext context) {
-    final transactions = context.select<TransactionsCubit, List<Transaction>>(
+    final transactions = context.select<DatabaseCubit, List<Transaction>>(
       (c) => c.state.transactions,
     );
 

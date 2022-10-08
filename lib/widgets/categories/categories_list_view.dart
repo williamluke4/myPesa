@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_pesa/categories/categories_cubit.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/pages/category_page.dart';
 
 class CategoriesListView extends StatelessWidget {
@@ -8,7 +8,7 @@ class CategoriesListView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoriesCubit, CategoriesState>(
+    return BlocBuilder<DatabaseCubit, DatabaseState>(
       builder: (context, state) {
         return ListView.builder(
           itemCount: state.categories.length,

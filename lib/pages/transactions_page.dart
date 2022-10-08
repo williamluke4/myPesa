@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/pages/transaction_page.dart';
-import 'package:my_pesa/transactions/transactions_cubit.dart';
-import 'package:my_pesa/transactions/view/transaction_list_widget.dart';
+import 'package:my_pesa/widgets/transactions/transaction_list_widget.dart';
 
 class TransactionsPage extends StatelessWidget {
   const TransactionsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TransactionsCubit, TransactionsState>(
-      listener: (BuildContext context, TransactionsState state) {
+    return BlocConsumer<DatabaseCubit, DatabaseState>(
+      listener: (BuildContext context, DatabaseState state) {
         if (state.error != null) {
           final snackBar = SnackBar(
             content: Text(

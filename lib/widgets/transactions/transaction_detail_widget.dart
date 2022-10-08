@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:my_pesa/categories/categories_cubit.dart';
-import 'package:my_pesa/categories/view/category_form.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
-import 'package:my_pesa/transactions/transactions_cubit.dart';
 import 'package:my_pesa/utils/logger.dart';
+import 'package:my_pesa/widgets/categories/category_form.dart';
 
 class TransactionDetailWidget extends StatelessWidget {
   const TransactionDetailWidget({
@@ -26,7 +25,7 @@ class TransactionDetailWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                context.read<TransactionsCubit>().applyCategoryToRecipient(
+                context.read<DatabaseCubit>().applyCategoryToRecipient(
                       transaction.recipient,
                       transaction.categoryId,
                     );
@@ -38,7 +37,7 @@ class TransactionDetailWidget extends StatelessWidget {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                context.read<TransactionsCubit>().applyCategoryToRecipient(
+                context.read<DatabaseCubit>().applyCategoryToRecipient(
                       transaction.recipient,
                       transaction.categoryId,
                       overwrite: true,
@@ -55,7 +54,7 @@ class TransactionDetailWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final categories = context
-        .select<CategoriesCubit, List<Category>>((c) => c.state.categories);
+        .select<DatabaseCubit, List<Category>>((c) => c.state.categories);
     return Padding(
       padding: const EdgeInsets.all(3),
       child: Card(
@@ -138,7 +137,7 @@ class TransactionDetailWidget extends StatelessWidget {
                     }).toList(),
                     onChanged: (Category? category) {
                       if (category != null) {
-                        context.read<TransactionsCubit>().updateTransaction(
+                        context.read<DatabaseCubit>().updateTransaction(
                               transaction.ref,
                               transaction.copyWith(categoryId: category.id),
                             );
@@ -156,7 +155,7 @@ class TransactionDetailWidget extends StatelessWidget {
                 onFieldSubmitted: (String? value) {
                   if (value != null) {
                     log.d(value);
-                    context.read<TransactionsCubit>().updateTransaction(
+                    context.read<DatabaseCubit>().updateTransaction(
                           transaction.ref,
                           transaction.copyWith(notes: value),
                         );

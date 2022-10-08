@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/pages/transaction_page.dart';
-import 'package:my_pesa/transactions/transactions_cubit.dart';
-import 'package:my_pesa/transactions/view/transaction_list_widget.dart';
 import 'package:my_pesa/utils/datetime.dart';
 import 'package:my_pesa/utils/insights.dart';
+import 'package:my_pesa/widgets/transactions/transaction_list_widget.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class CategoryDetailsView extends StatelessWidget {
@@ -44,8 +44,8 @@ class CategoryDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final transactions = context.select<TransactionsCubit, List<Transaction>>(
-      (settingsCubit) => settingsCubit.state.transactions,
+    final transactions = context.select<DatabaseCubit, List<Transaction>>(
+      (c) => c.state.transactions,
     );
     final categoryTransactions =
         transactions.where((element) => element.categoryId == category.id);
