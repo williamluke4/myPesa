@@ -17,31 +17,6 @@ class CategoryDetailsView extends StatelessWidget {
 
   final Category category;
 
-  Widget _buildBarChart(List<Transaction> txs) {
-    final insights = buildInsights(txs);
-    return SfCartesianChart(
-      primaryXAxis: DateTimeCategoryAxis(dateFormat: mmmyDateFormat),
-      series: <ColumnSeries<Insight, DateTime>>[
-        ColumnSeries<Insight, DateTime>(
-          color: Colors.green,
-          borderRadius: BorderRadius.circular(10),
-          dataSource: insights,
-          xValueMapper: (Insight data, _) => data.datetime,
-          yValueMapper: (Insight data, _) => data.total.incoming,
-          name: 'Income',
-        ),
-        ColumnSeries<Insight, DateTime>(
-          dataSource: insights,
-          color: Colors.red,
-          borderRadius: BorderRadius.circular(10),
-          xValueMapper: (Insight data, _) => data.datetime,
-          yValueMapper: (Insight data, _) => data.total.outgoing,
-          name: 'Expense',
-        )
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final transactions = context.select<DatabaseCubit, List<Transaction>>(
@@ -50,12 +25,14 @@ class CategoryDetailsView extends StatelessWidget {
     final categoryTransactions =
         transactions.where((element) => element.categoryId == category.id);
 
+    final insights = buildInsights(categoryTransactions);
+
     return Column(
       children: <Widget>[
         Container(
           height: 200,
           padding: const EdgeInsets.all(8),
-          child: _buildBarChart(categoryTransactions.toList()),
+          child: MonthlyCategoryBarChart(insights: insights),
         ),
         Expanded(
           child: TransactionListWidget(
@@ -74,6 +51,44 @@ class CategoryDetailsView extends StatelessWidget {
             transactions: categoryTransactions.toList(),
           ),
         ),
+      ],
+    );
+  }
+}
+
+const edge = Radius.elliptical(6, 6);
+const borderRadius = BorderRadius.only(topLeft: edge, topRight: edge);
+
+class MonthlyCategoryBarChart extends StatelessWidget {
+  const MonthlyCategoryBarChart({
+    super.key,
+    required this.insights,
+  });
+  final List<Insight> insights;
+
+  @override
+  Widget build(BuildContext context) {
+    return SfCartesianChart(
+      primaryXAxis: DateTimeCategoryAxis(dateFormat: mmmyDateFormat),
+      series: <ColumnSeries<Insight, DateTime>>[
+        ColumnSeries<Insight, DateTime>(
+          color: Colors.green,
+          borderRadius: borderRadius,
+          dataSource: insights,
+          enableTooltip: true,
+          xValueMapper: (Insight data, _) => data.datetime,
+          yValueMapper: (Insight data, _) => data.total.incoming,
+          name: 'Income',
+        ),
+        ColumnSeries<Insight, DateTime>(
+          dataSource: insights,
+          color: Colors.red,
+          enableTooltip: true,
+          borderRadius: borderRadius,
+          xValueMapper: (Insight data, _) => data.datetime,
+          yValueMapper: (Insight data, _) => data.total.outgoing,
+          name: 'Expense',
+        )
       ],
     );
   }

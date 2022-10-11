@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/utils/datetime.dart';
-import 'package:my_pesa/utils/logger.dart';
 
 int stringToInt(String value) {
   final strVal = value.replaceAll(',', '');
@@ -12,6 +11,7 @@ class Total {
   Total();
   int incoming = 0;
   int outgoing = 0;
+  int get diff => incoming - outgoing;
   void add(Transaction tx) {
     if (tx.type == TransactionType.IN) {
       incoming += stringToInt(tx.amount);
@@ -52,7 +52,7 @@ class Insight {
   final categories = <CategoryInsight>[];
 }
 
-List<Insight> buildInsights(List<Transaction> txs) {
+List<Insight> buildInsights(Iterable<Transaction> txs) {
   final months = groupTransactionsByMonth(txs);
   final insights = <Insight>[];
   for (final month in months.keys) {
@@ -65,18 +65,18 @@ List<Insight> buildInsights(List<Transaction> txs) {
       );
       insights.add(insight);
     } catch (e) {
-      log.e(e);
+      // Probably Failed due to trying to parse a bad date
     }
   }
   return insights;
 }
 
 Map<String, List<Transaction>> groupTransactionsByMonth(
-  List<Transaction> txs,
+  Iterable<Transaction> txs,
 ) {
   return groupBy<Transaction, String>(
     txs,
     (obj) =>
         obj.dateTime != null ? mmmyDateFormat.format(obj.dateTime!) : 'Unknown',
-  );
+  )..removeWhere((key, value) => key == 'Unknown');
 }

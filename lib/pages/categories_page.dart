@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_pesa/widgets/categories/categories_list_view.dart';
+import 'package:my_pesa/pages/category_page.dart';
+import 'package:my_pesa/widgets/categories/categories_grid_view.dart';
 import 'package:my_pesa/widgets/categories/category_form.dart';
 
 class CategoriesPage extends StatelessWidget {
@@ -12,16 +13,24 @@ class CategoriesPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Categories'),
       ),
-      body: const CategoriesListView(),
+      body: CategoriesGridView(
+        onCategoryTap: (category) => Navigator.push(
+          context,
+          MaterialPageRoute<Widget>(
+            builder: (context) => CategoryPage(
+              key: key,
+              categoryId: category.id,
+            ),
+          ),
+        ),
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          final formKey = GlobalKey<FormState>();
           showModalBottomSheet<void>(
             context: context,
             builder: (BuildContext c) {
               return CategoryForm(
                 onSubmitted: () => Navigator.pop(c),
-                formKey: formKey,
               );
             },
           );

@@ -24,8 +24,8 @@ void main() {
     test('hydration', () async {
       final cubit1 = await buildDatabaseCubit();
       await cubit1.fetchTransactionsFromSMS();
-      await cubit1.addCategory('Test');
-      await cubit1.addCategory('Test 🤔');
+      await cubit1.addCategory('Test', '');
+      await cubit1.addCategory('Test', '🤔');
       expect(
         cubit1.state.transactions,
         mockTransactions,
@@ -43,12 +43,15 @@ void main() {
       final cubit2 = await buildDatabaseCubit();
 
       await cubit1.fetchTransactionsFromSMS();
-      await cubit1.addCategory('Test');
-      await cubit1.addCategory('Test 🤔');
+      await cubit1.fetchTransactionsFromSMS();
+
+      await cubit1.addCategory('Test', '');
+      await cubit1.addCategory('Test', '🤔');
       expect(
         cubit1.state.transactions,
         mockTransactions,
       );
+
       final json = cubit1.toJson(cubit1.state);
       final state = cubit2.fromJson(json!);
       expect(
@@ -84,8 +87,8 @@ void main() {
     test('crud', () async {
       final cubit1 = await buildDatabaseCubit();
       // Add
-      final c1 = await cubit1.addCategory('Test');
-      final c2 = await cubit1.addCategory('Test 🤔');
+      final c1 = await cubit1.addCategory('Test', '');
+      final c2 = await cubit1.addCategory('Test 2', '🤔');
       var expectedCategories = [...defaultCategories, c1!, c2!]
         ..sort((a, b) => a.name.compareTo(b.name));
       expect(
@@ -107,7 +110,7 @@ void main() {
         ),
       );
       // Update
-      await cubit1.editCategory('Test 🤔🤔', c2);
+      await cubit1.updateCategory(c2.id, c2.copyWith(name: 'Test 🤔🤔'));
       expect(
         cubit1.findCategory(c2.id)?.name,
         'Test 🤔🤔',

@@ -86,17 +86,17 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
 
   Future<void> fetchTransactionsFromSMS() async {
     final txsFromSms = await transactionsRepository.getTxsFromSMS();
-    for (final tx in state.transactions) {
+    for (final currentTx in state.transactions) {
       // The Reason why it is done this way round is to allow for changes
       // in the sms parsing logic
-      final idx = txsFromSms.indexWhere((element) => element.ref == tx.ref);
-      if (idx != -1 && tx.isModified) {
-        // TX Exists in messages loaded from sms and has been modified
-        txsFromSms[idx] = txsFromSms[idx]
-            .copyWith(categoryId: tx.categoryId, notes: tx.notes);
-      } else {
+      final idx =
+          txsFromSms.indexWhere((txFromSMS) => txFromSMS.ref == currentTx.ref);
+      if (idx != -1) {
+        txsFromSms[idx] = txsFromSms[idx].merge(currentTx);
+      }
+      if (idx == -1) {
         // TX Does Not exist in sms messages
-        txsFromSms.add(tx);
+        txsFromSms.add(currentTx);
       }
     }
     emit(
@@ -124,11 +124,11 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
     };
   }
 
-  Future<void> editCategory(String newName, Category category) async {
-    final idx = state.categories.indexWhere((c) => c.id == category.id);
+  Future<void> updateCategory(String id, Category category) async {
+    final idx = state.categories.indexWhere((c) => c.id == id);
     if (idx != -1) {
       final updatedCategories = List<Category>.from(state.categories);
-      updatedCategories[idx] = updatedCategories[idx].copyWith(name: newName);
+      updatedCategories[idx] = category;
       emit(
         state.copyWith(
           categories: updatedCategories,
@@ -144,12 +144,12 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
     }
   }
 
-  Future<Category?> addCategory(String name) async {
+  Future<Category?> addCategory(String name, String emoji) async {
     log.d('Adding category $name');
     if (name.isEmpty || state.categories.any((c) => c.name == name)) {
       return null;
     }
-    final category = Category(name: name.trim());
+    final category = Category(name: name.trim(), emoji: emoji);
     final categories = [...state.categories, category]
       ..sort((a, b) => a.name.compareTo(b.name));
     emit(
@@ -203,18 +203,26 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
           .map((dynamic e) => Category.fromJson(e as Map<String, dynamic>))
           .toList();
       final newCategories = <Category>[...state.categories];
-      for (final c in importedCategories) {
-        final idx =
-            state.categories.indexWhere((element) => element.id == c.id);
-        if (idx == -1) newCategories.add(c);
+      for (final importedCategory in importedCategories) {
+        final idx = newCategories
+            .indexWhere((element) => element.id == importedCategory.id);
+        if (idx == -1) {
+          newCategories.add(importedCategory);
+        } else if (importedCategory.lastModified >
+            newCategories[idx].lastModified) {
+          newCategories[idx] = importedCategory;
+        }
       }
       newCategories.sort((a, b) => a.name.compareTo(b.name));
 
       final newTransactions = <Transaction>[...state.transactions];
       for (final c in importedTransactions) {
         final idx =
-            state.transactions.indexWhere((element) => element.ref == c.ref);
+            newTransactions.indexWhere((element) => element.ref == c.ref);
         if (idx == -1) newTransactions.add(c);
+        if (idx != -1) {
+          newTransactions[idx] = newTransactions[idx].merge(c);
+        }
       }
       emit(
         state.copyWith(

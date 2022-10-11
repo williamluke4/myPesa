@@ -20,19 +20,17 @@ class CategoryPage extends StatelessWidget {
         .select<DatabaseCubit, Category>((c) => c.findCategory(categoryId)!);
     return Scaffold(
       appBar: AppBar(
-        title: Text(category.name),
+        title: Text('${category.emoji} ${category.name}'),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.edit),
             tooltip: 'Edit',
             onPressed: () async {
-              final formKey = GlobalKey<FormState>();
               await showModalBottomSheet<void>(
                 context: context,
                 builder: (BuildContext c) {
                   return CategoryForm(
                     onSubmitted: () => Navigator.pop(c),
-                    formKey: formKey,
                     category: category,
                   );
                 },

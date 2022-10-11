@@ -12,7 +12,7 @@ enum TransactionType { IN, OUT, UNKNOWN }
 class Transaction extends Equatable {
   Transaction({
     this.recipient = '',
-    this.ref = '',
+    required this.ref,
     this.amount = '',
     this.txCost = '',
     this.balance = '',
@@ -21,13 +21,18 @@ class Transaction extends Equatable {
     String? categoryId,
     this.body = '',
     this.dateTime,
+    int? lastModified,
   })  : date = dateTime != null ? dateTimeToString(dateTime) : '',
-        categoryId = categoryId ?? defaultCategory.id;
+        categoryId = categoryId ?? defaultCategory.id,
+        lastModified = lastModified ?? DateTime.now().millisecondsSinceEpoch;
 
   factory Transaction.fromJson(Map<String, dynamic> json) =>
       _$TransactionFromJson(json);
 
-  bool get isModified => categoryId != Category.none().id || notes.isNotEmpty;
+  bool get isDefaultCategory => categoryId == Category.none().id;
+
+  bool get isModified => !isDefaultCategory || notes.isNotEmpty;
+
   final String amount;
   final String ref;
   final String txCost;
@@ -36,12 +41,31 @@ class Transaction extends Equatable {
   final String balance;
   final String body;
   final String notes;
-
+  final int lastModified;
   final DateTime? dateTime;
   final String categoryId;
   final TransactionType type;
 
   Map<String, dynamic> toJson() => _$TransactionToJson(this);
+
+  Transaction merge(Transaction tx) {
+    // Not the same tx
+    if (tx.ref != ref) return this;
+
+    final newest = tx.lastModified > lastModified ? tx : this;
+    final oldest = tx.lastModified < lastModified ? tx : this;
+
+    var categoryId = newest.categoryId;
+    var notes = newest.notes;
+
+    if (newest.isDefaultCategory && !oldest.isDefaultCategory) {
+      categoryId = oldest.categoryId;
+    }
+    if (newest.notes.isEmpty && oldest.notes.isNotEmpty) {
+      notes = oldest.notes;
+    }
+    return newest.copyWith(categoryId: categoryId, notes: notes);
+  }
 
   Transaction copyWith({
     String? amount,
@@ -67,6 +91,7 @@ class Transaction extends Equatable {
       dateTime: dateTime ?? this.dateTime,
       categoryId: categoryId ?? this.categoryId,
       type: type ?? this.type,
+      lastModified: DateTime.now().millisecondsSinceEpoch,
     );
   }
 
@@ -81,6 +106,7 @@ class Transaction extends Equatable {
         notes,
         dateTime,
         categoryId,
+        lastModified,
         type
       ];
 }

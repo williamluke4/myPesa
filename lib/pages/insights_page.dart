@@ -20,11 +20,8 @@ class InsightsPage extends StatelessWidget {
       (c) => c.state.categories,
     );
     final categoriesMap = {for (var e in categories) e.id: e};
-    // Add Date Range Filter for Transactions
-    // Use Pie Chart To Display Monthly Spending and Income by category
-    // Do something clever to spit out insights of monthly data
+
     final insights = buildInsights(transactions);
-    final isScreenWide = MediaQuery.of(context).size.width >= 600;
 
     return Scaffold(
       appBar: AppBar(
@@ -36,123 +33,9 @@ class InsightsPage extends StatelessWidget {
           itemCount: insights.length,
           itemBuilder: (context, insightIdx) {
             final insight = insights[insightIdx];
-            return Column(
-              children: [
-                Text(insight.name),
-                SizedBox(
-                  height: isScreenWide ? 400 : 700,
-                  child: Flex(
-                    direction: isScreenWide ? Axis.horizontal : Axis.vertical,
-                    children: [
-                      Expanded(
-                        child: SfCircularChart(
-                          annotations: <CircularChartAnnotation>[
-                            CircularChartAnnotation(
-                              height: '100%',
-                              width: '100%',
-                              widget: PhysicalModel(
-                                shape: BoxShape.circle,
-                                elevation: 10,
-                                color: const Color.fromRGBO(230, 230, 230, 1),
-                                child: Container(),
-                              ),
-                            ),
-                            CircularChartAnnotation(
-                              widget: Text(
-                                '${insight.total.incoming}',
-                                style: const TextStyle(
-                                  color: Color.fromRGBO(0, 0, 0, 0.5),
-                                  fontSize: 25,
-                                ),
-                              ),
-                            )
-                          ],
-                          title: ChartTitle(text: 'Income'),
-                          tooltipBehavior: TooltipBehavior(enable: true),
-                          series: <DoughnutSeries<CategoryInsight, String>>[
-                            DoughnutSeries<CategoryInsight, String>(
-                              dataSource: insight.categories
-                                  .where(
-                                    (element) => element.total.incoming != 0,
-                                  )
-                                  .toList(),
-                              xValueMapper: (CategoryInsight data, _) =>
-                                  categoriesMap[data.categoryId]?.name ??
-                                  'Unknown',
-                              yValueMapper: (CategoryInsight data, _) =>
-                                  data.total.incoming,
-                              pointColorMapper: (datum, index) =>
-                                  colorFrom(datum.categoryId),
-                              name: 'Income',
-                              sortingOrder: SortingOrder.descending,
-                              dataLabelMapper: (CategoryInsight data, _) =>
-                                  categoriesMap[data.categoryId]?.name ??
-                                  'Unknown',
-                              dataLabelSettings: const DataLabelSettings(
-                                isVisible: true,
-                                showZeroValue: false,
-                                labelPosition: ChartDataLabelPosition.outside,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: SfCircularChart(
-                          title: ChartTitle(text: 'Expenses'),
-                          annotations: <CircularChartAnnotation>[
-                            CircularChartAnnotation(
-                              height: '100%',
-                              width: '100%',
-                              widget: PhysicalModel(
-                                shape: BoxShape.circle,
-                                elevation: 10,
-                                color: const Color.fromRGBO(230, 230, 230, 1),
-                                child: Container(),
-                              ),
-                            ),
-                            CircularChartAnnotation(
-                              widget: Text(
-                                '${insight.total.outgoing}',
-                                style: const TextStyle(
-                                  color: Color.fromRGBO(0, 0, 0, 0.5),
-                                  fontSize: 25,
-                                ),
-                              ),
-                            )
-                          ],
-                          tooltipBehavior: TooltipBehavior(enable: true),
-                          series: <DoughnutSeries<CategoryInsight, String>>[
-                            DoughnutSeries<CategoryInsight, String>(
-                              dataSource: insight.categories
-                                  .where(
-                                    (element) => element.total.outgoing != 0,
-                                  )
-                                  .toList(),
-                              pointColorMapper: (datum, index) =>
-                                  colorFrom(datum.categoryId),
-                              xValueMapper: (CategoryInsight data, _) =>
-                                  categoriesMap[data.categoryId]?.name ??
-                                  'Unknown',
-                              yValueMapper: (CategoryInsight data, _) =>
-                                  data.total.outgoing,
-                              name: 'Expense',
-                              dataLabelMapper: (CategoryInsight data, _) =>
-                                  categoriesMap[data.categoryId]?.name ??
-                                  'Unknown',
-                              dataLabelSettings: const DataLabelSettings(
-                                isVisible: true,
-                                showZeroValue: false,
-                                labelPosition: ChartDataLabelPosition.outside,
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+            return MonthlyInsight(
+              insight: insight,
+              categoriesMap: categoriesMap,
             );
           },
         ),
@@ -161,4 +44,144 @@ class InsightsPage extends StatelessWidget {
   }
 }
 
-// StackedBarChart(buildChartSeries(transactions, categoriesMap)),
+class MonthlyInsight extends StatelessWidget {
+  const MonthlyInsight({
+    super.key,
+    required this.insight,
+    required this.categoriesMap,
+  });
+
+  final Insight insight;
+  final Map<String, Category> categoriesMap;
+
+  @override
+  Widget build(BuildContext context) {
+    final isScreenWide = MediaQuery.of(context).size.width >= 600;
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8),
+          child: Text(
+            insight.name,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+        ),
+        SizedBox(
+          height: isScreenWide ? 400 : 700,
+          child: Flex(
+            direction: isScreenWide ? Axis.horizontal : Axis.vertical,
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SpendingByCategoryPieChart(
+                    insight: insight,
+                    title: 'Income',
+                    valueMapper: (c) => c.total.incoming,
+                    totalSpending: insight.total.incoming,
+                    dataSource: insight.categories
+                        .where((element) => element.total.incoming != 0)
+                        .toList(),
+                    categoriesMap: categoriesMap,
+                  ),
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: SpendingByCategoryPieChart(
+                    insight: insight,
+                    title: 'Expenses',
+                    valueMapper: (c) => c.total.outgoing,
+                    totalSpending: insight.total.outgoing,
+                    dataSource: insight.categories
+                        .where((element) => element.total.outgoing != 0)
+                        .toList(),
+                    categoriesMap: categoriesMap,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class SpendingByCategoryPieChart extends StatelessWidget {
+  const SpendingByCategoryPieChart({
+    super.key,
+    required this.insight,
+    required this.title,
+    required this.totalSpending,
+    required this.valueMapper,
+    required this.dataSource,
+    required this.categoriesMap,
+  });
+
+  final Insight insight;
+  final String title;
+  final List<CategoryInsight> dataSource;
+  final int Function(CategoryInsight) valueMapper;
+  final int totalSpending;
+
+  final Map<String, Category> categoriesMap;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: SfCircularChart(
+        title: ChartTitle(text: title),
+        annotations: <CircularChartAnnotation>[
+          CircularChartAnnotation(
+            height: '100%',
+            width: '100%',
+            widget: PhysicalModel(
+              shape: BoxShape.circle,
+              elevation: 10,
+              color: const Color.fromRGBO(
+                230,
+                230,
+                230,
+                1,
+              ),
+              child: Container(),
+            ),
+          ),
+          CircularChartAnnotation(
+            widget: Text(
+              '$totalSpending',
+              style: const TextStyle(
+                color: Color.fromRGBO(0, 0, 0, 0.5),
+                fontSize: 25,
+              ),
+            ),
+          )
+        ],
+        tooltipBehavior: TooltipBehavior(enable: true),
+        series: <DoughnutSeries<CategoryInsight, String>>[
+          DoughnutSeries<CategoryInsight, String>(
+            dataSource: dataSource,
+            pointColorMapper: (datum, index) => colorFrom(datum.categoryId),
+            xValueMapper: (CategoryInsight data, _) =>
+                categoriesMap[data.categoryId]?.name ?? 'Unknown',
+            yValueMapper: (CategoryInsight data, _) => valueMapper(data),
+            name: title,
+            dataLabelMapper: (
+              CategoryInsight data,
+              _,
+            ) =>
+                categoriesMap[data.categoryId]?.name ?? 'Unknown',
+            dataLabelSettings: const DataLabelSettings(
+              isVisible: true,
+              showZeroValue: false,
+              labelPosition: ChartDataLabelPosition.outside,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}

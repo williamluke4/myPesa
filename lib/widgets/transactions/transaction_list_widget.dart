@@ -5,6 +5,7 @@ import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/pages/category_page.dart';
+import 'package:my_pesa/widgets/categories/categories_grid_view.dart';
 import 'package:my_pesa/widgets/transactions/transaction_row_widget.dart';
 
 class TransactionListWidget extends StatefulWidget {
@@ -55,40 +56,19 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                   children: [
                     TextButton(
                       onPressed: () async {
-                        await showDialog<void>(
-                          context: context,
-                          builder: (ctx) {
-                            return Dialog(
-                              child: DropdownButtonHideUnderline(
-                                child: DropdownButton(
-                                  value: defaultCategory,
-
-                                  // Down Arrow Icon
-                                  icon: const Icon(Icons.keyboard_arrow_down),
-
-                                  // Array list of items
-
-                                  items: categories.map((c) {
-                                    return DropdownMenuItem(
-                                      value: c,
-                                      child: Text(c.name),
+                        await Navigator.push(
+                          context,
+                          MaterialPageRoute<Widget>(
+                            builder: (context) => CategoriesGridPage(
+                              onCategoryTap: (category) {
+                                context.read<DatabaseCubit>().changeCategory(
+                                      toCategoryId: category.id,
+                                      txRefs: selectedTxRefs,
                                     );
-                                  }).toList(),
-                                  onChanged: (Category? category) {
-                                    if (category != null) {
-                                      context
-                                          .read<DatabaseCubit>()
-                                          .changeCategory(
-                                            toCategoryId: category.id,
-                                            txRefs: selectedTxRefs,
-                                          );
-                                    }
-                                    Navigator.pop(ctx);
-                                  },
-                                ),
-                              ),
-                            );
-                          },
+                                Navigator.pop(context);
+                              },
+                            ),
+                          ),
                         );
                         setState(() {
                           selectedTxRefs = [];

@@ -20,6 +20,7 @@ Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       dateTime: json['dateTime'] == null
           ? null
           : DateTime.parse(json['dateTime'] as String),
+      lastModified: json['lastModified'] as int?,
     );
 
 Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
@@ -31,6 +32,7 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'balance': instance.balance,
       'body': instance.body,
       'notes': instance.notes,
+      'lastModified': instance.lastModified,
       'dateTime': instance.dateTime?.toIso8601String(),
       'categoryId': instance.categoryId,
       'type': _$TransactionTypeEnumMap[instance.type],

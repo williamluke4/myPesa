@@ -4,6 +4,7 @@ import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/utils/logger.dart';
+import 'package:my_pesa/widgets/categories/categories_grid_view.dart';
 import 'package:my_pesa/widgets/categories/category_form.dart';
 
 class TransactionDetailWidget extends StatelessWidget {
@@ -55,6 +56,10 @@ class TransactionDetailWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final categories = context
         .select<DatabaseCubit, List<Category>>((c) => c.state.categories);
+    final category = categories.firstWhere(
+      (element) => element.id == transaction.categoryId,
+      orElse: () => defaultCategory,
+    );
     return Padding(
       padding: const EdgeInsets.all(3),
       child: Card(
@@ -99,17 +104,15 @@ class TransactionDetailWidget extends StatelessWidget {
               ),
               InputDecorator(
                 decoration: InputDecoration(
+                  border: InputBorder.none,
                   labelText: 'Category',
                   suffix: IconButton(
                     onPressed: () {
-                      final formKey = GlobalKey<FormState>();
-
                       showModalBottomSheet<void>(
                         context: context,
                         builder: (BuildContext c) {
                           return CategoryForm(
                             onSubmitted: () => Navigator.pop(c),
-                            formKey: formKey,
                           );
                         },
                       );
@@ -117,33 +120,26 @@ class TransactionDetailWidget extends StatelessWidget {
                     icon: const Icon(Icons.add),
                   ),
                 ),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton(
-                    value: categories.firstWhere(
-                      (element) => element.id == transaction.categoryId,
-                      orElse: () => defaultCategory,
-                    ),
-
-                    // Down Arrow Icon
-                    icon: const Icon(Icons.keyboard_arrow_down),
-
-                    // Array list of items
-
-                    items: categories.map((c) {
-                      return DropdownMenuItem(
-                        value: c,
-                        child: Text(c.name),
-                      );
-                    }).toList(),
-                    onChanged: (Category? category) {
-                      if (category != null) {
-                        context.read<DatabaseCubit>().updateTransaction(
-                              transaction.ref,
-                              transaction.copyWith(categoryId: category.id),
-                            );
-                      }
-                    },
-                  ),
+                child: CategoryGridItem(
+                  category: category,
+                  onTap: (_) async {
+                    await Navigator.push(
+                      context,
+                      MaterialPageRoute<Widget>(
+                        builder: (context) => CategoriesGridPage(
+                          onCategoryTap: (selectedCategory) {
+                            context.read<DatabaseCubit>().updateTransaction(
+                                  transaction.ref,
+                                  transaction.copyWith(
+                                    categoryId: selectedCategory.id,
+                                  ),
+                                );
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ),
+                    );
+                  },
                 ),
                 // Initial Value
               ),
@@ -165,7 +161,7 @@ class TransactionDetailWidget extends StatelessWidget {
               TextButton(
                 onPressed: () => _handleApplyToAll(context),
                 child: const Text('Apply To All'),
-              )
+              ),
             ],
           ),
         ),
