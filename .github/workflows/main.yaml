@@ -84,12 +84,22 @@ jobs:
 
       - name: Build MacOS
         run: flutter build macos -t ./lib/main_production.dart
+      - name: Move
+        run: |
+          mkdir ./build/macos/Build/Products/Release/dist/
+          mv ./build/macos/Build/Products/Release/my_pesa.app/ ./build/macos/Build/Products/Release/dist
 
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: myPesa-${{github.ref_name}}-macos.zip
+          directory: build/macos/Build/Products/Release/dist
       - name: Publish
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            build/macos/Build/Products/Release/my_pesa.app
+            build/macos/Build/Products/Release/myPesa-${{github.ref_name}}-macos.zip
 
   publish-linux:
     if: ${{ false }} # startsWith(github.ref, 'refs/tags/')
