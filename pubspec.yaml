@@ -28,7 +28,7 @@ dependencies:
   json_serializable: ^6.4.0
   layout: ^1.0.3
   logger: ^1.1.0
-  multiple_result: ^1.0.4
+  multiple_result: ^3.0.0
   path: ^1.8.2
   path_provider: ^2.0.11
   permission_handler: ^10.0.1
