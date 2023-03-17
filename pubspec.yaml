@@ -22,7 +22,7 @@ dependencies:
   google_sign_in_dartio: ^0.2.1
   googleapis: ^9.2.0
   http: ^0.13.5
-  hydrated_bloc: ^8.1.0
+  hydrated_bloc: ^9.0.0
   intl: ^0.17.0
   json_annotation: ^4.7.0
   json_serializable: ^6.4.0
