@@ -81,16 +81,35 @@ final List<String> transactionHeaders = [
   'Balance',
   'Notes'
 ];
-RowData sheetHeaders = RowData(
-  values: transactionHeaders
-      .map<CellData>((header) => cell(stringValue: header))
-      .toList(),
-);
+final List<String> splitTransactionHeaders = [
+  'Date',
+  'Ref',
+  'Recipient',
+  'Amount',
+  'Category',
+  'Notes',
+];
+
+RowData getSheetHeaders({required bool separateTransactionFees}) {
+  if (separateTransactionFees) {
+    return RowData(
+      values: splitTransactionHeaders
+          .map<CellData>((header) => cell(stringValue: header))
+          .toList(),
+    );
+  }
+  return RowData(
+    values: transactionHeaders
+        .map<CellData>((header) => cell(stringValue: header))
+        .toList(),
+  );
+}
 
 List<RowData> exportTransaction({
   required Transaction tx,
   required List<Category> categories,
-  bool debug = false,
+  required bool debugMode,
+  required bool separateTransactionFees,
 }) {
   Category getCategoryById(String categoryId) {
     return categories.firstWhere((element) => element.id == categoryId);
@@ -99,28 +118,70 @@ List<RowData> exportTransaction({
   final amount = double.tryParse(tx.amount.replaceAll(',', ''));
   final txCost = double.tryParse(tx.txCost.replaceAll(',', ''));
   final balance = double.tryParse(tx.balance.replaceAll(',', ''));
-
-  return [
-    RowData(
-      values: [
-        dateTimeCell(value: tx.dateTime),
-        cell(stringValue: tx.ref),
-        cell(stringValue: tx.recipient),
-        // In
-        currencyCell(value: tx.type == TransactionType.IN ? amount : null),
-        // Out
-        currencyCell(value: tx.type == TransactionType.OUT ? amount : null),
-        // TX Cost
-        currencyCell(value: txCost),
-        // Category
-        cell(stringValue: getCategoryById(tx.categoryId).name),
-        // Balance
-        currencyCell(value: balance),
-        // Notes
-        cell(stringValue: tx.notes),
-        if (debug || tx.type == TransactionType.UNKNOWN)
-          cell(stringValue: tx.body)
-      ],
-    )
-  ];
+  if (separateTransactionFees) {
+    final feeCategory = Category.fee();
+    return [
+      RowData(
+        values: [
+          // Date
+          dateTimeCell(value: tx.dateTime),
+          // Ref
+          cell(stringValue: tx.ref),
+          // Recipient
+          cell(stringValue: tx.recipient),
+          // Amount
+          currencyCell(value: txCost == null ? null : txCost * -1),
+          // Category
+          cell(stringValue: feeCategory.name),
+        ],
+      ),
+      RowData(
+        values: [
+          // Date
+          dateTimeCell(value: tx.dateTime),
+          // Ref
+          cell(stringValue: tx.ref),
+          // Recipient
+          cell(stringValue: tx.recipient),
+          // Amount
+          currencyCell(value: tx.getSignedAmount),
+          // Category
+          cell(stringValue: getCategoryById(tx.categoryId).name),
+          // Notes
+          cell(stringValue: tx.notes),
+          // Debug (Body)
+          if (debugMode || tx.type == TransactionType.UNKNOWN)
+            cell(stringValue: tx.body)
+        ],
+      )
+    ];
+  } else {
+    return [
+      RowData(
+        values: [
+          // Date
+          dateTimeCell(value: tx.dateTime),
+          // Ref
+          cell(stringValue: tx.ref),
+          // Recipient
+          cell(stringValue: tx.recipient),
+          // In
+          currencyCell(value: tx.type == TransactionType.IN ? amount : null),
+          // Out
+          currencyCell(value: tx.type == TransactionType.OUT ? amount : null),
+          // TX Cost
+          currencyCell(value: txCost),
+          // Category
+          cell(stringValue: getCategoryById(tx.categoryId).name),
+          // Balance
+          currencyCell(value: balance),
+          // Notes
+          cell(stringValue: tx.notes),
+          // Debug (Body)
+          if (debugMode || tx.type == TransactionType.UNKNOWN)
+            cell(stringValue: tx.body)
+        ],
+      )
+    ];
+  }
 }

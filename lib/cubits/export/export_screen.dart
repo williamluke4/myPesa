@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:my_pesa/cubits/database/database_cubit.dart';
+import 'package:my_pesa/cubits/export/export_alert.dart';
 import 'package:my_pesa/cubits/export/export_cubit.dart';
 import 'package:my_pesa/cubits/export/export_state.dart';
 import 'package:my_pesa/cubits/settings/settings_cubit.dart';
@@ -90,35 +91,45 @@ class ExportView extends StatelessWidget {
                   ElevatedButton(
                     onPressed: user == null
                         ? null
-                        : () =>
-                            context.read<ExportCubit>().exportToGoogleSheets(
-                                  user,
-                                  transactions,
-                                  categories,
-                                ),
+                        : () => showDialog<void>(
+                              context: context,
+                              builder: (dialogContext) => BlocProvider.value(
+                                value: BlocProvider.of<ExportCubit>(context),
+                                child: const ExportAlert(),
+                              ),
+                            ),
                     child: const Text('Export to Google Sheets'),
                   ),
                 ],
               ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () => context.read<DatabaseCubit>().backup(),
-                    child: const Text('Backup'),
-                  ),
-                  ElevatedButton(
-                    onPressed: () => _handleImport(context),
-                    child: const Text('Import'),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => context.read<DatabaseCubit>().backup(),
+                      child: const Text('Backup'),
+                    ),
+                    ElevatedButton(
+                      onPressed: () => _handleImport(context),
+                      child: const Text('Import'),
+                    ),
+                  ],
+                ),
               ),
-              Row(
-                children: [
-                  ElevatedButton(
-                    onPressed: () => _handleDelete(context),
-                    child: const Text('Delete All Data'),
-                  ),
-                ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.redAccent,
+                      ),
+                      onPressed: () => _handleDelete(context),
+                      child: const Text('Delete All Data'),
+                    ),
+                  ],
+                ),
               ),
             ],
           );

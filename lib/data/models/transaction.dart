@@ -32,6 +32,9 @@ class Transaction extends Equatable {
   bool get isDefaultCategory => categoryId == Category.none().id;
 
   bool get isModified => !isDefaultCategory || notes.isNotEmpty;
+  double get getSignedAmount =>
+      getAmount * (type == TransactionType.OUT ? -1 : 1);
+  double get getAmount => double.tryParse(amount.replaceAll(',', '')) ?? 0;
 
   final String amount;
   final String ref;

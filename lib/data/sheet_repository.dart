@@ -19,42 +19,6 @@ class SheetRepository {
   // prevents instantiation and extension.
   SheetRepository();
 
-  Future<void> getTransactionsFromSheet({
-    required GoogleSignInAccount user,
-    required String spreadsheetId,
-  }) async {
-    final sheetsAPI = await getAPI(user);
-    final sheet =
-        await sheetsAPI.spreadsheets.get(spreadsheetId, includeGridData: true);
-    final data = sheet.sheets![0].data;
-    // final transactions = <Transaction>[];
-    sheet.sheets?.forEach((element) {
-      final gridDataList = element.data;
-      gridDataList?.forEach((gridData) {
-        final rowDataList = gridData.rowData;
-        rowDataList?.forEach((rowData) {
-          final rowValues = <String>[];
-          rowData.values?.forEach((element) {
-            rowValues.add(element.effectiveValue?.stringValue ?? '');
-          });
-          log.d(rowValues);
-          // try {
-          //   final transaction = Transaction.fromRow(rowValues);
-          //   transactons.add(transaction);
-          // } catch (e) {
-          //   logger.e(e);
-          // }
-          // enteries.add(rowValues);
-        });
-      });
-    });
-
-    log.d(data);
-
-    final rowData = data != null ? data[0].rowData : <RowData>[];
-    log.d(rowData);
-  }
-
   Future<SheetsApi> getAPI(GoogleSignInAccount user) async {
     final authHeaders = await user.authHeaders;
     final sheetsAPI = SheetsApi(AuthClient(authHeaders, http.Client()));
@@ -65,11 +29,18 @@ class SheetRepository {
     required GoogleSignInAccount user,
     required List<Transaction> transactions,
     required List<Category> categories,
+    required bool separateTransactionFees,
+    required bool debugMode,
   }) async {
     final sheetsAPI = await getAPI(user);
     try {
       final rowData = transactions.fold<List<RowData>>([], (value, tx) {
-        value.addAll(exportTransaction(tx: tx, categories: categories));
+        value.addAll(exportTransaction(
+          tx: tx,
+          categories: categories,
+          debugMode: debugMode,
+          separateTransactionFees: separateTransactionFees,
+        ));
         return value;
       });
       final sheet = Sheet(
@@ -77,7 +48,12 @@ class SheetRepository {
         data: [
           GridData(
             rowData: rowData.toList().reversed.toList()
-              ..insert(0, sheetHeaders),
+              ..insert(
+                0,
+                getSheetHeaders(
+                  separateTransactionFees: separateTransactionFees,
+                ),
+              ),
           )
         ],
       );

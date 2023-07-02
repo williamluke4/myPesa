@@ -31,27 +31,39 @@ class ExportCubit extends HydratedCubit<ExportState> {
     }
   }
 
-  Future<void> readTransactions(
-    GoogleSignInAccount user,
-    String spreadsheetId,
-  ) async {
-    await sheetRepository.getTransactionsFromSheet(
-      user: user,
-      spreadsheetId: spreadsheetId,
-    );
-  }
-
   Future<void> setSpreadsheetId(String spreadsheetId) async {
     return emit(ExportedState(spreadsheetId: spreadsheetId));
   }
 
   Future<void> exportToGoogleSheets(
-    GoogleSignInAccount user,
+    GoogleSignInAccount? user,
     List<Transaction> txs,
-    List<Category> categories,
-  ) async {
+    List<Category> categories, {
+    bool separateTransactionFees = false,
+    bool debugMode = false,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    if (user == null) {
+      emit(
+        state.copyWith(
+          error: const UserError(message: 'User is not logged in'),
+        ),
+      );
+      return;
+    }
     emit(state.copyWith(isLoading: true));
-    if (txs.isEmpty) {
+    List<Transaction> filteredTxs;
+    if (startDate != null && endDate != null) {
+      filteredTxs = txs.where((tx) {
+        return tx.dateTime != null &&
+            tx.dateTime!.isAfter(startDate) &&
+            tx.dateTime!.isBefore(endDate);
+      }).toList();
+    } else {
+      filteredTxs = txs;
+    }
+    if (filteredTxs.isEmpty) {
       emit(
         state.copyWith(
           isLoading: false,
@@ -60,10 +72,13 @@ class ExportCubit extends HydratedCubit<ExportState> {
       );
       return;
     }
+
     final created = await sheetRepository.createSheet(
       user: user,
-      transactions: txs,
+      transactions: filteredTxs,
       categories: categories,
+      separateTransactionFees: separateTransactionFees,
+      debugMode: debugMode,
     );
 
     if (created.isSuccess() && created.tryGetSuccess() != null) {

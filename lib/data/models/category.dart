@@ -32,6 +32,11 @@ class Category extends Equatable {
         name: 'Uncategorized',
         id: 'dd978c2d-0d0c-4ebf-aa2d-b2032b6eb128',
       );
+  factory Category.fee() => Category(
+        emoji: '💸',
+        name: 'Mpesa Fee',
+        id: 'e176dc4c-2928-46d0-961a-b850817ecc82',
+      );
 
   /// Connect the generated [_$CategoryToJson] function to the `toJson` method.
   Map<String, dynamic> toJson() => _$CategoryToJson(this);
