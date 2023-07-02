@@ -61,7 +61,7 @@ class SheetRepository {
     return sheetsAPI;
   }
 
-  Future<Result<Exception, Spreadsheet>> createSheet({
+  Future<Result<Spreadsheet, Exception>> createSheet({
     required GoogleSignInAccount user,
     required List<Transaction> transactions,
     required List<Category> categories,
@@ -69,7 +69,7 @@ class SheetRepository {
     final sheetsAPI = await getAPI(user);
     try {
       final rowData = transactions.fold<List<RowData>>([], (value, tx) {
-        value.addAll(exportTransaction(tx, categories));
+        value.addAll(exportTransaction(tx: tx, categories: categories));
         return value;
       });
       final sheet = Sheet(

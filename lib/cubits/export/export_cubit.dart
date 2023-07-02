@@ -66,10 +66,10 @@ class ExportCubit extends HydratedCubit<ExportState> {
       categories: categories,
     );
 
-    if (created.isSuccess() && created.getSuccess() != null) {
+    if (created.isSuccess() && created.tryGetSuccess() != null) {
       emit(
         ExportedState(
-          spreadsheetId: created.getSuccess()!.spreadsheetId,
+          spreadsheetId: created.tryGetSuccess()!.spreadsheetId,
           success: 'Export Success',
         ),
       );

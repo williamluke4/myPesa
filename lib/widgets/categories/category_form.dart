@@ -67,7 +67,7 @@ class _CategoryFormState extends State<CategoryForm> {
                             Navigator.pop(context);
                           },
                           config: e.Config(
-                            showRecentsTab: false,
+                            recentTabBehavior: e.RecentTabBehavior.POPULAR,
                             // Issue: https://github.com/flutter/flutter/issues/28894
                             emojiSizeMax: 32 * (Platform.isIOS ? 1.30 : 1.0),
                             bgColor: Theme.of(context).colorScheme.background,

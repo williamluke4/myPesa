@@ -24,10 +24,8 @@ FutureOr<T> mockHydratedStorage<T>(
   FutureOr<T> Function() body, {
   Storage? storage,
 }) {
-  return HydratedBlocOverrides.runZoned(
-    body,
-    storage: storage ?? _buildMockStorage(),
-  );
+  HydratedBloc.storage = storage ?? _buildMockStorage();
+  return body();
 }
 
 Storage _buildMockStorage() {

@@ -48,8 +48,8 @@ class SettingsPage extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Column(
               children: [
-                Row(
-                  children: const [
+                const Row(
+                  children: [
                     Padding(
                       padding: EdgeInsets.all(8),
                       child: Text('Account'),
@@ -92,9 +92,9 @@ class SettingsPage extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Expanded(
+                    const Expanded(
                       child: Row(
-                        children: const [
+                        children: [
                           Icon(Icons.format_paint),
                           Padding(
                             padding: EdgeInsets.all(8),
