@@ -50,6 +50,7 @@ class Transaction extends Equatable {
 
   Transaction merge(Transaction tx) {
     // Not the same tx
+    // ignore: avoid_returning_this
     if (tx.ref != ref) return this;
 
     final newest = tx.lastModified > lastModified ? tx : this;
