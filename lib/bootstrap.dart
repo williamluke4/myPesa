@@ -62,22 +62,17 @@ Future<void> bootstrap(FutureOr<Widget> Function() builder) async {
         // Adjusting this value in production.
         ..tracesSampleRate = 1.0;
     },
-    appRunner: () => runZonedGuarded(
-      () async {
-        WidgetsFlutterBinding.ensureInitialized();
-        final storageDirectoryPath =
-            kIsWeb ? HydratedStorage.webStorageDirectory : await getConfigDir();
-        final storage = await HydratedStorage.build(
-          storageDirectory: storageDirectoryPath,
-        );
-        log.d(storageDirectoryPath);
-        await HydratedBlocOverrides.runZoned(
-          () async => runApp(await builder()),
-          storage: storage,
-          blocObserver: AppBlocObserver(),
-        );
-      },
-      (error, stackTrace) => log.e(error.toString(), [stackTrace]),
-    ),
+    appRunner: () async {
+      WidgetsFlutterBinding.ensureInitialized();
+      final storageDirectoryPath =
+          kIsWeb ? HydratedStorage.webStorageDirectory : await getConfigDir();
+
+      log.d(storageDirectoryPath);
+      HydratedBloc.storage = await HydratedStorage.build(
+        storageDirectory: storageDirectoryPath,
+      );
+      Bloc.observer = AppBlocObserver();
+      runApp(await builder());
+    },
   );
 }

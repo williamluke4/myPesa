@@ -1,9 +1,12 @@
 import 'package:mocktail/mocktail.dart';
+import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/data/transactions_repository.dart';
 
 String sentTransactionMessage =
     '''QC352PDIVL Confirmed. Ksh1,000.00 sent to SOPHIA  MWENI 0702972812 on 3/3/22 at 5:28 PM. New M-PESA balance is Ksh25,203.19. Transaction cost, Ksh12.00. Amount you can transact within the day is 292,600.00. Send KES100 & below to POCHI LA BIASHARA for FREE! To reverse, foward this message to 456.''';
+
+final mockCategories = [Category(name: 'Unknown'), Category(name: 'Groceries')];
 
 Transaction sentTransaction = Transaction(
   recipient: 'SOPHIA  MWENI 0702972812',
@@ -13,6 +16,7 @@ Transaction sentTransaction = Transaction(
   balance: '25,203.19',
   type: TransactionType.OUT,
   body: sentTransactionMessage,
+  categoryId: mockCategories[0].id,
   dateTime: DateTime(2022, 3, 3, 17, 28),
 );
 
@@ -25,6 +29,7 @@ Transaction sentTransactionWrongTimeFormat = Transaction(
   txCost: '74.00',
   balance: '226.85',
   type: TransactionType.OUT,
+  categoryId: mockCategories[0].id,
   body: sentTransactionWrongTimeFormatMessage,
   dateTime: DateTime(2021, 1, 16, 17, 9),
 );
@@ -42,6 +47,7 @@ Transaction depositTransaction = Transaction(
   balance: '104,061.96',
   type: TransactionType.IN,
   body: depositTransactionMessage,
+  categoryId: mockCategories[0].id,
   dateTime: DateTime(2021, 11, 9, 19, 7),
 );
 

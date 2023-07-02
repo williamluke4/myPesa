@@ -9,10 +9,10 @@ import 'helpers/hydrated_bloc.dart';
 
 void main() {
   group('SettingsCubit', () {
-    SettingsCubit build({Storage? storage}) => HydratedBlocOverrides.runZoned(
-          SettingsCubit.new,
-          storage: storage ?? MockStorage(),
-        );
+    SettingsCubit build({Storage? storage}) {
+      HydratedBloc.storage = storage ?? MockStorage();
+      return SettingsCubit();
+    }
 
     test('check state equality ', () {
       mockHydratedStorage(() {
