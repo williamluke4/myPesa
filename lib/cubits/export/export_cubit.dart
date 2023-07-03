@@ -55,10 +55,14 @@ class ExportCubit extends HydratedCubit<ExportState> {
     emit(state.copyWith(isLoading: true));
     List<Transaction> filteredTxs;
     if (startDate != null && endDate != null) {
+      final startDateStartOfDay =
+          DateTime(endDate.year, endDate.month, endDate.day);
+      final endDateEndOfDay =
+          DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
       filteredTxs = txs.where((tx) {
         return tx.dateTime != null &&
-            tx.dateTime!.isAfter(startDate) &&
-            tx.dateTime!.isBefore(endDate);
+            tx.dateTime!.isAfter(startDateStartOfDay) &&
+            tx.dateTime!.isBefore(endDateEndOfDay);
       }).toList();
     } else {
       filteredTxs = txs;

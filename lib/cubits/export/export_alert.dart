@@ -53,7 +53,9 @@ class ExportAlertState extends State<ExportAlert> {
             children: [
               const Text('Date Range:'),
               const SizedBox(width: 10),
-              Text('${startDate.year} - ${endDate.year}'),
+              Text(
+                '${startDate.day}/${startDate.month}/${startDate.year} - ${endDate.day}/${endDate.month}/${endDate.year}',
+              ),
               const SizedBox(width: 10),
               ElevatedButton(
                 onPressed: _selectDateRange,
