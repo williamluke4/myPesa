@@ -20,7 +20,7 @@ class BalanceWidget extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     'Balance',
-                    textScaleFactor: 2,
+                    textScaler: TextScaler.linear(2),
                     style: TextStyle(
                       color: Colors.white,
                       fontStyle: FontStyle.italic,
@@ -34,7 +34,7 @@ class BalanceWidget extends StatelessWidget {
                   child: Text(
                     'Ksh $balance',
                     textAlign: TextAlign.center,
-                    textScaleFactor: 3,
+                    textScaler: const TextScaler.linear(3),
                     style: const TextStyle(
                       color: Colors.white,
                       shadows: [
