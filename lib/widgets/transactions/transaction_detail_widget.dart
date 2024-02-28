@@ -79,9 +79,9 @@ class TransactionDetailWidget extends StatelessWidget {
                       SelectableText(
                         transaction.ref,
                         style: const TextStyle(fontWeight: FontWeight.bold),
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
               const SizedBox(height: 10),

@@ -19,7 +19,7 @@ class InsightsPage extends StatelessWidget {
     final categories = context.select<DatabaseCubit, List<Category>>(
       (c) => c.state.categories,
     );
-    final categoriesMap = {for (var e in categories) e.id: e};
+    final categoriesMap = {for (final e in categories) e.id: e};
 
     final insights = buildInsights(transactions);
 
@@ -158,7 +158,7 @@ class SpendingByCategoryPieChart extends StatelessWidget {
                 fontSize: 25,
               ),
             ),
-          )
+          ),
         ],
         tooltipBehavior: TooltipBehavior(enable: true),
         series: <DoughnutSeries<CategoryInsight, String>>[
@@ -179,7 +179,7 @@ class SpendingByCategoryPieChart extends StatelessWidget {
               showZeroValue: false,
               labelPosition: ChartDataLabelPosition.outside,
             ),
-          )
+          ),
         ],
       ),
     );

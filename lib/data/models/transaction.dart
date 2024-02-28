@@ -111,6 +111,6 @@ class Transaction extends Equatable {
         dateTime,
         categoryId,
         lastModified,
-        type
+        type,
       ];
 }

@@ -84,7 +84,7 @@ class SettingsPage extends StatelessWidget {
                             onPressed: () =>
                                 context.read<SettingsCubit>().signin(),
                             child: const Text('Sign In'),
-                          )
+                          ),
                       ],
                     ),
                   ],
@@ -123,7 +123,7 @@ class SettingsPage extends StatelessWidget {
                         DropdownMenuItem(
                           value: ThemeMode.light,
                           child: Text('Light'),
-                        )
+                        ),
                       ],
                       // After selecting the desired option,it will
                       // change button value to selected value
@@ -143,9 +143,9 @@ class SettingsPage extends StatelessWidget {
                         sheetRepository: SheetRepository(),
                       ),
                       child: const ExportView(),
-                    )
+                    ),
                   ],
-                )
+                ),
               ],
             ),
           );

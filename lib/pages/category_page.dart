@@ -59,9 +59,9 @@ class CategoryPage extends StatelessWidget {
                     );
                   });
                 },
-              )
+              ),
             ],
-          )
+          ),
         ],
       ),
       body: CategoryDetailsView(category: category),

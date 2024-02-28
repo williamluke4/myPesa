@@ -79,7 +79,7 @@ final List<String> transactionHeaders = [
   'TxFee',
   'Category',
   'Balance',
-  'Notes'
+  'Notes',
 ];
 final List<String> splitTransactionHeaders = [
   'Date',
@@ -151,9 +151,9 @@ List<RowData> exportTransaction({
           cell(stringValue: tx.notes),
           // Debug (Body)
           if (debugMode || tx.type == TransactionType.UNKNOWN)
-            cell(stringValue: tx.body)
+            cell(stringValue: tx.body),
         ],
-      )
+      ),
     ];
   } else {
     return [
@@ -179,9 +179,9 @@ List<RowData> exportTransaction({
           cell(stringValue: tx.notes),
           // Debug (Body)
           if (debugMode || tx.type == TransactionType.UNKNOWN)
-            cell(stringValue: tx.body)
+            cell(stringValue: tx.body),
         ],
-      )
+      ),
     ];
   }
 }

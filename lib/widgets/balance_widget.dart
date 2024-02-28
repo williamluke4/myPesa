@@ -39,7 +39,7 @@ class BalanceWidget extends StatelessWidget {
                       color: Colors.white,
                       shadows: [
                         Shadow(blurRadius: 5, color: Colors.grey),
-                        Shadow(blurRadius: 4, color: Colors.green)
+                        Shadow(blurRadius: 4, color: Colors.green),
                       ],
                     ),
                   ),

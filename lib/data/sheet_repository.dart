@@ -40,7 +40,7 @@ class SheetRepository {
           categories: categories,
           debugMode: debugMode,
           separateTransactionFees: separateTransactionFees,
-        ));
+        ),);
         return value;
       });
       final sheet = Sheet(
@@ -54,7 +54,7 @@ class SheetRepository {
                   separateTransactionFees: separateTransactionFees,
                 ),
               ),
-          )
+          ),
         ],
       );
       final now = DateTime.now();

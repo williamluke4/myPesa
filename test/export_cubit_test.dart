@@ -28,7 +28,7 @@ void main() {
       act: (cubit) => cubit.exportToGoogleSheets(mockUser, [], []),
       expect: () => [
         const ExportState(isLoading: true),
-        ExportState(error: noTransactionsError)
+        ExportState(error: noTransactionsError),
       ],
     );
   });

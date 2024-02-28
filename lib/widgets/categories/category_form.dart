@@ -130,7 +130,7 @@ class _CategoryFormState extends State<CategoryForm> {
                     child: Text(widget.category == null ? 'Add' : 'Save'),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),

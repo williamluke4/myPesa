@@ -66,9 +66,6 @@ class ExportView extends StatelessWidget {
         }
       },
       builder: (context, state) {
-        final transactions = context.read<DatabaseCubit>().state.transactions;
-        final categories = context.read<DatabaseCubit>().state.categories;
-
         final user = context
             .select<SettingsCubit, GoogleSignInAccount?>((s) => s.state.user);
 
@@ -103,7 +100,7 @@ class ExportView extends StatelessWidget {
                 ],
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Row(
                   children: [
                     ElevatedButton(
@@ -118,7 +115,7 @@ class ExportView extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 child: Row(
                   children: [
                     ElevatedButton(

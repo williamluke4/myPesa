@@ -88,7 +88,7 @@ class MonthlyCategoryBarChart extends StatelessWidget {
           xValueMapper: (Insight data, _) => data.datetime,
           yValueMapper: (Insight data, _) => data.total.outgoing,
           name: 'Expense',
-        )
+        ),
       ],
     );
   }

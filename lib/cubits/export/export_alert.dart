@@ -13,7 +13,7 @@ class ExportAlert extends StatefulWidget {
 }
 
 class ExportAlertState extends State<ExportAlert> {
-  DateTime startDate = DateTime(DateTime.now().year, 1, 1);
+  DateTime startDate = DateTime(DateTime.now().year);
   DateTime endDate = DateTime.now();
   bool separateTransactionFees = false;
   bool debugMode = false;

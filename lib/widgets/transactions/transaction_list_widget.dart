@@ -34,7 +34,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
     final categories = context.select<DatabaseCubit, List<Category>>(
       (c) => c.state.categories,
     );
-    final categoriesMap = {for (var e in categories) e.id: e};
+    final categoriesMap = {for (final e in categories) e.id: e};
 
     final dates = groupedByDate.keys.toList();
     final datesMap = groupedByDate.map((String date, List<Transaction> txs) {
@@ -93,7 +93,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                         });
                       },
                       child: const Text('Deselect All'),
-                    )
+                    ),
                   ],
                 ),
               ],
@@ -179,7 +179,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                           ),
                         ],
                       );
-                    })
+                    }),
                   ],
                 );
               },
