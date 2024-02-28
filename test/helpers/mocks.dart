@@ -35,7 +35,7 @@ Transaction sentTransactionWrongTimeFormat = Transaction(
 );
 
 // String reversedTransactionMessage =
-//     '''OAV2QRV4K4  Confirmed. Transaction OAO4LC1T3S has 
+//     '''OAV2QRV4K4  Confirmed. Transaction OAO4LC1T3S has
 // been reversed.  Your account balance is now Ksh12,260.03.''';
 String reversedTransactionMessage =
     '''SBN3Y4FTKV confirmed. Reversal of transaction SBN0XW46IM has been successfully reversed  on 23/2/24  at 5:37 PM and Ksh10.00 is credited to your M-PESA account. New M-PESA account balance is Ksh21,207.92.''';

@@ -35,12 +35,14 @@ class SheetRepository {
     final sheetsAPI = await getAPI(user);
     try {
       final rowData = transactions.fold<List<RowData>>([], (value, tx) {
-        value.addAll(exportTransaction(
-          tx: tx,
-          categories: categories,
-          debugMode: debugMode,
-          separateTransactionFees: separateTransactionFees,
-        ),);
+        value.addAll(
+          exportTransaction(
+            tx: tx,
+            categories: categories,
+            debugMode: debugMode,
+            separateTransactionFees: separateTransactionFees,
+          ),
+        );
         return value;
       });
       final sheet = Sheet(
