@@ -2,7 +2,7 @@
 
 ## Info
 
-Works by looking for messages from `MPESA` then parses them using regex. I am not a flutter dev, was just experimenting and **Safaricom** don't provide a nice way to view/export transactions.
+Works by looking for messages from `MPESA` then parses them using regex.
 
 ## Help Wanted
 
