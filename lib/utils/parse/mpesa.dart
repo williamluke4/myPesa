@@ -20,6 +20,9 @@ RegExp getWithdraw =
     RegExp(r'Withdraw\s+([a-zA-Z]+)([\d.,]+)\s*(from)\s+(.*?)\.{0,1}on');
 RegExp getDeposit = RegExp(r'Give Ksh([\d.,]+) cash to (.+) New');
 
+RegExp getReversal = RegExp('Reversal of transaction ([A-Z0-9]{10})');
+RegExp reversalTypeRegex = RegExp(r'Ksh([\d.,]+) is (credited|debited)');
+
 Transaction? parseMpesaTransaction(String body) {
   String? txCost;
   String? ref;
@@ -73,6 +76,18 @@ Transaction? parseMpesaTransaction(String body) {
     type = TransactionType.IN;
     amount = getDepositMatch.group(1);
     recipient = getDepositMatch.group(2);
+  }
+  final Match? getReversalMatch = getReversal.firstMatch(body);
+  if (getReversalMatch != null) {
+    final Match? t = reversalTypeRegex.firstMatch(body);
+    amount = t?.group(1);
+
+    if (t?.group(2) == 'credited') {
+      type = TransactionType.IN;
+    } else {
+      type = TransactionType.OUT;
+    }
+    recipient = 'Reversal of ${getReversalMatch.group(1)}';
   }
   if (ref == null) {
     return null;

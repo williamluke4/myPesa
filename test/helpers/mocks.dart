@@ -34,9 +34,20 @@ Transaction sentTransactionWrongTimeFormat = Transaction(
   dateTime: DateTime(2021, 1, 16, 17, 9),
 );
 
+// String reversedTransactionMessage =
+//     '''OAV2QRV4K4  Confirmed. Transaction OAO4LC1T3S has been reversed.  Your account balance is now Ksh12,260.03.''';
 String reversedTransactionMessage =
-    '''OAV2QRV4K4  Confirmed. Transaction OAO4LC1T3S has been reversed.  Your account balance is now Ksh12,260.03.''';
-
+    '''SBN3Y4FTKV confirmed. Reversal of transaction SBN0XW46IM has been successfully reversed  on 23/2/24  at 5:37 PM and Ksh10.00 is credited to your M-PESA account. New M-PESA account balance is Ksh21,207.92.''';
+Transaction reversedTransaction = Transaction(
+  recipient: 'Reversal of SBN0XW46IM',
+  ref: 'SBN3Y4FTKV',
+  amount: '10.00',
+  balance: '21,207.92',
+  type: TransactionType.IN,
+  body: reversedTransactionMessage,
+  categoryId: mockCategories[0].id,
+  dateTime: DateTime(2024, 2, 23, 17, 37),
+);
 String depositTransactionMessage =
     '''PK95FQHDN1 Confirmed. On 9/11/21 at 7:07 PM Give Ksh60,000.00 cash to Naivas Supermarket Kilifi New M-PESA balance is Ksh104,061.96. You can now access M-PESA via *334#''';
 

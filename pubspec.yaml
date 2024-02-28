@@ -3,7 +3,7 @@ version: 2.0.19+1
 publish_to: none
 description: Lets you View and Export MPESA Transactions
 environment:
-  sdk: ">=3.0.0 <3.1.0"
+  sdk: ">=3.0.0 <3.2.0"
 dependencies:
   basic_utils: ^5.3.0
   bloc: ^8.1.2

@@ -40,16 +40,15 @@ void main() {
       expect(transaction.dateTime, depositTransaction.dateTime);
     });
 
-    // TODO(williamluke4): Add support for reversed transactions.
-    // test('reversedTransaction', () {
-    //   final transaction = parseMpesaTransaction(reversedTransaction);
-    //   expect(transaction.amount, equals('1,000.00'));
-    //   expect(transaction.balance, equals('25,203.19'));
-    //   expect(transaction.txCost, equals('12.00'));
-    //   expect(transaction.type, equals(TransactionType.OUT));
+    test('reversedTransaction', () {
+      final transaction = parseMpesaTransaction(reversedTransaction.body)!;
 
-    //   expect(transaction.recipient, 'SOPHIA  MWENI 0702972812');
-    //   expect(transaction.dateTime, DateTime(2022, 3, 3, 17, 28));
-    // });
+      expect(transaction.amount, equals(reversedTransaction.amount));
+      expect(transaction.balance, equals(reversedTransaction.balance));
+      expect(transaction.txCost, equals(reversedTransaction.txCost));
+      expect(transaction.type, equals(reversedTransaction.type));
+      expect(transaction.recipient, reversedTransaction.recipient);
+      expect(transaction.dateTime, reversedTransaction.dateTime);
+    });
   });
 }
