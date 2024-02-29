@@ -89,23 +89,6 @@ class TransactionDetailWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
-                    child: SelectableText(transaction.account),
-                  ),
-                  SelectableText(
-                    transaction.amount,
-                    style: TextStyle(
-                      color: transaction.type != TransactionType.IN
-                          ? Colors.red
-                          : Colors.green,
-                    ),
-                    textAlign: TextAlign.right,
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
                     child: SelectableText(transaction.recipient),
                   ),
                   SelectableText(

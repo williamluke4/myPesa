@@ -68,10 +68,12 @@ class SheetHeaders {
   String get categoryId => 'categoryId';
   String get body => 'body';
   String get dateTime => 'dateTime';
+  String get account => 'account';
 }
 
 final List<String> transactionHeaders = [
   'Date',
+  'Account',
   'Ref',
   'Recipient',
   'In',
@@ -83,6 +85,7 @@ final List<String> transactionHeaders = [
 ];
 final List<String> splitTransactionHeaders = [
   'Date',
+  'Account',
   'Ref',
   'Recipient',
   'Amount',
@@ -125,6 +128,8 @@ List<RowData> exportTransaction({
         values: [
           // Date
           dateTimeCell(value: tx.dateTime),
+          // Account
+          cell(stringValue: tx.account),
           // Ref
           cell(stringValue: tx.ref),
           // Recipient
@@ -139,6 +144,8 @@ List<RowData> exportTransaction({
         values: [
           // Date
           dateTimeCell(value: tx.dateTime),
+          // Account
+          cell(stringValue: tx.account),
           // Ref
           cell(stringValue: tx.ref),
           // Recipient

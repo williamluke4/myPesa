@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:my_pesa/data/models/category.dart';
@@ -5,7 +7,6 @@ import 'package:my_pesa/utils/parse/mpesa.dart';
 
 part 'transaction.g.dart';
 
-// ignore: constant_identifier_names
 enum TransactionType { IN, OUT, UNKNOWN }
 
 enum AccountType { MPESA }

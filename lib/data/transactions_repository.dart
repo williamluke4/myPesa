@@ -1,5 +1,7 @@
+import 'package:carrier_info/carrier_info.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:my_pesa/data/models/transaction.dart';
+import 'package:my_pesa/utils/logger.dart';
 import 'package:my_pesa/utils/parse/mpesa.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -16,9 +18,19 @@ class TransactionsRepository {
   TransactionsRepository();
 
   Future<List<Transaction>> getTxsFromSMS() async {
-    if (await Permission.sms.isGranted == false) {
-      await Permission.sms.request();
+    await [
+      Permission.locationWhenInUse,
+      Permission.phone,
+      Permission.sms,
+    ].request();
+
+    AndroidCarrierData? carrierInfo;
+    try {
+      carrierInfo = await CarrierInfo.getAndroidInfo();
+    } catch (error) {
+      log.e('Failed to Get CarrierInfo', [error]);
     }
+
     final query = SmsQuery();
     final transactions = <Transaction>[];
     final messages = await query.querySms(
@@ -27,7 +39,7 @@ class TransactionsRepository {
       kinds: [SmsQueryKind.inbox],
     );
     for (final message in messages) {
-      final transaction = parseTransaction(message);
+      final transaction = parseTransaction(message, carrierInfo);
       if (transaction != null) {
         transactions.add(transaction);
       }

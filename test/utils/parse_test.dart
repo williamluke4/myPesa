@@ -6,7 +6,8 @@ import '../helpers/mocks.dart';
 void main() {
   group('parseMpesaTransaction', () {
     test('sentTransaction', () {
-      final transaction = parseMpesaTransaction(sentTransaction.body)!;
+      final transaction =
+          parseMpesaTransaction(sentTransaction.body, '+254723522717')!;
       expect(transaction.amount, equals(sentTransaction.amount));
       expect(transaction.balance, equals(sentTransaction.balance));
       expect(transaction.txCost, equals(sentTransaction.txCost));
@@ -16,8 +17,10 @@ void main() {
       expect(transaction.dateTime, sentTransaction.dateTime);
     });
     test('sentTransaction with wrongTimeFormat', () {
-      final transaction =
-          parseMpesaTransaction(sentTransactionWrongTimeFormat.body)!;
+      final transaction = parseMpesaTransaction(
+        sentTransactionWrongTimeFormat.body,
+        '+254723522717',
+      )!;
       expect(transaction.amount, equals(sentTransactionWrongTimeFormat.amount));
       expect(
         transaction.balance,
@@ -30,7 +33,8 @@ void main() {
       expect(transaction.dateTime, sentTransactionWrongTimeFormat.dateTime);
     });
     test('depositTransaction', () {
-      final transaction = parseMpesaTransaction(depositTransaction.body)!;
+      final transaction =
+          parseMpesaTransaction(depositTransaction.body, '+254723522717')!;
       expect(transaction.amount, equals(depositTransaction.amount));
       expect(transaction.balance, equals(depositTransaction.balance));
       expect(transaction.txCost, equals(depositTransaction.txCost));
@@ -41,7 +45,8 @@ void main() {
     });
 
     test('reversedTransaction', () {
-      final transaction = parseMpesaTransaction(reversedTransaction.body)!;
+      final transaction =
+          parseMpesaTransaction(reversedTransaction.body, '+254723522717')!;
 
       expect(transaction.amount, equals(reversedTransaction.amount));
       expect(transaction.balance, equals(reversedTransaction.balance));
