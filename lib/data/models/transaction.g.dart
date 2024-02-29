@@ -34,14 +34,14 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'txCost': instance.txCost,
       'recipient': instance.recipient,
       'balance': instance.balance,
-      'accountType': _$AccountTypeEnumMap[instance.accountType]!,
+      'accountType': _$AccountTypeEnumMap[instance.accountType],
       'account': instance.account,
       'body': instance.body,
       'notes': instance.notes,
       'lastModified': instance.lastModified,
       'dateTime': instance.dateTime?.toIso8601String(),
       'categoryId': instance.categoryId,
-      'type': _$TransactionTypeEnumMap[instance.type]!,
+      'type': _$TransactionTypeEnumMap[instance.type],
     };
 
 const _$AccountTypeEnumMap = {
