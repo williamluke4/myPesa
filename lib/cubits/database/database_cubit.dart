@@ -120,7 +120,7 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
     return <String, dynamic>{
       'transactions': transactions,
       'categories': categories,
-      'defaultCategory': defaultCategory,
+      'defaultCategory': defaultCategory
     };
   }
 
@@ -240,7 +240,7 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
       {
         'transactions': state.transactions,
         'categories': state.categories,
-        'version': 1,
+        'version': 1
       },
     );
     final now = DateTime.now();

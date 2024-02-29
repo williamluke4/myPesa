@@ -8,11 +8,15 @@ part 'transaction.g.dart';
 // ignore: constant_identifier_names
 enum TransactionType { IN, OUT, UNKNOWN }
 
+enum AccountType { MPESA }
+
 @JsonSerializable()
 class Transaction extends Equatable {
   Transaction({
     this.recipient = '',
     required this.ref,
+    this.accountType = AccountType.MPESA,
+    this.account = '',
     this.amount = '',
     this.txCost = '',
     this.balance = '',
@@ -42,6 +46,8 @@ class Transaction extends Equatable {
   final String recipient;
   final String date;
   final String balance;
+  final AccountType accountType;
+  final String account;
   final String body;
   final String notes;
   final int lastModified;
@@ -74,6 +80,8 @@ class Transaction extends Equatable {
   Transaction copyWith({
     String? amount,
     String? ref,
+    AccountType? accountType,
+    String? account,
     String? txCost,
     String? recipient,
     String? date,
@@ -88,6 +96,8 @@ class Transaction extends Equatable {
       amount: amount ?? this.amount,
       ref: ref ?? this.ref,
       txCost: txCost ?? this.txCost,
+      accountType: accountType ?? this.accountType,
+      account: account ?? this.account,
       recipient: recipient ?? this.recipient,
       balance: balance ?? this.balance,
       notes: notes ?? this.notes,
@@ -108,6 +118,8 @@ class Transaction extends Equatable {
         balance,
         body,
         notes,
+        accountType,
+        account,
         dateTime,
         categoryId,
         lastModified,
