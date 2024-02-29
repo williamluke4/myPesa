@@ -168,6 +168,8 @@ List<RowData> exportTransaction({
         values: [
           // Date
           dateTimeCell(value: tx.dateTime),
+          // Account
+          cell(stringValue: tx.account),
           // Ref
           cell(stringValue: tx.ref),
           // Recipient

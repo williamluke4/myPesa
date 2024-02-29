@@ -50,20 +50,20 @@ class ExportAlertState extends State<ExportAlert> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Date Range:'),
               const SizedBox(width: 10),
-              Text(
-                '${startDate.day}/${startDate.month}/${startDate.year} - ${endDate.day}/${endDate.month}/${endDate.year}',
-              ),
-              const SizedBox(width: 10),
               ElevatedButton(
                 onPressed: _selectDateRange,
-                child: const Text('Select'),
+                child: Text(
+                  '${startDate.day}/${startDate.month}/${startDate.year} - ${endDate.day}/${endDate.month}/${endDate.year}',
+                ),
               ),
             ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Separate Transaction Fees:'),
               const SizedBox(width: 10),
@@ -78,6 +78,7 @@ class ExportAlertState extends State<ExportAlert> {
             ],
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Debug:'),
               const SizedBox(width: 10),
