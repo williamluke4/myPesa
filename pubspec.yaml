@@ -7,6 +7,7 @@ environment:
 dependencies:
   basic_utils: ^5.3.0
   bloc: ^8.1.2
+  carrier_info: ^2.0.8
   collection: ^1.17.1
   emoji_picker_flutter: ^1.6.1
   equatable: ^2.0.5
@@ -17,7 +18,10 @@ dependencies:
   flutter_file_dialog: ^3.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_sms_inbox: ^1.0.3
+  flutter_sms_inbox:
+    git:
+      url: https://github.com/williamluke4/flutter_sms_inbox.git
+      ref: master # branch name
   google_sign_in: ^6.1.4
   google_sign_in_dartio: ^0.2.2+1
   googleapis: ^11.2.0

@@ -1,4 +1,6 @@
 import 'package:basic_utils/basic_utils.dart';
+import 'package:carrier_info/carrier_info.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:intl/intl.dart';
 import 'package:my_pesa/data/models/transaction.dart';
@@ -23,7 +25,10 @@ RegExp getDeposit = RegExp(r'Give Ksh([\d.,]+) cash to (.+) New');
 RegExp getReversal = RegExp('Reversal of transaction ([A-Z0-9]{10})');
 RegExp reversalTypeRegex = RegExp(r'Ksh([\d.,]+) is (credited|debited)');
 
-Transaction? parseMpesaTransaction(SmsMessage message) {
+Transaction? parseMpesaTransaction(
+  String? body,
+  String? phoneNumber,
+) {
   String? txCost;
   String? ref;
   String? recipient;
@@ -31,8 +36,6 @@ Transaction? parseMpesaTransaction(SmsMessage message) {
   TransactionType? type;
   String? balance;
   DateTime? dateTime;
-
-  final body = message.body;
 
   if (body == null) {
     return null;
@@ -98,11 +101,11 @@ Transaction? parseMpesaTransaction(SmsMessage message) {
   if (ref == null) {
     return null;
   }
+
   return Transaction(
     recipient: recipient ?? '',
     ref: ref,
-    account: message.address ?? '',
-    accountType: AccountType.MPESA,
+    account: phoneNumber ?? '',
     amount: amount ?? '',
     txCost: txCost ?? '',
     balance: balance ?? '',
@@ -112,9 +115,20 @@ Transaction? parseMpesaTransaction(SmsMessage message) {
   );
 }
 
-Transaction? parseTransaction(SmsMessage message) {
+Transaction? parseTransaction(
+  SmsMessage message,
+  AndroidCarrierData? carrierData,
+) {
+  String? phoneNumber;
+  if (message.subId != null) {
+    final sim = carrierData?.subscriptionsInfo
+        .firstWhereOrNull((element) => element.subscriptionId == message.subId);
+    if (sim != null) {
+      phoneNumber = sim.phoneNumber;
+    }
+  }
   if (message.sender == 'MPESA') {
-    return parseMpesaTransaction(message);
+    return parseMpesaTransaction(message.body, phoneNumber);
   }
   return null;
 }

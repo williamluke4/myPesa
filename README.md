@@ -42,6 +42,14 @@ $ flutter run --flavor production --target lib/main_production.dart
 flutter pub run build_runner build
 ```
 
+### Helper Commands
+
+```
+dart format --set-exit-if-changed lib test
+dart analyze lib test
+git tag v2.0.20 -m "Support Reversed Transactions"
+```
+
 _\*myPesa works on Android._
 
 ---

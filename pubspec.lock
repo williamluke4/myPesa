@@ -137,6 +137,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "8.9.1"
+  carrier_info:
+    dependency: "direct main"
+    description:
+      name: carrier_info
+      sha256: "72b650aecb6267804f71c279099e87f0fe4201321ebdb09a13a60db18509ac43"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.8"
   characters:
     dependency: transitive
     description:
@@ -310,10 +318,11 @@ packages:
   flutter_sms_inbox:
     dependency: "direct main"
     description:
-      name: flutter_sms_inbox
-      sha256: fc1c069225916418bcd4e8b4999d2f5e1216db3394c8b86c8440a5a5b0ec4bd2
-      url: "https://pub.dev"
-    source: hosted
+      path: "."
+      ref: master
+      resolved-ref: "3b9c0ce46502913114fd38778d0eb634a17232ba"
+      url: "https://github.com/williamluke4/flutter_sms_inbox.git"
+    source: git
     version: "1.0.3"
   flutter_test:
     dependency: "direct dev"
