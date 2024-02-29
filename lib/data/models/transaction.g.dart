@@ -8,7 +8,11 @@ part of 'transaction.dart';
 
 Transaction _$TransactionFromJson(Map<String, dynamic> json) => Transaction(
       recipient: json['recipient'] as String? ?? '',
-      ref: json['ref'] as String? ?? '',
+      ref: json['ref'] as String,
+      accountType:
+          $enumDecodeNullable(_$AccountTypeEnumMap, json['accountType']) ??
+              AccountType.MPESA,
+      account: json['account'] as String? ?? '',
       amount: json['amount'] as String? ?? '',
       txCost: json['txCost'] as String? ?? '',
       balance: json['balance'] as String? ?? '',
@@ -30,13 +34,19 @@ Map<String, dynamic> _$TransactionToJson(Transaction instance) =>
       'txCost': instance.txCost,
       'recipient': instance.recipient,
       'balance': instance.balance,
+      'accountType': _$AccountTypeEnumMap[instance.accountType]!,
+      'account': instance.account,
       'body': instance.body,
       'notes': instance.notes,
       'lastModified': instance.lastModified,
       'dateTime': instance.dateTime?.toIso8601String(),
       'categoryId': instance.categoryId,
-      'type': _$TransactionTypeEnumMap[instance.type],
+      'type': _$TransactionTypeEnumMap[instance.type]!,
     };
+
+const _$AccountTypeEnumMap = {
+  AccountType.MPESA: 'MPESA',
+};
 
 const _$TransactionTypeEnumMap = {
   TransactionType.IN: 'IN',

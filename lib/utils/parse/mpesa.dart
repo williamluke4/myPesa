@@ -23,7 +23,7 @@ RegExp getDeposit = RegExp(r'Give Ksh([\d.,]+) cash to (.+) New');
 RegExp getReversal = RegExp('Reversal of transaction ([A-Z0-9]{10})');
 RegExp reversalTypeRegex = RegExp(r'Ksh([\d.,]+) is (credited|debited)');
 
-Transaction? parseMpesaTransaction(String body) {
+Transaction? parseMpesaTransaction(SmsMessage message) {
   String? txCost;
   String? ref;
   String? recipient;
@@ -31,6 +31,12 @@ Transaction? parseMpesaTransaction(String body) {
   TransactionType? type;
   String? balance;
   DateTime? dateTime;
+
+  final body = message.body;
+
+  if (body == null) {
+    return null;
+  }
   final Match? balanceMatch = getBalanceRX.firstMatch(body);
   if (balanceMatch != null) {
     balance = balanceMatch.group(3);
@@ -95,6 +101,8 @@ Transaction? parseMpesaTransaction(String body) {
   return Transaction(
     recipient: recipient ?? '',
     ref: ref,
+    account: message.address ?? '',
+    accountType: AccountType.MPESA,
     amount: amount ?? '',
     txCost: txCost ?? '',
     balance: balance ?? '',
@@ -105,9 +113,8 @@ Transaction? parseMpesaTransaction(String body) {
 }
 
 Transaction? parseTransaction(SmsMessage message) {
-  if (message.sender == 'MPESA' && message.body != null) {
-    final transaction = parseMpesaTransaction(message.body ?? '');
-    return transaction;
+  if (message.sender == 'MPESA') {
+    return parseMpesaTransaction(message);
   }
   return null;
 }
