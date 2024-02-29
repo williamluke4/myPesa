@@ -56,7 +56,7 @@ class ExportCubit extends HydratedCubit<ExportState> {
     List<Transaction> filteredTxs;
     if (startDate != null && endDate != null) {
       final startDateStartOfDay =
-          DateTime(endDate.year, endDate.month, endDate.day);
+          DateTime(startDate.year, startDate.month, startDate.day);
       final endDateEndOfDay =
           DateTime(endDate.year, endDate.month, endDate.day, 23, 59, 59);
       filteredTxs = txs.where((tx) {
