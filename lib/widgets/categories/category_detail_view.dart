@@ -25,7 +25,7 @@ class CategoryDetailsView extends StatelessWidget {
     final categoryTransactions =
         transactions.where((element) => element.categoryId == category.id);
 
-    final insights = buildInsights(categoryTransactions);
+    final insights = buildMonthlyInsights(categoryTransactions);
 
     return Column(
       children: <Widget>[

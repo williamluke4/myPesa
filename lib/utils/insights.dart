@@ -52,7 +52,7 @@ class Insight {
   final categories = <CategoryInsight>[];
 }
 
-List<Insight> buildInsights(Iterable<Transaction> txs) {
+List<Insight> buildMonthlyInsights(Iterable<Transaction> txs) {
   final months = groupTransactionsByMonth(txs);
   final insights = <Insight>[];
   for (final month in months.keys) {
@@ -79,4 +79,32 @@ Map<String, List<Transaction>> groupTransactionsByMonth(
     (obj) =>
         obj.dateTime != null ? mmmyDateFormat.format(obj.dateTime!) : 'Unknown',
   )..removeWhere((key, value) => key == 'Unknown');
+}
+
+Map<String, List<Transaction>> groupTransactionsByYear(
+  Iterable<Transaction> txs,
+) {
+  return groupBy<Transaction, String>(
+    txs,
+    (obj) => obj.dateTime != null ? '${obj.dateTime!.year}' : 'Unknown',
+  )..removeWhere((key, value) => key == 'Unknown');
+}
+
+List<Insight> buildYearlyInsights(Iterable<Transaction> txs) {
+  final years = groupTransactionsByYear(txs);
+  final insights = <Insight>[];
+  for (final year in years.keys) {
+    final txsInYear = years[year];
+    try {
+      final insight = Insight(
+        name: year,
+        datetime: DateTime.parse('$year-01-01'),
+        txs: txsInYear ?? [],
+      );
+      insights.add(insight);
+    } catch (e) {
+      // Handle potential errors, such as parsing errors
+    }
+  }
+  return insights;
 }
