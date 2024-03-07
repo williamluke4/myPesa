@@ -25,7 +25,7 @@ dependencies:
   google_sign_in: ^6.1.4
   google_sign_in_dartio: ^0.2.2+1
   googleapis: ^11.2.0
-  http: ^0.13.5
+  http: ^1.0.0
   hydrated_bloc: ^9.1.2
   intl: ^0.18.0
   json_annotation: ^4.8.1
