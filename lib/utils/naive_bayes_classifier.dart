@@ -41,11 +41,13 @@ class NaiveBayesClassifier {
           (featureCounts[category]![feature] ?? 0) + 1;
     }
   }
+
   void trainAll(List<Transaction> transactions) {
     for (final transaction in transactions) {
       train(transaction.categoryId, extractFeatures(transaction));
     }
   }
+
   String predict(List<String> features) {
     var bestCategory = '';
     var highestProbability = double.negativeInfinity;
