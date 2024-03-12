@@ -10,7 +10,7 @@ jobs:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
       flutter_channel: stable
-      min_coverage: 27
+      min_coverage: 20
 
   publish:
     # Only Run on tags

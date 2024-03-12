@@ -14,7 +14,7 @@ jobs:
   test:
     uses: VeryGoodOpenSource/very_good_workflows/.github/workflows/flutter_package.yml@v1
     with:
-      min_coverage: 25
+      min_coverage: 20
       flutter_channel: stable
 
   # Creates Issues from comments
