@@ -1,9 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
-import 'package:my_pesa/utils/logger.dart';
 import 'package:my_pesa/widgets/categories/categories_grid_view.dart';
 import 'package:my_pesa/widgets/categories/category_form.dart';
 
@@ -60,11 +60,18 @@ class TransactionDetailWidget extends StatelessWidget {
       (element) => element.id == transaction.categoryId,
       orElse: () => defaultCategory,
     );
+
+    final predictedCategoryId = transaction.categoryId == defaultCategory.id
+        ? context.read<DatabaseCubit>().predictCategory(transaction)
+        : null;
+    final predictedCategory =
+        categories.firstWhereOrNull((cat) => cat.id == predictedCategoryId);
+
     return Padding(
       padding: const EdgeInsets.all(3),
       child: Card(
         child: Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -72,13 +79,16 @@ class TransactionDetailWidget extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
-                  Text(transaction.date),
+                  Text(
+                    transaction.date,
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
                   Row(
                     children: <Widget>[
                       const Text('Ref: '),
                       SelectableText(
                         transaction.ref,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
+                        style: Theme.of(context).textTheme.labelLarge,
                       ),
                     ],
                   ),
@@ -89,7 +99,10 @@ class TransactionDetailWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: <Widget>[
                   Expanded(
-                    child: SelectableText(transaction.recipient),
+                    child: SelectableText(
+                      transaction.recipient,
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
                   ),
                   SelectableText(
                     transaction.amount,
@@ -123,10 +136,17 @@ class TransactionDetailWidget extends StatelessWidget {
                 child: CategoryGridItem(
                   category: category,
                   onTap: (_) async {
+                    final predictions = context
+                        .read<DatabaseCubit>()
+                        .predictCategories(transaction);
+                    final topPredictions =
+                        predictions.take(3).toList(); // Take top 3 predictions
+
                     await Navigator.push(
                       context,
                       MaterialPageRoute<Widget>(
                         builder: (context) => CategoriesGridPage(
+                          predictedCategories: topPredictions,
                           onCategoryTap: (selectedCategory) {
                             context.read<DatabaseCubit>().updateTransaction(
                                   transaction.ref,
@@ -143,6 +163,23 @@ class TransactionDetailWidget extends StatelessWidget {
                 ),
                 // Initial Value
               ),
+              if (predictedCategory != null)
+                ListTile(
+                  leading:
+                      Icon(Icons.lightbulb_outline, color: Colors.yellow[700]),
+                  title: Text(predictedCategory.name),
+                  subtitle: const Text(
+                    'Suggested category based on your previous choices',
+                  ),
+                  onTap: () {
+                    context.read<DatabaseCubit>().updateTransaction(
+                          transaction.ref,
+                          transaction.copyWith(
+                            categoryId: predictedCategory.id,
+                          ),
+                        );
+                  },
+                ),
               TextFormField(
                 decoration: const InputDecoration(
                   labelText: 'Notes',
@@ -150,7 +187,6 @@ class TransactionDetailWidget extends StatelessWidget {
                 initialValue: transaction.notes,
                 onFieldSubmitted: (String? value) {
                   if (value != null) {
-                    log.d(value);
                     context.read<DatabaseCubit>().updateTransaction(
                           transaction.ref,
                           transaction.copyWith(notes: value),

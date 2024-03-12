@@ -19,9 +19,6 @@ class TransactionsPage extends StatelessWidget {
             ),
             backgroundColor: Colors.redAccent,
           );
-
-          // Find the ScaffoldMessenger in the widget tree
-          // and use it to show a SnackBar.
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
         }
       },
@@ -35,7 +32,7 @@ class TransactionsPage extends StatelessWidget {
                     context,
                     MaterialPageRoute<Widget>(
                       builder: (context) => TransactionPage(
-                        key: key,
+                        key: Key(tx.ref),
                         txRef: tx.ref,
                       ),
                     ),

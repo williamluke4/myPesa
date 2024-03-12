@@ -44,8 +44,9 @@ class AppView extends StatelessWidget {
       child: MaterialApp(
         title: 'myPesa',
         debugShowCheckedModeBanner: false,
-        themeMode: context
-            .select<SettingsCubit, ThemeMode>((cubit) => cubit.state.themeMode),
+        themeMode: context.select<SettingsCubit, ThemeMode>(
+          (cubit) => cubit.state.themeMode,
+        ),
         theme: ThemeData(
           primarySwatch: Colors.green,
           visualDensity: VisualDensity.adaptivePlatformDensity,
