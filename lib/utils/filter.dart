@@ -51,8 +51,9 @@ bool _matchesCategory(Transaction tx, List<String>? categoryIds) {
 
 bool _matchesDateRange(Transaction tx, DateTime? startDate, DateTime? endDate) {
   return (startDate == null ||
-          tx.dateTime?.isAfter(startDate.subtract(const Duration(days: 1))) ==
-              true) &&
+          (tx.dateTime?.isAfter(startDate.subtract(const Duration(days: 1))) ??
+              false)) &&
       (endDate == null ||
-          tx.dateTime?.isBefore(endDate.add(const Duration(days: 1))) == true);
+          (tx.dateTime?.isBefore(endDate.add(const Duration(days: 1))) ??
+              false));
 }
