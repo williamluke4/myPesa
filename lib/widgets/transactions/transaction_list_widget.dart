@@ -5,6 +5,8 @@ import 'package:my_pesa/cubits/database/database_cubit.dart';
 import 'package:my_pesa/data/models/category.dart';
 import 'package:my_pesa/data/models/transaction.dart';
 import 'package:my_pesa/pages/category_page.dart';
+import 'package:my_pesa/utils/filter.dart';
+import 'package:my_pesa/widgets/advanced_search_form.dart';
 import 'package:my_pesa/widgets/categories/categories_grid_view.dart';
 import 'package:my_pesa/widgets/transactions/transaction_row_widget.dart';
 
@@ -26,11 +28,41 @@ class TransactionListWidget extends StatefulWidget {
 
 class _TransactionListWidgetState extends State<TransactionListWidget> {
   List<String> selectedTxRefs = [];
+  AdvancedSearchCriteria? _advancedCriteria;
+  List<Transaction> get _filteredTransactions {
+    var filteredTransactions = widget.transactions;
+    if (_advancedCriteria != null) {
+      // Apply advanced filtering
+      filteredTransactions =
+          filterTransactions(filteredTransactions, _advancedCriteria!);
+    }
+    return filteredTransactions;
+  }
+
+  void _openAdvancedSearch() {
+    showDialog<void>(
+      context: context,
+      builder: (context) => Dialog(
+        child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: AdvancedSearchForm(
+            initial: _advancedCriteria,
+            onSearch: (criteria) {
+              setState(() {
+                _advancedCriteria = criteria;
+                selectedTxRefs = [];
+              });
+            },
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final groupedByDate =
-        groupBy<Transaction, String>(widget.transactions, (obj) => obj.date);
+        groupBy<Transaction, String>(_filteredTransactions, (obj) => obj.date);
     final categories = context.select<DatabaseCubit, List<Category>>(
       (c) => c.state.categories,
     );
@@ -79,7 +111,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          selectedTxRefs = widget.transactions
+                          selectedTxRefs = _filteredTransactions
                               .map<String>((e) => e.ref)
                               .toList();
                         });
@@ -99,6 +131,25 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
               ],
             ),
           ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            if (_advancedCriteria != null)
+              IconButton(
+                onPressed: () => setState(() {
+                  _advancedCriteria = null;
+                  selectedTxRefs = [];
+                }),
+                icon: const Icon(Icons.close),
+              ),
+            IconButton(
+              icon: const Icon(Icons.search),
+              selectedIcon: const Icon(Icons.edit),
+              isSelected: _advancedCriteria != null,
+              onPressed: _openAdvancedSearch,
+            ),
+          ],
+        ),
         Expanded(
           child: RefreshIndicator(
             onRefresh: () =>
@@ -119,6 +170,7 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                       child: Text(
                         textAlign: TextAlign.center,
                         date,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                     ),
                     ...categoryKeys.map<Column>((key) {
@@ -138,11 +190,13 @@ class _TransactionListWidgetState extends State<TransactionListWidget> {
                                   ),
                                 ),
                                 child: Chip(
+                                  avatar: Text(categoriesMap[key]?.emoji ?? ''),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  padding: const EdgeInsets.all(4),
                                   label: Text(
                                     categoriesMap[key]?.name ?? '',
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
                                   ),
                                 ),
                               ),
