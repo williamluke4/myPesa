@@ -8,12 +8,9 @@ import 'package:my_pesa/widgets/grid_delegate.dart';
 class CategoriesGridPage extends CategoriesGridView {
   const CategoriesGridPage({
     required super.onCategoryTap,
+    super.predictedCategories,
     super.key,
-    this.predictedCategories,
   });
-
-  @override
-  final List<(String, double)>? predictedCategories;
 
   @override
   Widget build(BuildContext context) {

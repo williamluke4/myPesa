@@ -207,6 +207,7 @@ class AdvancedSearchFormState extends State<AdvancedSearchForm> {
       },
       child: Text(
         _startDate != null && _endDate != null
+            // ignore: lines_longer_than_80_chars
             ? 'Date Range: ${_startDate!.toIso8601String().split('T').first} - ${_endDate!.toIso8601String().split('T').first}'
             : 'Select Date Range',
       ),
