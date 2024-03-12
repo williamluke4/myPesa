@@ -1,9 +1,9 @@
 import 'package:basic_utils/basic_utils.dart';
-import 'package:carrier_info/carrier_info.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_sms_inbox/flutter_sms_inbox.dart';
 import 'package:intl/intl.dart';
 import 'package:my_pesa/data/models/transaction.dart';
+import 'package:sim_data_plus/sim_model.dart';
 
 RegExp getBalanceRX = RegExp(r'balance\s+(is|was)\s+([a-zA-Z]+)([\d,]+.\d{2})');
 RegExp getTXCostRX = RegExp(r'Transaction\s*cost,\s*([a-zA-Z]+)([\d.,]+)\.');
@@ -117,11 +117,11 @@ Transaction? parseMpesaTransaction(
 
 Transaction? parseTransaction(
   SmsMessage message,
-  AndroidCarrierData? carrierData,
+  SimData? simData,
 ) {
   String? phoneNumber;
-  if (message.subId != null) {
-    final sim = carrierData?.subscriptionsInfo
+  if (message.subId != null && simData != null) {
+    final sim = simData.cards
         .firstWhereOrNull((element) => element.subscriptionId == message.subId);
     if (sim != null) {
       phoneNumber = sim.phoneNumber;
