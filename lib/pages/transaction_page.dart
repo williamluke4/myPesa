@@ -32,7 +32,6 @@ class TransactionPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
           TransactionDetailWidget(transaction: transaction),
-          const Text('All Transactions'),
           Expanded(
             child: TransactionListWidget(
               transactions: filteredTransactions,

@@ -9,6 +9,7 @@ import 'package:my_pesa/data/transactions_repository.dart';
 import 'package:my_pesa/errors.dart';
 import 'package:my_pesa/utils/file.dart';
 import 'package:my_pesa/utils/logger.dart';
+import 'package:my_pesa/utils/naive_bayes_classifier.dart';
 
 part 'database_state.dart';
 
@@ -17,6 +18,7 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
       : super(DatabaseState.initial());
 
   final TransactionsRepository transactionsRepository;
+  final NaiveBayesClassifier _classifier = NaiveBayesClassifier();
 
   Future<void> updateTransaction(String ref, Transaction tx) async {
     final txIdx = state.transactions.indexWhere((tx) => tx.ref == ref);
@@ -106,6 +108,27 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
     );
   }
 
+  void trainClassifier(List<Transaction> transactions) {
+    for (final transaction in transactions) {
+      if (transaction.categoryId == defaultCategory.id) continue;
+      _classifier.train(transaction.categoryId, extractFeatures(transaction));
+    }
+    // Optionally emit an initial state or status
+  }
+
+  String predictCategory(Transaction tx) {
+    final features = extractFeatures(tx);
+    final prediction = _classifier.predict(features);
+    return prediction;
+  }
+
+  List<(String, double)> predictCategories(Transaction tx) {
+    final features = extractFeatures(tx);
+    final predictions = _classifier.predictProbabilities(features)
+      ..sort((a, b) => b.$2.compareTo(a.$2));
+    return predictions;
+  }
+
   @override
   void onError(Object error, StackTrace stackTrace) {
     log.e('Error: $error', [stackTrace]);
@@ -161,7 +184,6 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
   }
 
   Category? findCategory(String id) {
-    log.d('Finding category $id');
     if (id.isEmpty) {
       return null;
     }
@@ -276,14 +298,18 @@ class DatabaseCubit extends HydratedCubit<DatabaseState> {
 
     final defaultCategory =
         Category.fromJson(json['defaultCategory'] as Map<String, dynamic>);
-    final transactions = json['transactions'] is List
+    final transactionsMap = json['transactions'] is List
         ? List<Map<String, dynamic>>.from(json['transactions'] as List)
         : <Map<String, dynamic>>[];
+    final transactions =
+        transactionsMap.map(Transaction.fromJson).toList(growable: false);
+
+    _classifier.trainAll(transactions);
+
     return DatabaseState(
       categories: categories,
       defaultCategory: defaultCategory,
-      transactions:
-          transactions.map(Transaction.fromJson).toList(growable: false),
+      transactions: transactions,
     );
   }
 }
